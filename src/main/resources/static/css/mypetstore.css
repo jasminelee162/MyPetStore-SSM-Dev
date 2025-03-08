@@ -1,0 +1,474 @@
+body {
+    margin: 0ex 10ex 0ex 10ex;
+    padding: 0ex;
+    font-family: helvetica, tahoma, arial, verdana, sans-serif;
+    font-size: 2ex;
+    color: #333;
+    background-color: #444;
+    width: 1540px;
+}
+
+pre {
+    font-family: "Courier New", Courier, mono;
+
+    font-style: normal;
+    background-color: #FFFFFF;
+    white-space: pre
+}
+
+h1 {
+    margin: 1ex 0ex 1ex 0ex;
+    padding: 0ex;
+
+    line-height: 3ex;
+    font-weight: 900;
+    color: #666;
+}
+
+h2 {
+    margin: 0px auto;
+    margin-top:20px;
+    width: 100%;
+    padding: 1ex 0;
+    line-height: 2ex;
+    font-weight: 700;
+    color: #1d4886;
+    text-align: center;
+}
+
+h3 {
+    margin: 1ex 0ex 1ex 0ex;
+    padding: 0ex;
+
+    line-height: 1.6ex;
+    font-weight: 700;
+    color: #222;
+}
+
+p {
+    font-family: helvetica, tahoma, arial, verdana, sans-serif;
+
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 2ex;
+}
+
+img {
+    border: 0;
+}
+span{
+    line-height:18px;
+    font-size:18px;
+    display: flex;
+    align-items: center;
+}
+li {
+    font-family: helvetica, tahoma, arial, verdana, sans-serif;
+
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 0ex;
+}
+
+table {
+    width: 70%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    font-size: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+table thead {
+    background-color: #f1f1f1;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+table th {
+    background-color: #f7f7f7;
+    font-weight: bold;
+}
+
+table tr:hover {
+    background-color: #f9f9f9;
+}
+
+a, a:visited, a:link {
+    color: #039;
+
+    text-decoration: none;
+    font-family: helvetica, tahoma, arial, verdana, sans-serif;
+}
+
+a:hover {
+    color: #69f;
+}
+
+a.Button, a.Button:link, a.Button:visited {
+    padding: .3ex;
+    color: #fff;
+    background-color: #005e21;
+    text-decoration: none;
+    font-family: helvetica, tahoma, arial, verdana, sans-serif;
+    font-size: 1.5ex;
+}
+
+a.Button:hover {
+    color: #000;
+    background-color: #54c07a;
+}
+
+#Logo {
+    width: 33%;
+    height: 9ex;
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 0ex 0ex 0ex 0ex;
+    border-width: 0ex 0ex .3ex 0px;
+    border-style: solid;
+    border-color: #ccc;
+    float: left;
+    background-color: #000;
+    color: #fff;
+    line-height: 9ex;
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    height: 9ex;
+}
+
+body>#Logo {
+    height: 9ex;
+}
+
+#Menu {
+    width: 33%;
+    height: 9ex;
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 0ex 0ex 0ex 0ex;
+    border-width: 0ex 0ex .3ex 0px;
+    border-style: solid;
+    border-color: #ccc;
+    float: left;
+    background-color: #000;
+    color: #eaac00;
+    text-decoration: none;
+    font-family: helvetica, tahoma, arial, verdana, sans-serif;
+    text-align: center;
+    line-height: 9ex;
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    height: 9ex;
+}
+
+#Menu, #Menu a, #Menu a:link, #Menu a:visited, #Menu a:hover {
+    color: #eaac00;
+    text-decoration: none;
+    font-family: helvetica, tahoma, arial, verdana, sans-serif;
+}
+
+body>#Menu {
+    height: 9ex;
+}
+
+{
+}
+
+#Search {
+    width: 33%;
+    height: 9ex;
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 0ex 0ex 0ex 0ex;
+    border-width: 0ex 0ex .3ex 0px;
+    border-style: solid;
+    border-color: #ccc;
+    float: left;
+    text-align: center;
+    background-color: #000;
+    color: #eaac00;
+    line-height: 9ex;
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    height: 9ex;
+}
+
+body>#Search {
+    height: 9ex;
+}
+
+#Search input {
+    border-width: .1ex .1ex .1ex .1ex;
+    border-style: solid;
+    border-color: #aaa;
+    background-color: #666;
+    color: #eaac00;
+}
+
+#QuickLinks {
+    text-align: center;
+    background-color: #FFF;
+    width: 99%;
+}
+
+#PoweredBy {
+    width: 30%;
+    height: 9ex;
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 0ex 0ex 0ex 0ex;
+    border-width: .3ex 0ex .3ex 0px;
+    border-style: solid;
+    border-color: #ccc;
+    float: left;
+    background-color: #000;
+    color: #fff;
+    line-height: 9ex;
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    height: 9ex;
+}
+
+body>#PoweredBy {
+    height: 9ex;
+}
+
+#Banner {
+    width: 69%;
+    height: 9ex;
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 0ex 0ex 0ex 0ex;
+    border-width: .3ex 0ex .3ex 0px;
+    border-style: solid;
+    border-color: #ccc;
+    float: left;
+    background-color: #000;
+    color: #fff;
+    line-height: 9ex;
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    height: 9ex;
+}
+
+body>#Banner {
+    height: 9ex;
+}
+
+#Content {
+    margin: 0;
+    padding: 0ex 0ex 0ex 0ex;
+    width: 99%;
+    color: #333;
+    background-color: #FFF;
+    border-width: 0;
+}
+
+#Separator {
+    clear:both;
+    margin: 0;
+    height:0;
+}
+
+#Main {
+    margin: 0;
+    padding: 1ex;
+    color: #333;
+    background-color: #FFF;
+    border-width: 1ex 0ex 2ex 0px;
+    border-style: solid;
+    border-color: #fff;
+}
+
+#Sidebar {
+    float: left;
+    background:inherit;
+    width: 30%;
+}
+
+#MainImage {
+    float: left;
+    background:inherit;
+    text-align:center;
+    width: 50%;
+}
+
+#Catalog {
+    padding: 1ex;
+    background:inherit;
+    text-align:center;
+}
+
+#Catalog input[type="submit"] {
+    padding: .5ex 1ex;
+    color: #fff;
+    background-color: #6657; /* 改为蓝色 */
+    text-decoration: none;
+    font-family: helvetica, tahoma, arial, verdana, sans-serif;
+    font-size: 1.6ex;
+    border: none;
+    border-radius: 5px; /* 圆角边框 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+    cursor: pointer; /* 鼠标悬停时显示为点击手势 */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* 添加过渡效果 */
+}
+
+#Catalog input[type="submit"]:hover {
+    background-color: #0056b3; /* 深蓝色 */
+    transform: translateY(-2px); /* 鼠标悬停时稍微上升 */
+}
+
+
+#Catalog table{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#BackLink{
+    padding: 1ex;
+    float: right;
+    border-width: .1ex 0ex .1ex 0px;
+    border-style: solid;
+    border-color: #000;
+}
+
+#Cart{
+    width: 69.99%;
+    float: left;
+    background-color:#fff;
+}
+
+#MyList {
+    float: left;
+    width: 95%;
+    background-color: #ffffff; /* 白色背景 */
+    border: 1px solid #e0e0e0; /* 浅灰色边框 */
+    border-radius: 10px; /* 圆角 */
+    padding: 20px;
+    margin-top: 20px;
+    margin-left: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
+    font-family: 'Arial', sans-serif; /* 现代字体 */
+}
+
+#MyList p {
+    font-size: 1.4rem; /* 略大字体 */
+    font-weight: 600; /* 半粗字体 */
+    color: #333333; /* 深灰色文字 */
+    margin-bottom: 15px; /* 标题与列表的间距 */
+}
+
+#MyList ul {
+    list-style: none; /* 去掉列表符号 */
+    padding: 0; /* 无内边距 */
+    margin: 0; /* 无外边距 */
+    display: flex; /* 列表项横向排列 */
+    flex-wrap: wrap; /* 多行自动换行 */
+    gap: 15px; /* 列表项间距 */
+}
+
+#MyList ul li {
+    background-color: #f9f9f9; /* 浅灰色背景 */
+    border: 1px solid #eaeaea; /* 浅灰色边框 */
+    border-radius: 8px; /* 圆角设计 */
+    padding: 15px;
+    flex: 1 1 calc(33.33% - 15px); /* 每行最多 3 个，动态布局 */
+    display: flex; /* 内部内容横向排列 */
+    align-items: center; /* 垂直居中 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* 轻微阴影 */
+    transition: transform 0.2s, box-shadow 0.2s; /* 动画效果 */
+}
+
+#MyList ul li:hover {
+    transform: translateY(-5px); /* 鼠标悬停时微微上移 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 阴影增强 */
+}
+
+#MyList ul li img {
+    width: 40px; /* 图标大小 */
+    height: 40px;
+    margin-right: 15px; /* 图标与文字的间距 */
+    border-radius: 50%; /* 圆形图标 */
+    border: 2px solid #ddd; /* 图标边框 */
+}
+
+#MyList ul li a {
+    text-decoration: none; /* 去掉下划线 */
+    color: #0078d7; /* 蓝色字体 */
+    font-weight: 600; /* 半粗 */
+    font-size: 1rem; /* 稍大字体 */
+    transition: color 0.2s; /* 动画效果 */
+}
+
+#MyList ul li a:hover {
+    color: #0056a5; /* 鼠标悬停时更深的蓝色 */
+}
+
+
+#productAutoComplete {
+    background:red;
+    position:relative;
+    top:-29px;
+    left:160px;
+    width:188px;
+    display: none;
+}
+
+#productAutoList {
+    margin: 0;
+    padding: 0;
+    background: #ccc;
+    border:1px solid #aaa
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.productAutoItem {
+    height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+    text-align: left;
+    padding-left: 5px;
+    margin-top: 3px;
+    border-bottom: 1px solid #666;
+    color: #005e21;
+    cursor: pointer;
+}
+
+.tooltip {
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.item-table {
+    width: 375px;
+    position: relative;
+    left: 80px;
+}
+
+.search-res {
+    width: 800px;
+    position: relative;
+    left: 80px;
+    text-align: center;
+}
+
+i {
+    margin-right: 30px;
+}
+
+.order-table {
+    margin: 0;
+    padding: 0;
+}
+.order-title {
+    margin: 0 auto 10px auto;
+    padding: 0;
+}

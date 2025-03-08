@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="StyleSheet" href="../css/mypetstore.css" type="text/css" media="screen"/>
+
+</head>
+<body>
+<footer th:fragment="footer">
+
+
+    <div id="Footer">
+
+        <div id="PoweredBy">&nbsp<a href="http://www.csu.edu.cn">www.csu.edu.cn</a>
+        </div>
+
+        <div id="Banner">
+            <th:block th:if="${session.loginAccount != null}">
+                <th:block th:if="${session.loginAccount.bannerOption}">
+                    <span th:text="${session.loginAccount.bannerName}"></span>
+                </th:block>
+            </th:block>
+        </div>
+
+    </div>
+
+
+
+
+</footer>
+</body>
+</html>
