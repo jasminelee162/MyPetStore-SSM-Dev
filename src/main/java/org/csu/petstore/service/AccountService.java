@@ -11,5 +11,4 @@ public interface AccountService {
     public void registerAccount(Account account);
 
 
-
 }

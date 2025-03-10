@@ -17,7 +17,8 @@ public class AccountServiceImpl implements AccountService {
         Account account = new Account();
         account.setUsername(username);
         account.setPassword(password);
-        return this.accountMapper.getAccountByUsernameAndPassword(account);
+        return this.accountMapper.getAccountByUsernameAndPassword(account.getUsername(), account.getPassword());
+
     }
 
     @Override
@@ -27,6 +28,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void registerAccount(Account account) {
-        // 等待实现
+        // 插入账户信息
+        accountMapper.insertAccount(account);
+        // 插入登录信息
+        accountMapper.insertSignon(account);
+        // 插入用户配置信息
+        accountMapper.insertProfile(account);
     }
 }
