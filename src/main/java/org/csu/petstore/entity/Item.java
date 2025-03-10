@@ -31,4 +31,5 @@ public class Item {
     private String attribute4;
     @TableField(value = "attr5")
     private String attribute5;
+
 }

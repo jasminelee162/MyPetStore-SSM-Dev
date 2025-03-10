@@ -1,4 +1,9 @@
 package org.csu.petstore.persistence;
 
-public interface ItemMapper {
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.csu.petstore.entity.Item;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ItemMapper extends BaseMapper<Item> {
 }

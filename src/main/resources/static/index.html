@@ -3,142 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加响应式设计 -->
+    <link rel="StyleSheet" href="css/index.css" type="text/css" media="screen"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"> <!-- 引入Poppins字体 -->
     <title>MyPetStore</title>
+<!--    &lt;!&ndash; 内联CSS样式 &ndash;&gt;-->
+<!--    <style>-->
+<!--        /* 全局样式 */-->
+<!--        body {-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--            font-family: 'Arial', 'Helvetica', sans-serif; /* 现代化字体 */-->
+<!--            font-size: 16px;-->
+<!--            color: #333;-->
+<!--            background-color: #f4f4f4; /* 背景色更柔和 */-->
+<!--        }-->
 
-    <!-- 内联CSS样式 -->
-    <style>
-        /* 全局样式 */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', 'Helvetica', sans-serif; /* 现代化字体 */
-            font-size: 16px;
-            color: #333;
-            background-color: #f4f4f4; /* 背景色更柔和 */
-        }
+<!--        /* 设置所有元素的 box-sizing 属性 */-->
+<!--        *, *::before, *::after {-->
+<!--            box-sizing: border-box;-->
+<!--        }-->
 
-        /* 设置所有元素的 box-sizing 属性 */
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+<!--        /* 主要内容区 */-->
+<!--        #Content {-->
+<!--            margin: 0 auto;-->
+<!--            padding: 2em;-->
+<!--            max-width: 1200px; /* 限制最大宽度 */-->
+<!--            background-color: #ffffff;-->
+<!--            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);-->
+<!--            border-radius: 8px;-->
+<!--        }-->
 
-        /* 主要内容区 */
-        #Content {
-            margin: 0 auto;
-            padding: 2em;
-            max-width: 1200px; /* 限制最大宽度 */
-            background-color: #ffffff;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+<!--        /* 头部标题 */-->
+<!--        header {-->
+<!--            text-align: center;-->
+<!--            background-color: #2c3e50; /* 背景色深色调 */-->
+<!--            color: #ecf0f1; /* 字体色更柔和 */-->
+<!--            padding: 3em 1em;-->
+<!--            border-bottom: 3px solid #34495e; /* 底部边框 */-->
+<!--        }-->
 
-        /* 头部标题 */
-        header {
-            text-align: center;
-            background-color: #2c3e50; /* 背景色深色调 */
-            color: #ecf0f1; /* 字体色更柔和 */
-            padding: 3em 1em;
-            border-bottom: 3px solid #34495e; /* 底部边框 */
-        }
+<!--        header h2 {-->
+<!--            font-size: 2.5em; /* 更大字体 */-->
+<!--            font-weight: 700;-->
+<!--            margin-bottom: 1em;-->
+<!--        }-->
 
-        header h2 {
-            font-size: 2.5em; /* 更大字体 */
-            font-weight: 700;
-            margin-bottom: 1em;
-        }
+<!--        header a.Button {-->
+<!--            padding: 12px 24px;-->
+<!--            background-color: #27ae60; /* 按钮背景色 */-->
+<!--            color: white;-->
+<!--            font-size: 1.2em;-->
+<!--            text-decoration: none;-->
+<!--            border-radius: 5px;-->
+<!--            display: inline-block;-->
+<!--            transition: background-color 0.3s ease, transform 0.3s ease; /* 增加交互效果 */-->
+<!--        }-->
 
-        header a.Button {
-            padding: 12px 24px;
-            background-color: #27ae60; /* 按钮背景色 */
-            color: white;
-            font-size: 1.2em;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            transition: background-color 0.3s ease, transform 0.3s ease; /* 增加交互效果 */
-        }
+<!--        header a.Button:hover {-->
+<!--            background-color: #2ecc71; /* 悬停时变亮 */-->
+<!--            transform: scale(1.05); /* 增加放大效果 */-->
+<!--        }-->
 
-        header a.Button:hover {
-            background-color: #2ecc71; /* 悬停时变亮 */
-            transform: scale(1.05); /* 增加放大效果 */
-        }
+<!--        /* 页脚样式 */-->
+<!--        footer {-->
+<!--            text-align: center;-->
+<!--            padding: 1em;-->
+<!--            background-color: #34495e;-->
+<!--            color: #ecf0f1;-->
+<!--            font-size: 0.9em;-->
+<!--        }-->
 
-        /* 页脚样式 */
-        footer {
-            text-align: center;
-            padding: 1em;
-            background-color: #34495e;
-            color: #ecf0f1;
-            font-size: 0.9em;
-        }
+<!--        /* 链接样式 */-->
+<!--        a, a:visited, a:link {-->
+<!--            color: #039;-->
+<!--            text-decoration: none;-->
+<!--            transition: color 0.3s ease;-->
+<!--        }-->
 
-        /* 链接样式 */
-        a, a:visited, a:link {
-            color: #039;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
+<!--        a:hover {-->
+<!--            color: #69f;-->
+<!--        }-->
 
-        a:hover {
-            color: #69f;
-        }
+<!--        /* 页面响应式设计 */-->
+<!--        @media (max-width: 768px) {-->
+<!--            body {-->
+<!--                font-size: 14px; /* 小屏设备上字体大小适当减小 */-->
+<!--            }-->
 
-        /* 页面响应式设计 */
-        @media (max-width: 768px) {
-            body {
-                font-size: 14px; /* 小屏设备上字体大小适当减小 */
-            }
+<!--            header h2 {-->
+<!--                font-size: 2em; /* 小屏设备上标题大小适当缩小 */-->
+<!--            }-->
 
-            header h2 {
-                font-size: 2em; /* 小屏设备上标题大小适当缩小 */
-            }
+<!--            header a.Button {-->
+<!--                font-size: 1.1em;-->
+<!--                padding: 10px 20px;-->
+<!--            }-->
 
-            header a.Button {
-                font-size: 1.1em;
-                padding: 10px 20px;
-            }
+<!--            #Content {-->
+<!--                width: 90%; /* 页面内容区域宽度减小，适应小屏 */-->
+<!--                padding: 1.5em;-->
+<!--            }-->
 
-            #Content {
-                width: 90%; /* 页面内容区域宽度减小，适应小屏 */
-                padding: 1.5em;
-            }
+<!--            footer {-->
+<!--                font-size: 0.8em;-->
+<!--            }-->
+<!--        }-->
 
-            footer {
-                font-size: 0.8em;
-            }
-        }
+<!--        @media (max-width: 480px) {-->
+<!--            header h2 {-->
+<!--                font-size: 1.5em; /* 更小屏设备下标题进一步缩小 */-->
+<!--            }-->
 
-        @media (max-width: 480px) {
-            header h2 {
-                font-size: 1.5em; /* 更小屏设备下标题进一步缩小 */
-            }
+<!--            header a.Button {-->
+<!--                font-size: 1em;-->
+<!--                padding: 8px 15px;-->
+<!--            }-->
 
-            header a.Button {
-                font-size: 1em;
-                padding: 8px 15px;
-            }
+<!--            #Content {-->
+<!--                width: 95%;-->
+<!--                padding: 1em;-->
+<!--            }-->
 
-            #Content {
-                width: 95%;
-                padding: 1em;
-            }
-
-            footer {
-                font-size: 0.7em;
-            }
-        }
-    </style>
+<!--            footer {-->
+<!--                font-size: 0.7em;-->
+<!--            }-->
+<!--        }-->
+<!--    </style>-->
 </head>
 <body>
-<div id="Content">
-    <header>
-        <h2>Welcome to JPetStore 6</h2>
-        <p><a href="/catalog/index" class="Button">Enter the Store</a></p>
-    </header>
+<!--<div id="Content">-->
+<!--    <header>-->
+<!--        <h2>Welcome to JPetStore 6</h2>-->
+<!--        <p><a href="/catalog/index" class="Button">Enter the Store</a></p>-->
+<!--    </header>-->
 
-    <footer>
-        <p><sub>Copyright Central South University.</sub></p>
-    </footer>
+<!--    <footer>-->
+<!--        <p><sub>Copyright Central South University.</sub></p>-->
+<!--    </footer>-->
+<!--</div>-->
+<div class="bg"><div></div><div></div></div>
+<div class="header-text" aria-hidden="true">
+    Welcome to JPetStore 6<br><span class="glow-filter" data-text="">
+        <a href="/catalog/index" class="glow-link">Enter the Store</a>
+    </span><br>Copyright Central South University.<br>
 </div>
+
+<p>
+    Whether you're looking for a playful puppy, a curious kitten, or a unique exotic pet, we have something for every pet lover. Simply browse through our selection, choose the pet that steals your heart, place an order, and we'll make sure it's ready for you to take home. </p>
+
+<svg class="filters" width='1440px' height='300px' viewBox='0 0 1440 300' xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter id="glow-4" color-interpolation-filters="sRGB" x="-50%" y="-200%" width="200%" Height="500%">
+            <feGaussianBlur in="SourceGraphic" data-target-blur="4" stdDeviation="4" result="blur4"/>
+            <feGaussianBlur in="SourceGraphic" data-target-blur="19" stdDeviation="19" result="blur19"/>
+            <feGaussianBlur in="SourceGraphic" data-target-blur="9" stdDeviation="9" result="blur9"/>
+            <feGaussianBlur in="SourceGraphic" data-target-blur="30" stdDeviation="30" result="blur30"/>
+            <feColorMatrix in="blur4" result="color-0-blur" type="matrix" values="1 0 0 0 0
+                      0 0.9803921568627451 0 0 0
+                      0 0 0.9647058823529412 0 0
+                      0 0 0 0.8 0"/>
+            <feOffset in="color-0-blur" result="layer-0-offsetted" dx="0" dy="0" data-target-offset-y="0"/>
+            <feColorMatrix in="blur19" result="color-1-blur" type="matrix" values="0.8156862745098039 0 0 0 0
+                      0 0.49411764705882355 0 0 0
+                      0 0 0.2627450980392157 0 0
+                      0 0 0 1 0"/>
+            <feOffset in="color-1-blur" result="layer-1-offsetted" dx="0" dy="2" data-target-offset-y="2"/>
+            <feColorMatrix in="blur9" result="color-2-blur" type="matrix" values="1 0 0 0 0
+                      0 0.6666666666666666 0 0 0
+                      0 0 0.36470588235294116 0 0
+                      0 0 0 0.65 0"/>
+            <feOffset in="color-2-blur" result="layer-2-offsetted" dx="0" dy="2" data-target-offset-y="2"/>
+            <feColorMatrix in="blur30" result="color-3-blur" type="matrix" values="1 0 0 0 0
+                      0 0.611764705882353 0 0 0
+                      0 0 0.39215686274509803 0 0
+                      0 0 0 1 0"/>
+            <feOffset in="color-3-blur" result="layer-3-offsetted" dx="0" dy="2" data-target-offset-y="2"/>
+            <feColorMatrix in="blur30" result="color-4-blur" type="matrix" values="0.4549019607843137 0 0 0 0
+                      0 0.16470588235294117 0 0 0
+                      0 0 0 0 0
+                      0 0 0 1 0"/>
+            <feOffset in="color-4-blur" result="layer-4-offsetted" dx="0" dy="16" data-target-offset-y="16"/>
+            <feColorMatrix in="blur30" result="color-5-blur" type="matrix" values="0.4235294117647059 0 0 0 0
+                      0 0.19607843137254902 0 0 0
+                      0 0 0.11372549019607843 0 0
+                      0 0 0 1 0"/>
+            <feOffset in="color-5-blur" result="layer-5-offsetted" dx="0" dy="64" data-target-offset-y="64"/>
+            <feColorMatrix in="blur30" result="color-6-blur" type="matrix" values="0.21176470588235294 0 0 0 0
+                      0 0.10980392156862745 0 0 0
+                      0 0 0.07450980392156863 0 0
+                      0 0 0 1 0"/>
+            <feOffset in="color-6-blur" result="layer-6-offsetted" dx="0" dy="64" data-target-offset-y="64"/>
+            <feColorMatrix in="blur30" result="color-7-blur" type="matrix" values="0 0 0 0 0
+                      0 0 0 0 0
+                      0 0 0 0 0
+                      0 0 0 0.68 0"/>
+            <feOffset in="color-7-blur" result="layer-7-offsetted" dx="0" dy="64" data-target-offset-y="64"/>
+            <feMerge>
+                <feMergeNode in="layer-0-offsetted"/>
+                <feMergeNode in="layer-1-offsetted"/>
+                <feMergeNode in="layer-2-offsetted"/>
+                <feMergeNode in="layer-3-offsetted"/>
+                <feMergeNode in="layer-4-offsetted"/>
+                <feMergeNode in="layer-5-offsetted"/>
+                <feMergeNode in="layer-6-offsetted"/>
+                <feMergeNode in="layer-7-offsetted"/>
+                <feMergeNode in="layer-0-offsetted"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+</svg>
 </body>
 </html>
