@@ -1,14 +1,32 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="StyleSheet" href="../css/mypetstore.css" type="text/css" media="screen"/>
-</head>
-<body>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--    <link rel="StyleSheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>-->
+<!--</head>-->
+<!--<body>-->
+<!--<footer th:fragment="footer">-->
+<!--    <div id="Footer">-->
+
+<!--        <div id="PoweredBy">-->
+<!--            &nbsp<a href="www.csu.edu.cn">Central South University</a>-->
+<!--        </div>-->
+
+<!--        <div id="Banner">-->
+<!--            &lt;!&ndash; Banner Name &ndash;&gt;-->
+<!--            <label th:if="(${session.account} != null) and (${session.authenticated})">-->
+<!--                <img th:if="${session.account.bannerOption}"-->
+<!--                     th:src="${#strings.arraySplit(session.account.bannerName,'&quot;')[1]}">-->
+<!--            </label>-->
+<!--        </div>-->
+
+<!--    </div>-->
+<!--</footer>-->
+<!--</body>-->
+<!--</html>-->
 <footer th:fragment="footer">
     <div id="Footer">
-
         <div id="PoweredBy">
             &nbsp<a href="www.csu.edu.cn">Central South University</a>
         </div>
@@ -20,8 +38,5 @@
                      th:src="${#strings.arraySplit(session.account.bannerName,'&quot;')[1]}">
             </label>
         </div>
-
     </div>
 </footer>
-</body>
-</html>
