@@ -1,34 +1,53 @@
 package org.csu.petstore.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.io.Serializable;
-//import net.sourceforge.stripes.validation.Validate;
-
 @Data
-public class Account implements Serializable {
-    private static final long serialVersionUID = 8751282105532159742L;
+@TableName("account") // 对应数据库表名，如果类名和表名一致，可以省略
+public class Account {
 
+    @TableId(value = "userid", type = IdType.INPUT) // 指定主键，使用 userid 对应数据库列名
     private String username;
-    private String password;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String status;
-    private String address1;
-    private String address2;
-    private String city;
-    private String state;
-    private String zip;
-    private String country;
-    private String phone;
-    private String favouriteCategoryId;
-    private String languagePreference;
-    private boolean listOption;
-    private boolean bannerOption;
-    private String bannerName;
 
+    @TableField("password") // 对应数据库字段名，如果字段名和属性名一致，可以省略
+    private String password;
+
+    @TableField("email")
+    private String email;
+
+    @TableField("firstname")
+    private String firstname;
+
+    @TableField("lastname")
+    private String lastname;
+
+    @TableField("status")
+    private String status;
+
+    @TableField("addr1")
+    private String addr1;
+
+    @TableField("addr2")
+    private String addr2;
+
+    @TableField("city")
+    private String city;
+
+    @TableField("state")
+    private String state;
+
+    @TableField("zip")
+    private String zip;
+
+    @TableField("country")
+    private String country;
+
+    @TableField("phone")
+    private String phone;
 
 
 }

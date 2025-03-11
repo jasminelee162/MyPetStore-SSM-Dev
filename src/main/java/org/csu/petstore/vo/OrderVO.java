@@ -36,7 +36,7 @@ public class OrderVO {
     private String cardType;
     private String locale;
     private String status;
-    private List<LineItem> lineItems;
+    //private List<LineItem> lineItems;
 
 
     private Timestamp timestamp;

@@ -3,6 +3,7 @@ package org.csu.petstore.service.impl;
 import org.csu.petstore.entity.Account;
 import org.csu.petstore.persistence.AccountMapper;
 import org.csu.petstore.service.AccountService;
+import org.csu.petstore.vo.AccountVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,8 @@ public class AccountServiceImpl implements AccountService {
     private AccountMapper accountMapper;
 
     @Override
-    public Account getAccount(String username, String password) {
-        Account account = new Account();
-        account.setUsername(username);
-        account.setPassword(password);
-        return this.accountMapper.getAccountByUsernameAndPassword(account.getUsername(), account.getPassword());
-
+    public AccountVO getAccount(String username, String password) {
+        return accountMapper.getAccountVOByUsernameAndPassword(username, password);
     }
 
     @Override

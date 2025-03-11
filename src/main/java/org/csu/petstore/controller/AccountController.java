@@ -4,6 +4,7 @@ import org.csu.petstore.entity.Account;
 import org.csu.petstore.entity.Product;
 import org.csu.petstore.service.AccountService;
 import org.csu.petstore.service.CatalogService;
+import org.csu.petstore.vo.AccountVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
@@ -22,7 +23,7 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/account")
-@SessionAttributes({"loginAccount", "captchaGot"})
+@SessionAttributes({"loginAccount", "authenticated"})
 public class AccountController {
 
     private String msg;
@@ -45,17 +46,16 @@ public class AccountController {
         if (!validate(username, password, gotCaptcha, captcha)) {
             // 失败回跳
             model.addAttribute("msg", msg);
-
             return "account/signOnForm";
         } else {
-            Account loginAccount = accountService.getAccount(username, password);
+            AccountVO loginAccount = accountService.getAccount(username, password);
             if (loginAccount == null) {
                 this.msg = "用户名或密码错误";
                 model.addAttribute("msg", msg);
                 return "account/signOnForm";
             } else {
                 model.addAttribute("loginAccount", loginAccount);
-                model.addAttribute("userName", username);
+                model.addAttribute("authenticated", true);
 
                 /*if (loginAccount.getListOption()) {
                     List<Product> myList = catalogService.getProductListByCategory(loginAccount.getFavouriteCategoryId());
@@ -81,7 +81,7 @@ public class AccountController {
     public String register(@ModelAttribute Account account, Model model) {
         // 调用服务层的注册方法
         accountService.registerAccount(account);
-        return "account/signOnForm";
+        return "account/registerForm";
     }
 
 
@@ -90,7 +90,7 @@ public class AccountController {
     public String signOut(SessionStatus status, Model model) {
         status.setComplete(); // 标记 Session 完成，清除 @SessionAttributes 管理的属性
         model.addAttribute("myAttribute", null);
-        return "mainForm";
+        return "catalog/main";
 
     }
 
