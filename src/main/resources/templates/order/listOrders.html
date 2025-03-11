@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders</title>
+    <link rel="StyleSheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<header th:replace="common/top"></header>
+
+<div id="Content">
+
+    <!-- 返回主菜单 -->
+    <div id="BackLink">
+        <a th:href="@{/mainForm}">Return to Main Menu</a>
+    </div>
+
+    <!-- 订单列表 -->
+    <div id="Catalog">
+
+        <h2 class="order-title">My Orders</h2>
+
+        <table class="order-table">
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Total Price</th>
+            </tr>
+
+            <!-- 遍历订单 -->
+            <tr th:each="order : ${orderList}">
+                <td>
+                    <a th:href="@{/order/viewOrder(orderId=${order.orderId})}"
+                       th:text="${order.orderId}">OrderID</a>
+                </td>
+                <td th:text="${#dates.format(order.orderDate, 'yyyy/MM/dd')}">2025/03/10</td>
+                <td th:text="${#numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')}">$99.99</td>
+            </tr>
+        </table>
+
+    </div>
+
+</div>
+
+<footer th:replace="common/bottom"></footer>
+
+</body>
+</html>

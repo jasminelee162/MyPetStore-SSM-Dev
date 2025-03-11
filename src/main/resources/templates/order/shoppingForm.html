@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shipping Address</title>
+    <link rel="stylesheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<!-- Top 导航栏 -->
+<header th:replace="common/top"></header>
+
+<div id="Content">
+
+    <!-- 返回链接 -->
+    <div id="BackLink">
+        <a th:href="@{/catalog/index}">Return to Main Menu</a>
+    </div>
+
+    <div id="Catalog">
+
+        <h2>Shipping Address</h2>
+
+        <form th:action="@{/order/confirmShip}" th:object="${order}" method="post">
+
+            <table>
+                <tr>
+                    <th colspan="2">Shipping Address</th>
+                </tr>
+                <tr>
+                    <td>First Name:</td>
+                    <td><input type="text" th:field="*{shipToFirstName}" style="width: 300px;"/></td>
+                </tr>
+                <tr>
+                    <td>Last Name:</td>
+                    <td><input type="text" th:field="*{shipToLastName}" style="width: 300px;"/></td>
+                </tr>
+                <tr>
+                    <td>Address 1:</td>
+                    <td><input type="text" th:field="*{shipAddress1}" style="width: 300px;"/></td>
+                </tr>
+                <tr>
+                    <td>Address 2:</td>
+                    <td><input type="text" th:field="*{shipAddress2}" style="width: 300px;"/></td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td><input type="text" th:field="*{shipCity}" style="width: 300px;"/></td>
+                </tr>
+                <tr>
+                    <td>State:</td>
+                    <td><input type="text" th:field="*{shipState}" style="width: 300px;"/></td>
+                </tr>
+                <tr>
+                    <td>Zip:</td>
+                    <td><input type="text" th:field="*{shipZip}" style="width: 300px;"/></td>
+                </tr>
+                <tr>
+                    <td>Country:</td>
+                    <td><input type="text" th:field="*{shipCountry}" style="width: 300px;"/></td>
+                </tr>
+            </table>
+
+            <div style="margin-top: 1.5em;">
+                <button type="submit" style="background-color: #1d4886; color: white; padding: 0.75em 1.5em; border: none; border-radius: 4px; cursor: pointer;">
+                    Continue
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<footer th:replace="common/bottom"></footer>
+
+</body>
+</html>
