@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>signOn</title>
+    <link rel="StyleSheet" href="/css/signon.css" type="text/css" media="screen"/>
+</head>
+<body>
+<header th:replace="common/top"></header>
+
+<div id="on">
+
+    <form action="#" th:action="@{/account/signOn}" method="post" enctype="application/x-www-form-urlencoded">
+
+
+    <p>Please enter your username and password.</p>
+        <!-- 使用Thymeleaf的条件注释和变量表达式 -->
+        <p th:if="${msg != null}">
+            <font color="red" th:text="${msg}"></font>
+        </p>
+        <table>
+            <tr>
+                <td><label for="username">Username:</label></td>
+                <td><input type="text" name="username" id="username" required></td>
+            </tr>
+            <tr>
+                <td><label for="password">Password:</label></td>
+                <td><input type="password" name="password" id="password" required></td>
+            </tr>
+
+            <tr>
+                <td><label for="captcha">Captcha:</label></td>
+                <td>
+                    <input type="text" name="captcha" id="captcha" required style="width: 100px;">
+                    <input type="hidden" id="captchaUrl" th:value="@{/account/captcha}" />
+                    <!-- 使用Thymeleaf的src表达式 -->
+                    <img src="#" th:src="@{/account/captcha}" alt="Captcha Image" id="captchaImage" style="cursor: pointer; margin-left: 10px; vertical-align: middle;" onclick="refreshCaptcha()" />
+                </td>
+            </tr>
+        </table>
+
+        <input type="submit" value="Login">
+
+    </form>
+    Need a user name and password?
+    <a  th:href="@{/registerForm}">Register Now</a>
+
+</div>
+<footer th:replace="common/bottom"></footer>
+
+
+
+<script>
+    function refreshCaptcha() {
+        const captchaImage = document.getElementById('captchaImage');
+        const captchaUrl = document.getElementById('captchaUrl').value;
+        captchaImage.src = captchaUrl + '?' + new Date().getTime();
+    }
+</script>
+
+</body>
+</html>
+

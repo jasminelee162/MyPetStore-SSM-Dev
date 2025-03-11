@@ -5,20 +5,28 @@ import org.csu.petstore.entity.Product;
 import org.csu.petstore.service.AccountService;
 import org.csu.petstore.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/account")
-@SessionAttributes("loginAccount")
+@SessionAttributes({"loginAccount", "captchaGot"})
 public class AccountController {
 
     private String msg;
+    private String captcha;
 
     @Autowired
     private AccountService accountService;
@@ -31,13 +39,14 @@ public class AccountController {
     public String signOn(@RequestParam("username") String username,
                          @RequestParam("password") String password,
                          @RequestParam("captcha") String gotCaptcha, // 接收前端验证码
-                         @SessionAttribute("captcha") String captcha, // 获取 Session 中的验证码
                          Model model) {
+
 
         if (!validate(username, password, gotCaptcha, captcha)) {
             // 失败回跳
             model.addAttribute("msg", msg);
-            return "redirect:/login";
+
+            return "account/signOnForm";
         } else {
             Account loginAccount = accountService.getAccount(username, password);
             if (loginAccount == null) {
@@ -59,7 +68,7 @@ public class AccountController {
                     model.addAttribute("cart", cart);
                 }*/
 
-                return "mainForm"; //返回主页
+                return "catalog/main"; //返回主页
 
             }
 
@@ -93,6 +102,61 @@ public class AccountController {
     @GetMapping("/registerForm")
     public String registerForm(Model model) {
         return "account/registerForm";
+    }
+
+    @GetMapping("/captcha")
+    @ResponseBody
+    public byte[] getCaptcha(Model model) throws IOException {
+        int originalWidth = 200;
+        int originalHeight = 50;
+
+        double scale = 0.75;
+        int width = (int) (originalWidth * scale);
+        int height = (int) (originalHeight * scale);
+
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = bufferedImage.createGraphics();
+
+        g2d.setColor(Color.white);
+        g2d.fillRect(0, 0, width, height);
+
+        captcha = generateRandomString(5);
+
+        g2d.setFont(new Font("SansSerif", Font.BOLD, (int) (24 * scale)));
+        g2d.setColor(Color.black);
+
+        g2d.drawString(captcha, (int) (50 * scale), (int) (30 * scale));
+
+        addNoise(g2d, width, height);
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", os);
+        return os.toByteArray();
+    }
+
+
+    private String generateRandomString(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder randomString = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            randomString.append(characters.charAt(index));
+        }
+
+        return randomString.toString();
+    }
+
+    private void addNoise(Graphics2D g2d, int width, int height) {
+        Random random = new Random();
+        for (int i = 0; i < 75; i++) {
+            int x = random.nextInt(width);
+            int y = random.nextInt(height);
+            int size = random.nextInt((int)(5 * (0.75)));
+            g2d.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat()));
+            g2d.fillRect(x, y, size, size);
+        }
     }
 
     private boolean validate(String username, String password, String gotCaptcha, String captcha) {
