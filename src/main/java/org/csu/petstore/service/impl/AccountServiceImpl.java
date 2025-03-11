@@ -6,6 +6,7 @@ import org.csu.petstore.service.AccountService;
 import org.csu.petstore.vo.AccountVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("accountService")
 public class AccountServiceImpl implements AccountService {
@@ -31,5 +32,15 @@ public class AccountServiceImpl implements AccountService {
         accountMapper.insertSignon(account);
         // 插入用户配置信息
         accountMapper.insertProfile(account);
+    }
+
+    @Override
+    @Transactional
+    public void updateAccount(Account account) {
+        accountMapper.updateAccount(account);
+        accountMapper.updateProfile(account);
+        if (account.getPassword() != null && !account.getPassword().isEmpty()) {
+            accountMapper.updateSignon(account);
+        }
     }
 }
