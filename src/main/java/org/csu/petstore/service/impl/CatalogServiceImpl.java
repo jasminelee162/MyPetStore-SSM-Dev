@@ -22,10 +22,6 @@ import java.util.List;
 @Service("CatalogService")
 public class CatalogServiceImpl implements CatalogService {
 
-    @Override
-    public List<Product> getProductListByCategory(String categoryId) {
-        return List.of();
-    }
     @Autowired
     private CategoryMapper categoryMapper;
 
