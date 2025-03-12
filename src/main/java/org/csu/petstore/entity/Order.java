@@ -36,6 +36,8 @@ public class Order {
     @TableField(value = "billstate")
     private String billState;
     @TableField(value = "billcountry")
+    private String billZip;
+    @TableField(value = "billzip")
     private String billCountry;
     @TableField(value = "courier")
     private String courier;
@@ -57,4 +59,7 @@ public class Order {
     private String cardType;
     @TableField(value = "locale")
     private String locale;
+
+
+
 }

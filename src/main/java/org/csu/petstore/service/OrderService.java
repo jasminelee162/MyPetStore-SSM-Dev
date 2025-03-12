@@ -1,7 +1,10 @@
 package org.csu.petstore.service;
 
+import org.csu.petstore.entity.Order;
 import org.csu.petstore.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 public interface OrderService {
 
@@ -9,4 +12,14 @@ public interface OrderService {
     public OrderVO getProduct(String product);
     public SequenceVO getSequence(String sequence);
     public LineItemVO getLineItem(String lineItem);
+
+
+    //Order数据库操作方法定义
+    List<Order> getOrdersByUsername(String username);
+
+    OrderVO getOrder(int orderId);
+
+    boolean insertOrder(OrderVO order);
+
+    boolean insertOrderStatus(OrderVO order);
 }
