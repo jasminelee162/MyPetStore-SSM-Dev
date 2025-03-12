@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>signOn</title>
     <link rel="StyleSheet" href="/static/css/signon.css" type="text/css" media="screen"/>
+
 </head>
 <body>
 <header th:replace="common/top"></header>
@@ -42,10 +43,12 @@
         <input type="submit" value="Login">
 
     </form>
-    Need a user name and password?
-    <a  th:href="@{/account/registerForm}">Register Now</a>
+    <p>Need a user name and password?
+        <a  th:href="@{/account/registerForm}">Register Now</a></p>
 
 </div>
+
+
 <footer th:replace="common/bottom"></footer>
 
 
