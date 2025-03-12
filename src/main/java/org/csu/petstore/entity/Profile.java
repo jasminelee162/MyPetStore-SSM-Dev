@@ -20,8 +20,8 @@ public class Profile {
     private String favcategory;
 
     @TableField("mylistopt")
-    private Integer mylistopt;
+    private boolean mylistopt;
 
     @TableField("banneropt")
-    private Integer banneropt;
+    private boolean banneropt;
 }

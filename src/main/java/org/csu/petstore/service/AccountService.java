@@ -11,7 +11,7 @@ public interface AccountService {
 
     public AccountVO getAccount(String username, String password);
     public boolean checkAccount(String username);
-    public void registerAccount(Account account);
+    public void registerAccount(AccountVO account);
 
     public void updateAccount(Account account);
 }

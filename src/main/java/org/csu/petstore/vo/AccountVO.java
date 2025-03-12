@@ -26,12 +26,14 @@ public class AccountVO {
     // Profile 类中的字段
     private String langpref;
     private String favcategory;
-    private Integer mylistopt;
-    private Integer banneropt;
+    private boolean mylistopt;
+    private boolean banneropt;
 
     // SignOn 类中的字段
     private String signOnUsername;
     private String signOnPassword;
+
+    private String bannerName;
 
     // 构造函数，用于整合三个类的信息
     /*public AccountVO(Account account, Profile profile, SignOn signOn) {

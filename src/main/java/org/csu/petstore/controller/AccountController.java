@@ -78,10 +78,13 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute Account account, Model model) {
+    public String register(@ModelAttribute AccountVO account, Model model) {
+
+        System.out.println("99999");
         // 调用服务层的注册方法
         accountService.registerAccount(account);
-        return "account/registerForm";
+        System.out.println("99999");
+        return "catalog/main";
     }
 
 
@@ -101,7 +104,6 @@ public class AccountController {
 
     @GetMapping("/registerForm")
     public String registerForm(Model model) {
-        System.out.println("6666");
         return "account/registerForm";
     }
 

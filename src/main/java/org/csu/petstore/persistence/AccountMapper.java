@@ -1,9 +1,12 @@
 package org.csu.petstore.persistence;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.csu.petstore.entity.Account;
+import org.csu.petstore.entity.Profile;
+import org.csu.petstore.entity.SignOn;
 import org.csu.petstore.vo.AccountVO;
 import org.springframework.stereotype.Repository;
 
@@ -27,11 +30,16 @@ public interface AccountMapper extends BaseMapper<Account> {
 
    // Account getAccountByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
+    @Insert("INSERT INTO ACCOUNT (USERID, EMAIL, FIRSTNAME, LASTNAME, STATUS, ADDR1, ADDR2, CITY, STATE, ZIP, COUNTRY, PHONE) " +
+            "VALUES (#{username}, #{email}, #{firstname}, #{lastname}, #{status}, #{addr1}, #{addr2}, #{city}, #{state}, #{zip}, #{country}, #{phone})")
     void insertAccount(Account account);
 
-    void insertProfile(Account account);
+    @Insert("INSERT INTO PROFILE (USERID, LANGPREF, FAVCATEGORY, MYLISTOPT, BANNEROPT) " +
+            "VALUES (#{userid}, #{langpref}, #{favcategory}, #{mylistopt}, #{banneropt})")
+    void insertProfile(Profile profile);
 
-    void insertSignon(Account account);
+    @Insert("INSERT INTO SIGNON (USERNAME, PASSWORD) VALUES (#{username}, #{password})")
+    void insertSignon(SignOn signon);
 
     void updateAccount(Account account);
 
