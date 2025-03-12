@@ -36,11 +36,17 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public void updateAccount(Account account) {
+    public int updateAccount(AccountVO account) {
         accountMapper.updateAccount(account);
         accountMapper.updateProfile(account);
-        if (account.getPassword() != null && !account.getPassword().isEmpty()) {
-            accountMapper.updateSignon(account);
-        }
+
+        return 0;
     }
+
+    @Override
+    public boolean validatePassword(String username, String password) {
+        return false;
+    }
+
+
 }
