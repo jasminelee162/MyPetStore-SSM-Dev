@@ -21,7 +21,7 @@
 
         <h2>Shipping Address</h2>
 
-        <form th:action="@{/order/confirmShip}" th:object="${order}" method="post">
+        <form th:action="@{/order/confirmShip}" th:object="${orderForm}" method="post">
 
             <table>
                 <tr>
@@ -37,11 +37,11 @@
                 </tr>
                 <tr>
                     <td>Address 1:</td>
-                    <td><input type="text" th:field="*{shipAddress1}" style="width: 300px;"/></td>
+                    <td><input type="text" th:field="*{shipAddr1}" style="width: 300px;"/></td>
                 </tr>
                 <tr>
                     <td>Address 2:</td>
-                    <td><input type="text" th:field="*{shipAddress2}" style="width: 300px;"/></td>
+                    <td><input type="text" th:field="*{shipAddr2}" style="width: 300px;"/></td>
                 </tr>
                 <tr>
                     <td>City:</td>
