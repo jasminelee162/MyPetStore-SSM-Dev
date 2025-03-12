@@ -6,6 +6,7 @@ import org.csu.petstore.entity.Product;
 import org.csu.petstore.persistence.ItemMapper;
 import org.csu.petstore.persistence.ItemQuantityMapper;
 import org.csu.petstore.persistence.ProductMapper;
+import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.ItemVO;
 import org.csu.petstore.vo.LineItemVO;
 import org.csu.petstore.vo.OrderVO;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("OrderService")
-public class OrderServiceImpl {
+public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ItemMapper itemMapper;

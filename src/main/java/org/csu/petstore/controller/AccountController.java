@@ -101,6 +101,7 @@ public class AccountController {
 
     @GetMapping("/registerForm")
     public String registerForm(Model model) {
+        System.out.println("6666");
         return "account/registerForm";
     }
 
