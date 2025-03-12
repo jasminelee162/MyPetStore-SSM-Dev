@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>
+</head>
+
+<body>
+<!-- 通用头部 -->
+<header th:replace="common/top"></header>
+
+<div id="Content">
+    <!-- 返回链接 -->
+    <div id="BackLink">
+        <a href="/catalog/index">Return to Main Menu</a>
+    </div>
+
+    <!-- 感谢信息 -->
+    <ul class="message" style="text-align: center; font-size: 1.2em; margin: 1.5em 0;">
+        <li>Thank you, your order has been submitted.</li>
+    </ul>
+
+    <!-- 订单详细信息 -->
+    <div id="Catalog" style="max-width: 1000px; margin: 0 auto; padding: 2em; background-color: #ffffff; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+        <table style="width: 100%; border-collapse: collapse;">
+
+            <!-- 订单信息 -->
+            <tr>
+                <th colspan="2" style="background-color: #1d4886; color: white; padding: 1em; text-align: center; font-size: 1.5em; border-radius: 8px 8px 0 0;">
+                    Order #
+                    <span th:text="${order.orderId}">1000</span><br />
+                    <span th:text="${#dates.format(order.timestamp, 'yyyy/MM/dd HH:mm:ss')}">2025/03/11 12:00:00</span>
+                </th>
+            </tr>
+
+            <!-- 支付信息 -->
+            <tr>
+                <th colspan="2" class="section-header">Payment Details</th>
+            </tr>
+            <tr>
+                <td class="label">Card Type:</td>
+                <td th:text="${order.cardType}">Visa</td>
+            </tr>
+            <tr>
+                <td class="label">Card Number:</td>
+                <td th:text="${order.creditCard}">**** **** **** 1234</td>
+            </tr>
+            <tr>
+                <td class="label">Expiry Date (MM/YYYY):</td>
+                <td th:text="${order.expiryDate}">12/2026</td>
+            </tr>
+
+            <!-- 账单地址 -->
+            <tr>
+                <th colspan="2" class="section-header">Billing Address</th>
+            </tr>
+            <tr><td class="label">First Name:</td><td th:text="${order.billToFirstName}">John</td></tr>
+            <tr><td class="label">Last Name:</td><td th:text="${order.billToLastName}">Doe</td></tr>
+            <tr><td class="label">Address 1:</td><td th:text="${order.billAddress1}">123 Main St</td></tr>
+            <tr><td class="label">Address 2:</td><td th:text="${order.billAddress2}">Apt 4B</td></tr>
+            <tr><td class="label">City:</td><td th:text="${order.billCity}">Springfield</td></tr>
+            <tr><td class="label">State:</td><td th:text="${order.billState}">IL</td></tr>
+            <tr><td class="label">Zip:</td><td th:text="${order.billZip}">62704</td></tr>
+            <tr><td class="label">Country:</td><td th:text="${order.billCountry}">USA</td></tr>
+
+            <!-- 收货地址 -->
+            <tr>
+                <th colspan="2" class="section-header">Shipping Address</th>
+            </tr>
+            <tr><td class="label">First Name:</td><td th:text="${order.shipToFirstName}">Jane</td></tr>
+            <tr><td class="label">Last Name:</td><td th:text="${order.shipToLastName}">Doe</td></tr>
+            <tr><td class="label">Address 1:</td><td th:text="${order.shipAddress1}">456 Elm St</td></tr>
+            <tr><td class="label">Address 2:</td><td th:text="${order.shipAddress2}">Suite 500</td></tr>
+            <tr><td class="label">City:</td><td th:text="${order.shipCity}">Metropolis</td></tr>
+            <tr><td class="label">State:</td><td th:text="${order.shipState}">NY</td></tr>
+            <tr><td class="label">Zip:</td><td th:text="${order.shipZip}">10001</td></tr>
+            <tr><td class="label">Country:</td><td th:text="${order.shipCountry}">USA</td></tr>
+            <tr><td class="label">Courier:</td><td th:text="${order.courier}">UPS</td></tr>
+
+            <tr>
+                <td colspan="2" style="text-align: center; font-weight: bold; padding: 1.5em 0;">
+                    Status: <span th:text="${order.status}">Shipped</span>
+                </td>
+            </tr>
+
+            <!-- 订单商品 -->
+            <tr>
+                <td colspan="2">
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 1.5em;">
+                        <thead>
+                        <tr style="background-color: #f4f4f4; color: #1d4886;">
+                            <th style="padding: 0.75em 1em;">Item ID</th>
+                            <th style="padding: 0.75em 1em;">Description</th>
+                            <th style="padding: 0.75em 1em;">Quantity</th>
+                            <th style="padding: 0.75em 1em;">Price</th>
+                            <th style="padding: 0.75em 1em;">Total Cost</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="lineItem : ${order.lineItems}">
+                            <td style="padding: 0.75em 1em;">
+                                <a th:href="@{/catalog/viewItem(itemId=${lineItem.item.itemId})}" th:text="${lineItem.item.itemId}">EST-1</a>
+                            </td>
+                            <td style="padding: 0.75em 1em;">
+                                <span th:if="${lineItem.item != null}" th:text="${lineItem.item.attribute1} + ' ' + ${lineItem.item.attribute2} + ' ' + ${lineItem.item.attribute3} + ' ' + ${lineItem.item.product.name}">Description</span>
+                                <i th:if="${lineItem.item == null}">{description unavailable}</i>
+                            </td>
+                            <td style="padding: 0.75em 1em;" th:text="${lineItem.quantity}">1</td>
+                            <td style="padding: 0.75em 1em;" th:text="${#numbers.formatDecimal(lineItem.unitPrice, 1, 'COMMA', 2, 'POINT')}">$10.00</td>
+                            <td style="padding: 0.75em 1em;" th:text="${#numbers.formatDecimal(lineItem.unitPrice * lineItem.quantity, 1, 'COMMA', 2, 'POINT')}">$10.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="font-size: 1.2em; font-weight: bold; padding: 1.25em 1em; text-align: right;">
+                                Total: <span th:text="${#numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')}">$100.00</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- 通用底部 -->
+<footer th:replace="common/bottom"></footer>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet"  href="/static/css/mypetstore.css" type="text/css" media="screen"/>
+
+</head>
+<body>
+
+<!-- 引入 top.jsp 替换版 -->
+<header th:replace="common/top"></header>
+
+<div id="Catalog" style="max-width: 900px; margin: 0 auto; padding: 2em; background-color: #ffffff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+    <form th:action="@{/order/confirm}" th:object="${order}" method="post">
+
+        <table style="width: 100%; border-collapse: collapse;">
+            <!-- Payment Details Section -->
+            <tr>
+                <th colspan="2" style="background-color: #1d4886; color: white; padding: 1em; text-align: left; border-top-left-radius: 8px; border-top-right-radius: 8px;">Payment Details</th>
+            </tr>
+
+            <tr>
+                <td style="padding: 0.75em 0; width: 40%; vertical-align: middle;">
+                    <label for="cardType">Card Type:</label>
+                </td>
+                <td style="padding: 0.75em 0;">
+                    <select th:field="*{cardType}" id="cardType" style="width: 100%; max-width: 350px;">
+                        <option value="Visa">Visa</option>
+                        <option value="MasterCard">MasterCard</option>
+                        <option value="American Express">American Express</option>
+                        <option th:each="card : ${creditCardTypes}" th:value="${card}" th:text="${card}"></option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="creditCard">Card Number:</label></td>
+                <td>
+                    <input type="text" th:field="*{creditCard}" id="creditCard" style="width: 100%; max-width: 350px;">
+                    <span>* Use a fake number!</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="expiryDate">Expiry Date (MM/YYYY):</label></td>
+                <td>
+                    <input type="text" th:field="*{expiryDate}" id="expiryDate" style="width: 100%; max-width: 350px;">
+                </td>
+            </tr>
+
+            <!-- Billing Address Section -->
+            <tr>
+                <th colspan="2" style="background-color: #1d4886; color: white; padding: 1em; text-align: left;">Billing Address</th>
+            </tr>
+
+            <tr>
+                <td><label for="billToFirstName">First Name:</label></td>
+                <td><input type="text" th:field="*{billToFirstName}" id="billToFirstName" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="billToLastName">Last Name:</label></td>
+                <td><input type="text" th:field="*{billToLastName}" id="billToLastName" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="billAddress1">Address 1:</label></td>
+                <td><input type="text" th:field="*{billAddress1}" id="billAddress1" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="billAddress2">Address 2:</label></td>
+                <td><input type="text" th:field="*{billAddress2}" id="billAddress2" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="billCity">City:</label></td>
+                <td><input type="text" th:field="*{billCity}" id="billCity" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="billState">State:</label></td>
+                <td><input type="text" th:field="*{billState}" id="billState" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="billZip">Zip:</label></td>
+                <td><input type="text" th:field="*{billZip}" id="billZip" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="billCountry">Country:</label></td>
+                <td><input type="text" th:field="*{billCountry}" id="billCountry" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <!-- Shipping Address Section -->
+            <tr>
+                <th colspan="2" style="background-color: #1d4886; color: white; padding: 1em; text-align: left;">Shipping Address</th>
+            </tr>
+
+            <tbody id="shippingAddressSection" style="display: none;">
+            <tr>
+                <td><label for="shipToFirstName">First Name:</label></td>
+                <td><input type="text" th:field="*{shipToFirstName}" id="shipToFirstName" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="shipToLastName">Last Name:</label></td>
+                <td><input type="text" th:field="*{shipToLastName}" id="shipToLastName" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="shipAddress1">Address 1:</label></td>
+                <td><input type="text" th:field="*{shipAddress1}" id="shipAddress1" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="shipAddress2">Address 2:</label></td>
+                <td><input type="text" th:field="*{shipAddress2}" id="shipAddress2" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="shipCity">City:</label></td>
+                <td><input type="text" th:field="*{shipCity}" id="shipCity" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="shipState">State:</label></td>
+                <td><input type="text" th:field="*{shipState}" id="shipState" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="shipZip">Zip:</label></td>
+                <td><input type="text" th:field="*{shipZip}" id="shipZip" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+
+            <tr>
+                <td><label for="shipCountry">Country:</label></td>
+                <td><input type="text" th:field="*{shipCountry}" id="shipCountry" style="width: 100%; max-width: 350px;"></td>
+            </tr>
+            </tbody>
+
+            <!-- Checkbox to toggle shipping address -->
+            <tr>
+                <td colspan="2" style="padding: 1em 0;">
+                    <label>
+                        <input type="checkbox" id="shippingAddressRequired" name="shippingAddressRequired">
+                        Ship to different address...
+                    </label>
+                </td>
+            </tr>
+        </table>
+
+        <div style="text-align: right; margin-top: 2em;">
+            <button type="submit" style="background-color: #1d4886; color: white; padding: 1em 2em; border: none; border-radius: 4px; cursor: pointer;">Continue</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function toggleShippingAddress() {
+        const shippingSection = document.getElementById('shippingAddressSection');
+        const checkbox = document.getElementById('shippingAddressRequired');
+        shippingSection.style.display = checkbox.checked ? 'table-row-group' : 'none';
+    }
+
+    document.getElementById('shippingAddressRequired').addEventListener('change', toggleShippingAddress);
+    window.onload = toggleShippingAddress;
+</script>
+
+<!-- 引入 bottom.jsp 替换版 -->
+<div th:replace="common/bottom :: bottom"></div>
+<footer th:replace="common/bottom"></footer>
+
+</body>
+</html>

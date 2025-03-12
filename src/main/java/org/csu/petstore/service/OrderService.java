@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public interface OrderService {
 
-    public ItemVO getItem(String Item);
+    public ItemVO getItem(String itemId);
     public OrderVO getProduct(String product);
     public SequenceVO getSequence(String sequence);
     public LineItemVO getLineItem(String lineItem);

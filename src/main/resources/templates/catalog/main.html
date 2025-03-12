@@ -1,55 +1,159 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--    <link rel="StyleSheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>-->
+<!--</head>-->
+<!--<body>-->
+<!--<header th:replace="common/top"></header>-->
+<!--<div id="Content">-->
+<!--    <div id="Welcome">-->
+<!--        <div id="WelcomeContent">-->
+<!--            &lt;!&ndash;登录用户的firstname&ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div id="Main">-->
+<!--        <div id="Sidebar">-->
+<!--            <div id="SidebarContent">-->
+<!--                <a href="/catalog/viewCategory?categoryId=FISH"><img src="../images/fish_icon.gif"/></a><br/>-->
+<!--                Saltwater, Freshwater <br/>-->
+<!--                <a href="/catalog/viewCategory?categoryId=DOGS"><img src="../images/dogs_icon.gif"/></a><br/>-->
+<!--                Various Breeds <br/>-->
+<!--                <a href="/catalog/viewCategory?categoryId=CATS"><img src="../images/cats_icon.gif"/></a><br/>-->
+<!--                Various Breeds, Exotic Varieties <br/>-->
+<!--                <a href="/catalog/viewCategory?categoryId=REPTILES"><img src="../images/reptiles_icon.gif"/></a><br/>-->
+<!--                Lizards, Turtles, Snakes <br/>-->
+<!--                <a href="/catalog/viewCategory?categoryId=BIRDS"><img src="../images/birds_icon.gif"/></a><br/>-->
+<!--                Exotic Varieties-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div id="MainImage">-->
+<!--            <div id="MainImageContent">-->
+<!--                <map name="estoremap">-->
+<!--                    <area alt="Birds" coords="72,2,280,250" href="/catalog/viewCategory?categoryId=BIRDS" shape="RECT"/>-->
+<!--                    <area alt="Fish" coords="2,180,72,250" href="/catalog/viewCategory?categoryId=FISH" shape="RECT"/>-->
+<!--                    <area alt="Dogs" coords="60,250,130,320" href="/catalog/viewCategory?categoryId=DOGS" shape="RECT"/>-->
+<!--                    <area alt="Reptiles" coords="140,270,210,340" href="/catalog/viewCategory?categoryId=REPTILES"-->
+<!--                          shape="RECT"/>-->
+<!--                    <area alt="Cats" coords="225,240,295,310" href="/catalog/viewCategory?categoryId=CATS"-->
+<!--                          shape="RECT"/>-->
+<!--                    <area alt="Birds" coords="280,180,350,250" href="/catalog/viewCategory?categoryId=BIRDS"-->
+<!--                          shape="RECT"/>-->
+<!--                </map>-->
+<!--                <img height="355" src="../images/splash.gif" align="middle" usemap="#estoremap" width="350"/>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div id="Separator">&nbsp;</div>-->
+<!--    </div>-->
+
+<!--</div>-->
+<!--<footer th:replace="common/bottom"></footer>-->
+<!--</body>-->
+<!--</html>-->
+
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html style="--n: 6">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="StyleSheet" href="../css/mypetstore.css" type="text/css" media="screen"/>
+    <link rel="StyleSheet" href="/static/css/main.css" type="text/css" media="screen"/>
 </head>
 <body>
+<svg width="0" height="0" aria-hidden="true">
+    <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="7.13"></feTurbulence>
+        <feColorMatrix type="saturate" values="0"></feColorMatrix>
+        <feComponentTransfer>
+            <feFuncA type="linear" slope=".02"></feFuncA>
+        </feComponentTransfer>
+        <feBlend in2="SourceGraphic"></feBlend>
+    </filter>
+</svg>
+
 <header th:replace="common/top"></header>
-<div id="Content">
-    <div id="Welcome">
-        <div id="WelcomeContent">
-            <!--登录用户的firstname-->
+<div id="Main">
+    <div id="Sidebar">
+        <div id="SidebarContent">
+            <a href="categoryForm?categoryId=FISH"><img src="/static/images/fish_icon.gif"/></a><br/>
+            <span>Saltwater, Freshwater</span><br/>
+            <a href="categoryForm?categoryId=DOGS"><img src="/static/images/dogs_icon.gif"/></a><br/>
+            <span>Various Breeds</span><br/>
+            <a href="categoryForm?categoryId=CATS"><img src="/static/images/cats_icon.gif"/></a><br/>
+            <span>Various Breeds, Exotic Varieties</span><br/>
+            <a href="categoryForm?categoryIdd=REPTILES"><img src="/static/images/reptiles_icon.gif"/></a><br/>
+            <span>Lizards, Turtles, Snakes</span><br/>
+            <a href="categoryForm?categoryId=BIRDS"><img src="/static/images/birds_icon.gif"/></a><br/>
+            <span>Exotic Varieties</span>
         </div>
     </div>
 
-    <div id="Main">
-        <div id="Sidebar">
-            <div id="SidebarContent">
-                <a href="/catalog/viewCategory?categoryId=FISH"><img src="../images/fish_icon.gif"/></a><br/>
-                Saltwater, Freshwater <br/>
-                <a href="/catalog/viewCategory?categoryId=DOGS"><img src="../images/dogs_icon.gif"/></a><br/>
-                Various Breeds <br/>
-                <a href="/catalog/viewCategory?categoryId=CATS"><img src="../images/cats_icon.gif"/></a><br/>
-                Various Breeds, Exotic Varieties <br/>
-                <a href="/catalog/viewCategory?categoryId=REPTILES"><img src="../images/reptiles_icon.gif"/></a><br/>
-                Lizards, Turtles, Snakes <br/>
-                <a href="/catalog/viewCategory?categoryId=BIRDS"><img src="../images/birds_icon.gif"/></a><br/>
-                Exotic Varieties
-            </div>
-        </div>
 
-        <div id="MainImage">
-            <div id="MainImageContent">
-                <map name="estoremap">
-                    <area alt="Birds" coords="72,2,280,250" href="/catalog/viewCategory?categoryId=BIRDS" shape="RECT"/>
-                    <area alt="Fish" coords="2,180,72,250" href="/catalog/viewCategory?categoryId=FISH" shape="RECT"/>
-                    <area alt="Dogs" coords="60,250,130,320" href="/catalog/viewCategory?categoryId=DOGS" shape="RECT"/>
-                    <area alt="Reptiles" coords="140,270,210,340" href="/catalog/viewCategory?categoryId=REPTILES"
-                          shape="RECT"/>
-                    <area alt="Cats" coords="225,240,295,310" href="/catalog/viewCategory?categoryId=CATS"
-                          shape="RECT"/>
-                    <area alt="Birds" coords="280,180,350,250" href="/catalog/viewCategory?categoryId=BIRDS"
-                          shape="RECT"/>
-                </map>
-                <img height="355" src="../images/splash.gif" align="middle" usemap="#estoremap" width="350"/>
-            </div>
-        </div>
+    <main class="scene">
+        <section class="assembly">
 
-        <div id="Separator">&nbsp;</div>
-    </div>
-
+            <article style="--i: 0; --url: url(https://images.unsplash.com/photo-1555169062-013468b47731?h=900); --pos: 47% 35%"
+                     onclick="window.location.href='/catalog/viewCategory?categoryId=BIRDS';"
+            >
+                <header>
+                    <h2>BIRDS</h2>
+                    <em>Exotic varieties</em>
+                </header>
+                <figure>
+                    <img src="https://images.unsplash.com/photo-1555169062-013468b47731?h=900" alt="birds">
+                </figure>
+            </article>
+            <article style="--i: 1; --url: url(https://images.unsplash.com/photo-1544943910-4c1dc44aab44?h=900); --pos: 75% 65%"
+                     onclick="window.location.href='/catalog/viewCategory?categoryId=FISH';"
+            >
+                <header>
+                    <h2>FISH</h2>
+                    <em>Saltwater,Freshwater</em>
+                </header>
+                <figure>
+                    <img src="https://images.unsplash.com/photo-1544943910-4c1dc44aab44?h=900" alt="fish">
+                </figure>
+            </article>
+            <article style="--i: 2; --url: url(https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?h=900); --pos: 53% 43%"
+                     onclick="window.location.href='/catalog/viewCategory?categoryId=DOGS';"
+            >
+                <header>
+                    <h2>DOGS</h2>
+                    <em>various breeds</em>
+                </header>
+                <figure>
+                    <img src="https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?h=900" alt="dog">
+                </figure>
+            </article>
+            <article style="--i: 3; --url: url(https://images.unsplash.com/photo-1536590158209-e9d615d525e4?h=900); --pos: 65% 65%"
+                     onclick="window.location.href='/catalog/viewCategory?categoryId=CATS';"
+            >
+                <header>
+                    <h2>CATS</h2>
+                    <em>Various Breeds, Exotic Varieties</em>
+                </header>
+                <figure>
+                    <img src="https://images.unsplash.com/photo-1536590158209-e9d615d525e4?h=900" alt="cat">
+                </figure>
+            </article>
+            <article style="--i: 4; --url: url(https://images.unsplash.com/photo-1610629651605-0b181ad69aab?h=900); --pos: 50% 25%"
+                     onclick="window.location.href='/catalog/viewCategory?categoryId=REPTILES';"
+            >
+                <header>
+                    <h2>REPTILES</h2>
+                    <em>Lizards, Turtles, Snakes</em>
+                </header>
+                <figure>
+                    <img src="https://images.unsplash.com/photo-1610629651605-0b181ad69aab?h=900" alt="reptile">
+                </figure>
+            </article>
+        </section>
+    </main>
 </div>
 <footer th:replace="common/bottom"></footer>
 </body>

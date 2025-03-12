@@ -49,6 +49,8 @@ public class Account {
     @TableField("phone")
     private String phone;
 
+    @TableField("uncategorizable")
+    private String uncategorizable;
 
 }
 

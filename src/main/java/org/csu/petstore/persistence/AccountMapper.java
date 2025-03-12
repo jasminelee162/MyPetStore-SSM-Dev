@@ -41,6 +41,5 @@ public interface AccountMapper extends BaseMapper<Account> {
 
     boolean isUsernameExists(String username);
 
-
-
+    AccountVO getAccountByUsername(String username);
 }

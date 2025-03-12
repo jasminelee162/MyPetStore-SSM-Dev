@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>编辑账户</title>
+</head>
+<body>
+<h2>编辑账户信息</h2>
+<form action="edit" method="post">
+    <input type="hidden" name="username" value="${account.username}"/>
+    <label>姓名:</label>
+    <label>
+        <input type="text" name="firstName" value="${account.firstName}" required/>
+    </label><br/>
+    <label>姓氏:</label>
+    <label>
+        <input type="text" name="lastName" value="${account.lastName}" required/>
+    </label><br/>
+    <label>邮箱:</label>
+    <label>
+        <input type="email" name="email" value="${account.email}" required/>
+    </label><br/>
+    <label>电话:</label>
+    <label>
+        <input type="text" name="phone" value="${account.phone}" required/>
+    </label><br/>
+    <label>新密码:</label>
+    <label>
+        <input type="password" name="password"/>
+    </label><br/>
+    <label>确认密码:</label>
+    <label>
+        <input type="password" name="repeatedPassword"/>
+    </label><br/>
+    <label>国家:</label>
+    <label>
+        <input type="text" name="country" value="${account.country}" required/>
+    </label><br/>
+    <input type="submit" value="保存修改"/>
+</form>
+</body>
+</html>
+
