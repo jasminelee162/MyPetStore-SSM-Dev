@@ -41,9 +41,9 @@ public interface AccountMapper extends BaseMapper<Account> {
     @Insert("INSERT INTO SIGNON (USERNAME, PASSWORD) VALUES (#{username}, #{password})")
     void insertSignon(SignOn signon);
 
-    void updateAccount(Account account);
+    void updateAccount(AccountVO account);
 
-    void updateProfile(Account account);
+    void updateProfile(AccountVO account);
 
     void updateSignon(Account account);
 
