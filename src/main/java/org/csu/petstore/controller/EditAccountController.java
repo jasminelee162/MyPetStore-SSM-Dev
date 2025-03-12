@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.apache.catalina.startup.ExpandWar.validate;
+
 @Controller
 @RequestMapping("/account")
 public class EditAccountController {
@@ -38,55 +40,9 @@ public class EditAccountController {
         return EDIT_ACCOUNT_FORM;
     }
 
-    @PostMapping("/edit")
-    public String editAccount(@ModelAttribute Account account,
-                              @RequestParam String repeatedPassword,
-                              HttpSession session,
-                              Model model) {
 
-        // 获取当前用户信息
-        Account loginAccount = (Account) session.getAttribute("loginAccount");
-        if (loginAccount == null) {
-            return "redirect:/login";
-        }
-        account.setUsername(loginAccount.getUsername());
 
-        // 校验字段
-        if (!validate(account)) {
-            model.addAttribute("error", "请完整填写信息！");
-            return EDIT_ACCOUNT_FORM;
-        }
 
-        // 校验密码一致性
-        if (!account.getPassword().isEmpty() && !account.getPassword().equals(repeatedPassword)) {
-            model.addAttribute("error", "两次输入的密码不一致！");
-            return EDIT_ACCOUNT_FORM;
-        }
 
-        // 更新账户信息
-        accountService.updateAccount(account);
 
-        // 重新获取用户信息，存入 session
-        AccountVO updatedAccount = accountService.getAccount(loginAccount.getUsername(), loginAccount.getPassword());
-        session.setAttribute("loginAccount", updatedAccount);
-
-        // 更新用户喜欢的商品列表
-        List<Product> myList = (List<Product>) catalogService.getProduct(account.getUncategorizable());
-        session.setAttribute("myList", myList);
-
-        return "redirect:/main";
-    }
-
-    private boolean validate(Account account) {
-        return account.getFirstname() != null && !account.getFirstname().isEmpty() &&
-                account.getLastname() != null && !account.getLastname().isEmpty() &&
-                account.getEmail() != null && !account.getEmail().isEmpty() &&
-                account.getPhone() != null && !account.getPhone().isEmpty() &&
-                account.getAddr1() != null && !account.getAddr1().isEmpty() &&
-                account.getCity() != null && !account.getCity().isEmpty() &&
-                account.getState() != null && !account.getState().isEmpty() &&
-                account.getZip() != null && !account.getZip().isEmpty() &&
-                account.getCountry() != null && !account.getCountry().isEmpty() &&
-                account.getUncategorizable() != null && !account.getUncategorizable().isEmpty();
-    }
 }

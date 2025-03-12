@@ -1,12 +1,17 @@
 /* 统一表单容器样式 */
 #on {
     width: 80%;
-    max-width: 600px; /* 限制表单整体宽度 */
+    max-width: 1000px; /* 限制表单整体宽度 */
     margin: 0 auto;
-    padding: 20px 30px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 80px 30px;
+    /*background-color: #f9f9f9;*/
+    /*box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);*/
     border-radius: 8px;
+
+    box-shadow:
+            0 0 15px rgba(255, 255, 255, 0.8),
+            0 0 30px #f48c06,
+            0 0 50px #dc3055;
 }
 #on span {
     font-size: 14px;
@@ -19,6 +24,8 @@
     font-size: 14px;
     color: #555;
     text-align: center;
+    text-shadow: 0 0 8px #f48c06,
+    0 0 16px #f48c0603;
 }
 
 /* 表单标题 */
@@ -60,7 +67,7 @@ label {
 
 /* 提交按钮样式 */
 #on input[type="submit"] {
-    background-color: #007BFF; /* 主体蓝色 */
+    background-color: rgba(255, 98, 0, 0.7); /* 主体蓝色 */
     color: white;
     font-size: 16px;
     font-weight: bold;
@@ -77,7 +84,7 @@ label {
 
 /* 提交按钮悬停样式 */
 #on input[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color:#ff6200 ;
     transform: translateY(-2px); /* 悬停时轻微上移 */
 }
 
@@ -184,5 +191,19 @@ label {
         text-align: left;
         padding-right: 5px;
     }
+}
+body {
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+    url('https://images.unsplash.com/photo-1545529468-42764ef8c85f?q=80&w=2673&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;  /* 让 body 占满整个视口高度 */
+    margin: 0;
 }
 
