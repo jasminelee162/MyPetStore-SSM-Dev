@@ -3,6 +3,7 @@ package org.csu.petstore.service;
 import org.csu.petstore.entity.Order;
 import org.csu.petstore.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.csu.petstore.entity.OrderStatus;
 
 import java.util.List;
 
@@ -21,5 +22,5 @@ public interface OrderService {
 
     boolean insertOrder(OrderVO order);
 
-    boolean insertOrderStatus(OrderVO order);
+    boolean insertOrderStatus(OrderStatusVO orderStatus);
 }
