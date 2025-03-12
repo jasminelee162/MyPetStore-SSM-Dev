@@ -2,12 +2,17 @@
 
 .registration-form {
     width: 80%;
-    max-width: 600px; /* 限制表单整体宽度 */
+    max-width: 800px; /* 限制表单整体宽度 */
+    max-height:950px;
     margin: 0px auto;
     padding: 20px 30px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /*background-color: #f9f9f9;*/
+    /*box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);*/
     border-radius: 8px;
+    box-shadow:
+            0 0 15px rgba(255, 255, 255, 0.8),
+            0 0 30px #f48c06,
+            0 0 50px #dc3055;
 }
 
 /* Title */
@@ -103,6 +108,7 @@ label {
 /* Table Styling */
 table {
     width: 100%;
+    max-height:700px;
     border-spacing: 0;
     border-collapse: collapse;
     font-size: 14px;
@@ -117,7 +123,7 @@ table tr {
 }
 
 table td {
-    padding: 10px 5px;
+    padding: 0px 5px;
     vertical-align: middle;
 }
 
@@ -136,11 +142,11 @@ table td:last-child{
 }
 
 table tr:nth-child(even) {
-    background-color: #f4f4f4;
+    /*background-color: #f4f4f4;*/
 }
 
 table tr:nth-child(even):hover {
-    background-color: #f4f4f4;
+    /*background-color: #f4f4f4;*/
 }
 
 table tr:hover {
@@ -167,3 +173,18 @@ table tr.group-separator td {
     }
 }
 
+body {
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+    url('https://images.unsplash.com/photo-1545529468-42764ef8c85f?q=80&w=2673&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* 让 body 至少占满一屏，内容超出时继续扩展 */
+    height: auto;
+    margin: 0;
+}
