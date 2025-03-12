@@ -1,7 +1,6 @@
 package org.csu.petstore.persistence;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.csu.petstore.entity.Account;
 import org.csu.petstore.vo.AccountVO;
@@ -33,9 +32,9 @@ public interface AccountMapper extends BaseMapper<Account> {
 
     void insertSignon(Account account);
 
-    void updateAccount(Account account);
+    void updateAccount(AccountVO account);
 
-    void updateProfile(Account account);
+    void updateProfile(AccountVO account);
 
     void updateSignon(Account account);
 
