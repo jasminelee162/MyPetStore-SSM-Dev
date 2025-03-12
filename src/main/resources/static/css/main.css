@@ -219,7 +219,8 @@ kbd {
     padding: 20px;
     margin-right: 0px; /* 侧边栏与轮播图的间距 */
     margin-left: 100px;
-    height:650px;
+    margin-top:100px;
+    height:600px;
     box-shadow:
             0 0 15px rgba(255, 255, 255, 0.8),
             0 0 30px #f48c06,
