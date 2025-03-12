@@ -12,4 +12,5 @@ public class ProductVO {
     private String productName;
 
     private List<Item> itemList;
+
 }

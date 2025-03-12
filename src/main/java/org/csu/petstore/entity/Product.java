@@ -16,4 +16,5 @@ public class Product {
     private String name;
     @TableField("descn")
     private String description;
+
 }

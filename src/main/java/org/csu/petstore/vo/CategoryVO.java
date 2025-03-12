@@ -16,5 +16,4 @@ public class CategoryVO {
     @Setter
     @Getter
     private List<Product> productList;
-
 }
