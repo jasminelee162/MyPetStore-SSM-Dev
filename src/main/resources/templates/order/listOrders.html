@@ -29,7 +29,7 @@
             </tr>
 
             <!-- 遍历订单 -->
-            <tr th:each="order : ${orderList}">
+            <tr th:each="order : ${order}">
                 <td>
                     <a th:href="@{/order/viewOrder(orderId=${order.orderId})}"
                        th:text="${order.orderId}">OrderID</a>

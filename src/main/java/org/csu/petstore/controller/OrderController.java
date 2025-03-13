@@ -36,17 +36,27 @@ public class OrderController {
 
     //订单确认页面控制：新订单request获得填写信息的Parameter，并放入session
     @GetMapping("confirmOrder")
-    public String confirmOrder(String itemId, Model model) {
-        ItemVO itemVO = orderService.getItem(itemId);
-        model.addAttribute("order", itemVO);
+    public String confirmOrder(String orderId, Model model) {
+        OrderVO orderVO = new OrderVO();
+        orderVO.setOrderId(orderId);
+        model.addAttribute("order", orderVO);
         return "order/confirmOrder";
+    }
+
+    @GetMapping("listOrders")
+    public String listOrders(String orderId, Model model) {
+        OrderVO orderVO = new OrderVO();
+        orderVO.setOrderId(orderId);
+        model.addAttribute("order", orderVO);
+        return "order/listOrders";
     }
 
     //查看最终订单页面控制：session信息打印
     @GetMapping("viewOrder")
-    public String viewOrder(String itemId, Model model) {
-        ItemVO itemVO = orderService.getItem(itemId);
-        model.addAttribute("order", itemVO);
+    public String viewOrder(String orderId, Model model) {
+        OrderVO orderVO = new OrderVO();
+        orderVO.setOrderId(orderId);
+        model.addAttribute("order", orderVO);
         return "order/viewOrder";
     }
 

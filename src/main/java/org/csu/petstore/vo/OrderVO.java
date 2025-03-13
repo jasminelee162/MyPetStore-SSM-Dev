@@ -6,6 +6,7 @@ import org.csu.petstore.entity.Product;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 @Data
@@ -44,7 +45,7 @@ public class OrderVO {
     //status在原来init时默认为P，待实现
 
     private String status;
-    //private List<LineItem> lineItems;
+    private List<LineItemVO> lineItems;
 
 
     private Timestamp timestamp;
