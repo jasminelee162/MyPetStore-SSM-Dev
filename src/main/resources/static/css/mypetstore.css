@@ -255,8 +255,8 @@ body>#Banner {
 
 #Content {
     /*margin: 0;*/
-    margin-top:320px;
-    margin-left:100px;
+    margin-top:200px;
+    margin-bottom:275px;
     padding: 0ex 0ex 0ex 0ex;
     width: 99%;
     color: #333;
@@ -265,8 +265,8 @@ body>#Banner {
     border-radius: 100px; /* 调整数值增大或减小圆角大小 */
     box-shadow:
             0 0 15px rgba(255, 255, 255, 0.8),
-            0 0 30px #f48c06,
-            0 0 50px #dc3055;
+            0 0 30px #039,
+            0 0 50px #69f;
 }
 
 #Separator {
