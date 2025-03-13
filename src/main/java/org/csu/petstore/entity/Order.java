@@ -41,7 +41,7 @@ public class Order {
     private String billCountry;
     @TableField(value = "courier")
     private String courier;
-    @TableId(value = "totalprice")
+    @TableField(value = "totalprice")
     private String totalPrice;
     @TableField(value = "billtofirstname")
     private String billToFirstName;

@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
         orderVO.setShipZip(order.getShipZip());
         orderVO.setShipCountry(order.getShipCountry());
         orderVO.setBillAddr1(order.getBillAddr1());
-        orderVO.setBillAddr2(order.getBilladdr2());
+        orderVO.setBillAddr2(order.getBillAddr2());
         orderVO.setBillCity(order.getBillCity());
         orderVO.setBillState(order.getBillState());
         orderVO.setBillZip(order.getBillZip());
@@ -128,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
         order.setShipZip(orderVO.getShipZip());
         order.setShipCountry(orderVO.getShipCountry());
         order.setBillAddr1(orderVO.getBillAddr1());
-        order.setBilladdr2(orderVO.getBillAddr2());
+        order.setBillAddr2(orderVO.getBillAddr2());
         order.setBillCity(orderVO.getBillCity());
         order.setBillState(orderVO.getBillState());
         order.setBillZip(orderVO.getBillZip());
