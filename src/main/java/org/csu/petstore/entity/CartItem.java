@@ -5,13 +5,18 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-
 @Data
-@TableName("inventory")
-public class ItemQuantity {
-    @TableId(value = "itemid")
+@TableName("cartitem")
+public class CartItem {
+
+    @TableId
+    private String username;
+
+    @TableField(value = "itemid")
     private String itemId;
 
-    @TableField("qty")
-    private Integer quantity;
+    private int quantity;
+
+    @TableField(value = "in_stock")
+    private boolean inStock;
 }
