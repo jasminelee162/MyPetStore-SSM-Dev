@@ -20,7 +20,7 @@
                 <a href="/cart/viewCart"><img align="middle" name="img_cart" src="../images/cart.gif"/></a>
                 <img align="middle" src="../images/separator.gif"/>
                 <a th:if="${session.loginAccount} == null" href="/account/signOnForm">Sign In</a>
-                <a th:if="(${session.loginAccount} != null) and (${session.authenticated} ?: true) " href="/account/signonForm">Sign
+                <a th:if="(${session.loginAccount} != null) and (${session.authenticated} ?: true) " href="/account/signOnForm">Sign
                     In</a>
                 <a th:if="(${session.loginAccount} != null) and (${session.authenticated} ?: true)" href="/account/signOut">Sign
                     Out</a>
