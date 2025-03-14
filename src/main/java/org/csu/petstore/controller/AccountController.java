@@ -56,6 +56,7 @@ public class AccountController {
             } else {
                 model.addAttribute("loginAccount", loginAccount);
                 model.addAttribute("authenticated", true);
+                System.out.println(loginAccount.toString());
 
                 /*if (loginAccount.getListOption()) {
                     List<Product> myList = catalogService.getProductListByCategory(loginAccount.getFavouriteCategoryId());
@@ -80,10 +81,8 @@ public class AccountController {
     @PostMapping("/register")
     public String register(@ModelAttribute AccountVO account, Model model) {
 
-        System.out.println("99999");
         // 调用服务层的注册方法
         accountService.registerAccount(account);
-        System.out.println("99999");
         return "catalog/main";
     }
 

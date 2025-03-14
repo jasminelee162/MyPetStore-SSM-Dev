@@ -16,10 +16,10 @@ public interface AccountMapper extends BaseMapper<Account> {
     @Select("SELECT " +
             "SIGNON.USERNAME, " +
             "ACCOUNT.EMAIL, ACCOUNT.FIRSTNAME, ACCOUNT.LASTNAME, ACCOUNT.STATUS, " +
-            "ACCOUNT.ADDR1 AS address1, ACCOUNT.ADDR2 AS address2, " +
+            "ACCOUNT.ADDR1 AS addr1, ACCOUNT.ADDR2 AS addr2, " +
             "ACCOUNT.CITY, ACCOUNT.STATE, ACCOUNT.ZIP, ACCOUNT.COUNTRY, ACCOUNT.PHONE, " +
-            "PROFILE.LANGPREF AS languagePreference, PROFILE.FAVCATEGORY AS favouriteCategoryId, " +
-            "PROFILE.MYLISTOPT AS listOption, PROFILE.BANNEROPT AS bannerOption, " +
+            "PROFILE.LANGPREF AS langpref, PROFILE.FAVCATEGORY AS favcategory, " +
+            "PROFILE.MYLISTOPT AS mylistopt, PROFILE.BANNEROPT AS banneropt, " +
             "BANNERDATA.BANNERNAME AS bannerName " +
             "FROM ACCOUNT " +
             "JOIN SIGNON ON SIGNON.USERNAME = ACCOUNT.USERID " +
