@@ -16,7 +16,7 @@
 <div id="Catalog">
     <div id="Cart">
         <h2>Shopping Cart</h2>
-        <form id="cart-form"  method="post"><!--th:action="@{/newOrderForm}"-->
+        <form id="cart-form" th:action="@{/order/newOrder}"  method="post">
             <input type="hidden" id="selected-items" name="selectedItems" value="">
 
             <table>
@@ -33,7 +33,7 @@
                 </thead>
                 <tbody id="cart-items">
                 <!-- 购物车为空时的提示 -->
-                <tr id="empty-cart-message" th:if="${#lists.isEmpty(session.cart.itemList)}">
+                <tr id="empty-cart-message" style="display:none;">
                     <td colspan="7"><b>Your cart is empty.</b></td>
                 </tr>
 
@@ -48,7 +48,7 @@
                     <td class="item-info">
                         <div class="item-details">
                             <img th:src="'../'+${cartItem.item.descriptionImage}">
-                            <label th:text="${cartItem.item.descriptionText}"></label>
+<!--                            <label th:text="${cartItem.item.descriptionText}"></label>-->
                         </div>
                     </td>
                     <td th:id="|single-price-${cartItem.item.itemId}|">
@@ -65,7 +65,7 @@
                         <span th:text="${#numbers.formatCurrency(cartItem.totalPrice)}"></span>
                     </td>
                     <td>
-                        <button class="Button" th:id="remove-item" th:data-item-id="${cartItem.item.itemId}">Remove</button>
+                        <button type="button" class="Button" th:id="remove-item" th:data-item-id="${cartItem.item.itemId}">Remove</button>
                     </td>
                 </tr>
                 </tbody>
