@@ -11,7 +11,7 @@ import lombok.Data;
 public class Order {
     @TableId(value = "orderid")
     private String orderId;
-    @TableId(value = "userid")
+    @TableField(value = "userid")
     private String userId;
     @TableField(value = "orderdate")
     private String orderDate;
@@ -30,22 +30,24 @@ public class Order {
     @TableField(value = "billaddr1")
     private String billAddr1;
     @TableField(value = "billaddr2")
-    private String billaddr2;
+    private String billAddr2;
     @TableField(value = "billcity")
     private String billCity;
     @TableField(value = "billstate")
     private String billState;
     @TableField(value = "billcountry")
+    private String billZip;
+    @TableField(value = "billzip")
     private String billCountry;
     @TableField(value = "courier")
     private String courier;
-    @TableId(value = "totalprice")
+    @TableField(value = "totalprice")
     private String totalPrice;
     @TableField(value = "billtofirstname")
     private String billToFirstName;
     @TableField(value = "billtolastname")
     private String billToLastName;
-    @TableField(value = "shiptofistname")
+    @TableField(value = "shiptofirstname")
     private String shipToFirstName;
     @TableField(value = "shiptolastname")
     private String shipToLastName;
@@ -57,4 +59,7 @@ public class Order {
     private String cardType;
     @TableField(value = "locale")
     private String locale;
+
+
+
 }

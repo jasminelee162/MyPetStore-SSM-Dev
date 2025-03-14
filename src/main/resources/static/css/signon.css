@@ -80,6 +80,7 @@ label {
     text-align: center;
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin-bottom: 15px;
+    /*width:50%;*/
 }
 
 /* 提交按钮悬停样式 */
@@ -206,4 +207,20 @@ body {
     height: 100vh;  /* 让 body 占满整个视口高度 */
     margin: 0;
 }
-
+form {
+    display: flex;
+    flex-direction: column; /* 让表单内容竖直排列 */
+    align-items: center; /* 让表单内所有元素水平居中 */
+    padding: 20px;
+    /*border: 1px solid #ccc;*/
+    /*border-radius: 8px;*/
+    /*background-color: rgba(255, 255, 255, 0.8); !* 半透明背景 *!*/
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.form-group {
+    display: flex;
+    align-items: center; /* 让 label 和 input 垂直居中 */
+    justify-content: center; /* 水平居中 */
+    margin-bottom: 10px;
+    width: 60%;
+}

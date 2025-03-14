@@ -12,7 +12,7 @@
 <header th:replace="common/top"></header>
 
 <div id="Catalog" style="max-width: 900px; margin: 0 auto; padding: 2em; background-color: #ffffff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); border-radius: 8px;">
-    <form th:action="@{/order/confirm}" th:object="${order}" method="post">
+    <form th:action="@{/order/confirm}" th:object="${orderForm}" method="post">
 
         <table style="width: 100%; border-collapse: collapse;">
             <!-- Payment Details Section -->
@@ -29,7 +29,7 @@
                         <option value="Visa">Visa</option>
                         <option value="MasterCard">MasterCard</option>
                         <option value="American Express">American Express</option>
-                        <option th:each="card : ${creditCardTypes}" th:value="${card}" th:text="${card}"></option>
+                        <option th:each="card : ${orderForm.creditCard}" th:value="${card}" th:text="${card}"></option>
                     </select>
                 </td>
             </tr>
@@ -45,7 +45,7 @@
             <tr>
                 <td><label for="expiryDate">Expiry Date (MM/YYYY):</label></td>
                 <td>
-                    <input type="text" th:field="*{expiryDate}" id="expiryDate" style="width: 100%; max-width: 350px;">
+                    <input type="text" th:field="*{exprDate}" id="expiryDate" style="width: 100%; max-width: 350px;">
                 </td>
             </tr>
 
@@ -66,12 +66,12 @@
 
             <tr>
                 <td><label for="billAddress1">Address 1:</label></td>
-                <td><input type="text" th:field="*{billAddress1}" id="billAddress1" style="width: 100%; max-width: 350px;"></td>
+                <td><input type="text" th:field="*{billAddr1}" id="billAddress1" style="width: 100%; max-width: 350px;"></td>
             </tr>
 
             <tr>
                 <td><label for="billAddress2">Address 2:</label></td>
-                <td><input type="text" th:field="*{billAddress2}" id="billAddress2" style="width: 100%; max-width: 350px;"></td>
+                <td><input type="text" th:field="*{billAddr2}" id="billAddress2" style="width: 100%; max-width: 350px;"></td>
             </tr>
 
             <tr>
@@ -112,12 +112,12 @@
 
             <tr>
                 <td><label for="shipAddress1">Address 1:</label></td>
-                <td><input type="text" th:field="*{shipAddress1}" id="shipAddress1" style="width: 100%; max-width: 350px;"></td>
+                <td><input type="text" th:field="*{shipAddr1}" id="shipAddress1" style="width: 100%; max-width: 350px;"></td>
             </tr>
 
             <tr>
                 <td><label for="shipAddress2">Address 2:</label></td>
-                <td><input type="text" th:field="*{shipAddress2}" id="shipAddress2" style="width: 100%; max-width: 350px;"></td>
+                <td><input type="text" th:field="*{shipAddr2}" id="shipAddress2" style="width: 100%; max-width: 350px;"></td>
             </tr>
 
             <tr>

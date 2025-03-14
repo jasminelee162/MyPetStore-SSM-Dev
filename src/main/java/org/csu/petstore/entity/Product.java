@@ -11,9 +11,11 @@ import lombok.Data;
 public class Product {
     @TableId(value = "productid")
     private String productId;
+
     @TableField("category")
     private String categoryId;
     private String name;
     @TableField("descn")
     private String description;
+
 }

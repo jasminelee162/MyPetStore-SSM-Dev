@@ -214,12 +214,11 @@ kbd {
 /* 侧边栏样式 */
 #Sidebar {
     width: 400px; /* 设置侧边栏宽度 */
-    /*background: rgba(0, 0, 0, 0.7); !* 半透明黑色背景 *!*/
-    background: linear-gradient(to bottom, #04040400, #f48c06d6); /* 从上到下 */
+    background: radial-gradient(circle, #f48c06d6, #040404);
     padding: 20px;
     margin-right: 0px; /* 侧边栏与轮播图的间距 */
     margin-left: 100px;
-    margin-top:100px;
+    margin-top:140px;
     height:600px;
     box-shadow:
             0 0 15px rgba(255, 255, 255, 0.8),
@@ -231,6 +230,7 @@ kbd {
 /* 侧边栏内的内容样式 */
 #SidebarContent {
     text-align: center;
+    margin-top:70px;
 }
 
 /* 侧边栏中的文字（白色发光） */

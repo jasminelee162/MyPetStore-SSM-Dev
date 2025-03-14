@@ -1,6 +1,8 @@
 package org.csu.petstore.controller;
 
+import org.csu.petstore.service.AccountService;
 import org.csu.petstore.service.CatalogService;
+import org.csu.petstore.service.LogService;
 import org.csu.petstore.vo.CategoryVO;
 import org.csu.petstore.vo.ItemVO;
 import org.csu.petstore.vo.ProductVO;
@@ -17,6 +19,12 @@ public class CatalogController {
     @Autowired
     private CatalogService catalogService;
 
+    @Autowired
+    private LogService logService;
+
+    @Autowired
+    private AccountService accountService;
+
     @GetMapping("index")
     public String index(){
         return "catalog/main";
@@ -26,6 +34,7 @@ public class CatalogController {
     public String viewCategory(String categoryId, Model model){
         CategoryVO categoryVO = catalogService.getCategory(categoryId);
         model.addAttribute("category", categoryVO);
+
         return "catalog/category";
     }
 

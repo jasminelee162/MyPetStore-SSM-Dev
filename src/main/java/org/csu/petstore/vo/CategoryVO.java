@@ -11,10 +11,5 @@ import java.util.List;
 public class CategoryVO {
     private String categoryId;
     private String categoryName;
-    // setter 方法
-    // getter 方法
-    @Setter
-    @Getter
     private List<Product> productList;
-
 }

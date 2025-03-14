@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("CatalogService")
+@Service("catalogService")
 public class CatalogServiceImpl implements CatalogService {
 
     @Autowired
@@ -61,6 +61,7 @@ public class CatalogServiceImpl implements CatalogService {
         productVO.setItemList(itemList);
         productVO.setProductName(product.getName());
         productVO.setProductId(productId);
+        productVO.setCategoryId(product.getCategoryId());
 
         return productVO;
     }
