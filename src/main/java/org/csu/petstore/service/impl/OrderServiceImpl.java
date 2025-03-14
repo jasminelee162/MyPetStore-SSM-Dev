@@ -9,8 +9,13 @@ import org.csu.petstore.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("OrderService")
 public class OrderServiceImpl implements OrderService {
@@ -168,4 +173,66 @@ public class OrderServiceImpl implements OrderService {
         return result > 0;
     }
 
+
+
+    //非数据库方法实现
+
+    //Order初始化
+    @Override
+    public OrderVO initOrder(AccountVO accountVO, CartVO cartVO) {
+        OrderVO orderVO = new OrderVO();
+
+        orderVO.setUserId(accountVO.getUsername());
+        orderVO.setOrderDate(LocalDate.now().toString());
+
+        orderVO.setShipToFirstName(accountVO.getFirstname());
+        orderVO.setShipToLastName(accountVO.getLastname());
+        orderVO.setShipAddr1(accountVO.getAddr1());
+        orderVO.setShipAddr2(accountVO.getAddr2());
+        orderVO.setShipCity(accountVO.getCity());
+        orderVO.setShipState(accountVO.getState());
+        orderVO.setShipZip(accountVO.getZip());
+        orderVO.setShipCountry(accountVO.getCountry());
+
+        orderVO.setBillToFirstName(accountVO.getFirstname());
+        orderVO.setBillToLastName(accountVO.getLastname());
+        orderVO.setBillAddr1(accountVO.getAddr1());
+        orderVO.setBillAddr2(accountVO.getAddr2());
+        orderVO.setBillCity(accountVO.getCity());
+        orderVO.setBillState(accountVO.getState());
+        orderVO.setBillZip(accountVO.getZip());
+        orderVO.setBillCountry(accountVO.getCountry());
+
+        orderVO.setTotalPrice(cartVO.getSubTotal().toString());
+
+        orderVO.setCreditCard("999 9999 9999 9999");
+        orderVO.setExprDate("12/03");
+        orderVO.setCardType("Visa");
+        orderVO.setCourier("UPS");
+        orderVO.setLocale("CA");
+        orderVO.setStatus("P");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        orderVO.setTimestamp(Timestamp.valueOf(LocalDateTime.now().format(formatter)));
+
+        // 转换 CartItemVO 到 LineItemVO
+        List<LineItemVO> lineItems = cartVO.getItemList().stream()
+                .map(cartItemVO -> convertCartItemVOToLineItemVO(cartItemVO, cartVO.getItemList().indexOf(cartItemVO) + 1))
+                .collect(Collectors.toList());
+
+        orderVO.setLineItems(lineItems);
+
+        return orderVO;
+    }
+
+    private LineItemVO convertCartItemVOToLineItemVO(CartItemVO cartItemVO, int lineNumber) {
+        LineItemVO lineItemVO = new LineItemVO();
+        lineItemVO.setLineNumber(lineNumber);
+        lineItemVO.setItemId(cartItemVO.getItem().getItemId());
+        lineItemVO.setQuantity(cartItemVO.getQuantity());
+        lineItemVO.setUnitPrice(cartItemVO.getItem().getListPrice());
+        lineItemVO.setItem(cartItemVO.getItem());
+        lineItemVO.setTotal(cartItemVO.getTotalPrice());
+        return lineItemVO;
+    }
 }

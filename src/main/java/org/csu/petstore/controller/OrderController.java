@@ -1,5 +1,6 @@
 package org.csu.petstore.controller;
 
+import org.csu.petstore.entity.Account;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.OrderService;
 import org.csu.petstore.service.impl.OrderServiceImpl;
@@ -7,10 +8,15 @@ import org.csu.petstore.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
+
+import jakarta.servlet.http.HttpSession;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/order")
@@ -68,12 +74,85 @@ public class OrderController {
         return "catalog/item";
     }
 
+    //新Order页面控制
+    // 新订单页面控制
     @PostMapping("newOrder")
-    public String newOrder(String orderId, Model model) {
-        OrderVO orderVO = new OrderVO();
-        orderVO.setOrderId(orderId);
-        model.addAttribute("orderForm", orderVO);
-        return "order/newOrder";
+    public String newOrder(@RequestParam(value = "selectedItems", required = false) String selectedItemsParam,
+                           HttpSession session,
+                           Model model) {
+        try {
+            // 获取购物车
+            CartVO cartVO = (CartVO) session.getAttribute("cart");
+            if (cartVO == null) {
+                cartVO = new CartVO();
+                session.setAttribute("cart", cartVO);
+            }
+
+            // 检查用户是否登录
+            AccountVO loginAccount = (AccountVO) session.getAttribute("loginAccount");
+//            if (loginAccount == null) {
+//                return "redirect:/signonForm";
+//            }
+            // 判断 loginAccount 是否为空，并打印相关信息
+            if (loginAccount == null) {
+                System.out.println("session中的loginAccount是null");
+            } else {
+                // 如果你的 AccountVO 重写了 toString() 方法，可以直接打印对象
+                System.out.println("session中的loginAccount: " + loginAccount);
+                // 如果没有重写 toString()，可以逐个字段打印
+                System.out.println("loginAccount.username: " + loginAccount.getUsername());
+                System.out.println("loginAccount.firstname: " + loginAccount.getFirstname());
+                System.out.println("loginAccount.lastname: " + loginAccount.getLastname());
+                // 根据需要继续打印其他字段...
+            }
+
+
+            // 获取选中的商品 ID
+            if (selectedItemsParam == null || selectedItemsParam.isEmpty()) {
+                return "redirect:/cartForm";
+            }
+
+            String[] selectedItemIds = selectedItemsParam.split(",");
+            List<CartItemVO> selectedItems = new ArrayList<>();
+
+            // 创建一个新的购物车
+            CartVO newCartVO = new CartVO();
+
+            // 根据选中的 ID 筛选商品，并添加到新的购物车
+            BigDecimal newSubTotal = BigDecimal.ZERO;
+            for (String itemId : selectedItemIds) {
+                CartItemVO cartItemVO = cartVO.getItemMap().get(itemId);
+                if (cartItemVO != null) {
+                    selectedItems.add(cartItemVO);
+                    newCartVO.getItemList().add(cartItemVO); // 添加商品到新的购物车
+                    newSubTotal = newSubTotal.add(cartItemVO.getTotalPrice()); // 计算新的小计
+                }
+            }
+
+            // 更新新的购物车小计
+            newCartVO.setSubTotal(newSubTotal);
+
+            // 设置新的购物车到 session 中
+            session.setAttribute("selectedCart", newCartVO);
+
+            // 初始化订单
+            OrderVO orderVO = orderService.initOrder(loginAccount, newCartVO);
+
+            // 设置信用卡类型
+            session.setAttribute("creditCardTypes", orderVO.getCardType());
+
+            // 将 OrderVO 对象添加到模型中，键为 "orderForm"
+            model.addAttribute("orderForm", orderVO);
+
+            System.out.println(orderVO.getBillAddr1());
+
+            return "order/newOrder";
+        } catch (Exception e) {
+            // 记录异常信息
+            e.printStackTrace();
+            // 返回错误页面或重定向到错误页面
+            return "redirect:/error";
+        }
     }
 
     @GetMapping("shoppingForm")

@@ -35,14 +35,14 @@ public class CartController {
     @GetMapping("viewCart")
     public String viewCart(HttpSession session) {
         // 检查 session 是否有账户信息
-        AccountVO account = (AccountVO) session.getAttribute("account");
+        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
         if (account == null) {
             account = new AccountVO(); // 创建一个空的 AccountVO
             session.setAttribute("loginAccount", account);
         }
 
         // 获取购物车信息
-        CartVO cart = cartService.getCartByUsername("chen");
+        CartVO cart = cartService.getCartByUsername("j2ee");
         if (cart == null) {
             cart = new CartVO(); // 创建一个新的购物车对象
             session.setAttribute("cart", cart);
@@ -57,7 +57,7 @@ public class CartController {
     public String addItemToCart(@RequestParam("workingItemId") String itemId, HttpSession session) {
         //从 session 中获取登录用户的 username
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-        String username = "chen"; // 或者 account.getUsername()
+        String username = "j2ee"; // 或者 account.getUsername()
 
         //调用 CartService 的方法将商品添加到购物车
         cartService.addCartItem(username, itemId);
@@ -82,7 +82,7 @@ public class CartController {
         // 获取用户信息
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
 //    String username = (account != null) ? account.getUsername() : null;
-        String username = "chen";
+        String username = "j2ee";
 
         // 获取购物车信息（不重新查询）
         CartVO cart = (CartVO) session.getAttribute("cart");

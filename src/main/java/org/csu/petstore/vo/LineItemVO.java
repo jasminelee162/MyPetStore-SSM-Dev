@@ -12,6 +12,6 @@ public class LineItemVO {
     private int quantity;
     private String itemId;
     private BigDecimal unitPrice;
-    private Item item;
+    private ItemVO item;   //修改为ItemVO
     private BigDecimal total;
 }
