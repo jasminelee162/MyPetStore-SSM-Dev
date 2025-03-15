@@ -1,6 +1,7 @@
 package org.csu.petstore.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 @Data
 @TableName("order_status") // 数据库表名为 order_status
 public class OrderStatus {
-    @TableField("orderid")
+    @TableId(value = "orderid")
     private Integer orderId; // orderid 是整型
 
     @TableField("linenum")
