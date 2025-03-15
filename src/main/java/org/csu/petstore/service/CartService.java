@@ -1,9 +1,11 @@
 package org.csu.petstore.service;
 
+import jakarta.servlet.http.HttpSession;
 import org.csu.petstore.entity.CartItem;
 import org.csu.petstore.vo.CartItemVO;
 import org.csu.petstore.vo.CartVO;
 import org.csu.petstore.vo.ItemVO;
+import org.springframework.ui.Model;
 
 
 public interface CartService {
@@ -14,10 +16,10 @@ public interface CartService {
     void updateCartItem(String username, String itemId,int quantity);
 
     // 删除购物车项
-    ItemVO removeCartItem(String username, String itemId);
+    ItemVO removeCartItem(String username, String itemId, HttpSession session);
 
     // 获取用户购物车
-    CartVO getCartByUsername(String username);
+    CartVO getCartByUsername(String username, HttpSession session);
 
     // 清空购物车
     void clearCart(String username);

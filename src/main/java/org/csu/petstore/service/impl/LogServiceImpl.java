@@ -1,28 +1,28 @@
 package org.csu.petstore.service.impl;
 
-import org.csu.petstore.persistence.UserLogMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.csu.petstore.entity.LogRecord;
+import org.csu.petstore.persistence.LogMapper;
 import org.csu.petstore.service.LogService;
-import org.csu.petstore.vo.UserLogVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 
-@Service
+
+
+
+
+@Service("logService")
 public class LogServiceImpl implements LogService {
+    private static final Logger logger = LogManager.getLogger(LogService.class);
 
     @Autowired
-    private UserLogMapper userLogMapper;
-
+    private LogMapper logMapper;
 
     @Override
-    public UserLogVO getUserBrowseLog(String userName, String categoryId, String productId, String itemId, Timestamp timestamp) {
-        UserLogVO userLogVO = new UserLogVO();
-        userLogVO.setUserName(userName);
-        userLogVO.setActionType("Browse");
-        userLogVO.setTimestamp(timestamp);
-        userLogVO.setActionDetails("categoryId=" + categoryId + "&productId=" + productId + "&itemId=" + itemId);
-        userLogMapper.insert(userLogVO);
-        return userLogVO;
+    public void logInfo(String message) {
+        logger.info(message);
+        logMapper.insertLog(new LogRecord("INFO", message));
     }
 }

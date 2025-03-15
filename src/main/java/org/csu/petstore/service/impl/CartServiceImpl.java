@@ -1,9 +1,8 @@
 package org.csu.petstore.service.impl;
 
+import jakarta.servlet.http.HttpSession;
 import org.csu.petstore.entity.CartItem;
-import org.csu.petstore.entity.Item;
 import org.csu.petstore.persistence.CartItemMapper;
-import org.csu.petstore.persistence.ItemMapper;
 import org.csu.petstore.service.CartService;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.vo.CartItemVO;
@@ -11,6 +10,7 @@ import org.csu.petstore.vo.CartVO;
 import org.csu.petstore.vo.ItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -49,26 +49,26 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public ItemVO removeCartItem(String username, String itemId) {
-        ItemVO itemVO = catalogService.getItem(itemId);
+    public ItemVO removeCartItem(String username, String itemId, HttpSession session) {
+        ItemVO itemVO = catalogService.getItem(itemId, session);
 
         cartItemMapper.deleteCartItem(username, itemId);
         return itemVO;
     }
 
     @Override
-    public CartVO getCartByUsername(String username) {
+    public CartVO getCartByUsername(String username, HttpSession session) {
         // 获取该用户的购物车商品
         List<CartItem> cartItems = cartItemMapper.getCartItemsByUsername(username);
 
         // 调用封装的方法，转换为 CartVO
-        return convertToCartVO(cartItems);
+        return convertToCartVO(cartItems, session);
     }
 
     /**
      * 将购物车数据转换为 CartVO
      */
-    private CartVO convertToCartVO(List<CartItem> cartItems) {
+    private CartVO convertToCartVO(List<CartItem> cartItems, HttpSession session) {
         CartVO cartVO = new CartVO();
         BigDecimal subTotal = BigDecimal.ZERO;
 
@@ -80,7 +80,7 @@ public class CartServiceImpl implements CartService {
             cartItemVO.setQuantity(cartItem.getQuantity());
 
             // 获取商品数据
-            ItemVO item = catalogService.getItem(cartItem.getItemId());
+            ItemVO item = catalogService.getItem(cartItem.getItemId(), session);
             cartItemVO.setItem(item);
 
             // 计算商品总价

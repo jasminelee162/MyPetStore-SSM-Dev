@@ -1,21 +1,23 @@
 package org.csu.petstore.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.csu.petstore.entity.Category;
-import org.csu.petstore.entity.Item;
-import org.csu.petstore.entity.ItemQuantity;
-import org.csu.petstore.entity.Product;
-import org.csu.petstore.persistence.CategoryMapper;
-import org.csu.petstore.persistence.ItemMapper;
-import org.csu.petstore.persistence.ItemQuantityMapper;
-import org.csu.petstore.persistence.ProductMapper;
+import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
+import org.csu.petstore.entity.*;
+import org.csu.petstore.persistence.*;
 import org.csu.petstore.entity.Product;
 import org.csu.petstore.service.CatalogService;
+import org.csu.petstore.service.OrderService;
+import org.csu.petstore.vo.AccountVO;
 import org.csu.petstore.vo.CategoryVO;
 import org.csu.petstore.vo.ItemVO;
 import org.csu.petstore.vo.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 
@@ -34,8 +36,13 @@ public class CatalogServiceImpl implements CatalogService {
     @Autowired
     private ItemQuantityMapper itemQuantityMapper;
 
+    @Autowired
+    private LogMapper logMapper;
+
+    private static final Logger logger = LogManager.getLogger(OrderService.class);
+
     @Override
-    public CategoryVO getCategory(String categoryId) {
+    public CategoryVO getCategory(String categoryId, HttpSession session) {
         CategoryVO categoryVO = new CategoryVO();
         Category category = categoryMapper.selectById(categoryId);
 
@@ -47,11 +54,14 @@ public class CatalogServiceImpl implements CatalogService {
         categoryVO.setCategoryName(category.getName());
         categoryVO.setCategoryId(categoryId);
 
+        //记录日志
+        setLog("category", session, categoryId);
+
         return categoryVO;
     }
 
     @Override
-    public ProductVO getProduct(String productId) {
+    public ProductVO getProduct(String productId, HttpSession session) {
         ProductVO productVO = new ProductVO();
         Product product = productMapper.selectById(productId);
         QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
@@ -63,11 +73,13 @@ public class CatalogServiceImpl implements CatalogService {
         productVO.setProductId(productId);
         productVO.setCategoryId(product.getCategoryId());
 
+        setLog("product", session, productId);
+
         return productVO;
     }
 
     @Override
-    public ItemVO getItem(String itemId) {
+    public ItemVO getItem(String itemId, HttpSession session) {
         ItemVO itemVO = new ItemVO();
         Item item = itemMapper.selectById(itemId);
         Product product = productMapper.selectById(item.getProductId());
@@ -83,7 +95,21 @@ public class CatalogServiceImpl implements CatalogService {
         itemVO.setDescriptionText(temp[1].substring(1));
 
         itemVO.setQuantity(itemQuantity.getQuantity());
+
+        setLog("item", session, itemId);
         return itemVO;
+    }
+
+    @Override
+    public void setLog(String type, HttpSession session, String typeId) {
+        // 记录日志
+        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
+        String username = account.getUsername();
+        if(!username.isEmpty()){
+            String message = "User " + username + " viewed " + type + ": " + typeId;
+            logger.info(message);
+            logMapper.insertLog(new LogRecord("INFO", message));
+        }
     }
 
 

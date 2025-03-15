@@ -14,6 +14,7 @@ import org.csu.petstore.vo.CartItemVO;
 import org.csu.petstore.vo.CartVO;
 import org.csu.petstore.vo.ItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,21 +30,20 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
+    @Autowired
+    private CatalogService catalogService;
 
     @GetMapping("viewCart")
-    public String viewCart(HttpSession session,Model model) {
+    public String viewCart(HttpSession session) {
         // 检查 session 是否有账户信息
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-        String username = null;
         if (account == null) {
-            model.addAttribute("msg", "请先登录后再使用购物车！");
-            return "/account/signOnForm";
-        } else {
-            username = account.getUsername();
+            account = new AccountVO(); // 创建一个空的 AccountVO
+            session.setAttribute("loginAccount", account);
         }
 
         // 获取购物车信息
-        CartVO cart = cartService.getCartByUsername(username);
+        CartVO cart = cartService.getCartByUsername("j2ee");
         if (cart == null) {
             cart = new CartVO(); // 创建一个新的购物车对象
             session.setAttribute("cart", cart);
@@ -55,14 +55,11 @@ public class CartController {
     }
 
     @GetMapping("/addItemToCart")
-    public String addItemToCart(@RequestParam("workingItemId") String itemId, HttpSession session, Model model) {
+    public String addItemToCart(@RequestParam("workingItemId") String itemId, HttpSession session) {
         //从 session 中获取登录用户的 username
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-        if (account == null) {
-            model.addAttribute("msg", "请先登录后再使用购物车！");
-            return "/account/signOnForm";
-        }
-        String username = account.getUsername();
+        String username = "j2ee"; // 或者 account.getUsername()
+
         //调用 CartService 的方法将商品添加到购物车
         cartService.addCartItem(username, itemId);
 
@@ -85,7 +82,8 @@ public class CartController {
 
         // 获取用户信息
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-        String username = (account != null) ? account.getUsername() : null;
+//    String username = (account != null) ? account.getUsername() : null;
+        String username = "j2ee";
 
         // 获取购物车信息（不重新查询）
         CartVO cart = (CartVO) session.getAttribute("cart");

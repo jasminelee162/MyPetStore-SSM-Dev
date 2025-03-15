@@ -1,6 +1,9 @@
 package org.csu.petstore.controller;
 
-import org.csu.petstore.service.AccountService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.LogService;
 import org.csu.petstore.vo.CategoryVO;
@@ -22,8 +25,9 @@ public class CatalogController {
     @Autowired
     private LogService logService;
 
-    @Autowired
-    private AccountService accountService;
+    private static final Logger logger = LogManager.getLogger(CatalogController.class);
+
+
 
     @GetMapping("index")
     public String index(){
@@ -31,25 +35,46 @@ public class CatalogController {
     }
 
     @GetMapping("viewCategory")
-    public String viewCategory(String categoryId, Model model){
-        CategoryVO categoryVO = catalogService.getCategory(categoryId);
-        model.addAttribute("category", categoryVO);
+    public String viewCategory(String categoryId, Model model, HttpSession session){
 
+        //异常处理，检测到获取账户信息空异常，则直接跳往登陆界面
+        try {
+            CategoryVO categoryVO = catalogService.getCategory(categoryId, session);
+            model.addAttribute("category", categoryVO);
+        }catch (Exception e){
+            return "account/signOnForm";
+        }
         return "catalog/category";
     }
 
     @GetMapping("viewProduct")
-    public String viewProduct(String productId, Model model){
-        ProductVO productVO = catalogService.getProduct(productId);
+    public String viewProduct(String productId, Model model, HttpSession session, HttpServletRequest request) {
+        logRequest(request, "User viewed product: " + productId);
+        ProductVO productVO = catalogService.getProduct(productId, session);
+        session.setAttribute("product", productVO);
         model.addAttribute("product", productVO);
         return "catalog/product";
     }
 
     @GetMapping("viewItem")
-    public String viewItem(String itemId, Model model){
-        ItemVO itemVO = catalogService.getItem(itemId);
+    public String viewItem(String itemId, Model model, HttpSession session, HttpServletRequest request) {
+        logRequest(request, "User viewed item: " + itemId);
+        ItemVO itemVO = catalogService.getItem(itemId, session);
+        session.setAttribute("item", itemVO);
         model.addAttribute("item", itemVO);
         return "catalog/item";
     }
+
+    private void logRequest(HttpServletRequest request, String message) {
+        String ip = request.getRemoteAddr();  // 获取用户 IP
+        String userAgent = request.getHeader("User-Agent");  // 获取 User-Agent
+        String logMessage = "[IP: " + ip + "] [User-Agent: " + userAgent + "] " + message;
+
+        logger.info(logMessage);
+        logService.logInfo(logMessage);
+    }
+
+
+
 
 }
