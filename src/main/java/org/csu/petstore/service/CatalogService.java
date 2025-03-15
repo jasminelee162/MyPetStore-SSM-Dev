@@ -1,5 +1,6 @@
 package org.csu.petstore.service;
 
+import jakarta.servlet.http.HttpSession;
 import org.csu.petstore.vo.CategoryVO;
 import org.csu.petstore.vo.ItemVO;
 import org.csu.petstore.vo.ProductVO;

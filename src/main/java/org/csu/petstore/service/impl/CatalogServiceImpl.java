@@ -54,7 +54,7 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public CategoryVO getCategory(String categoryId, HttpSession session) {
+    public CategoryVO getCategory(String categoryId) {
         CategoryVO categoryVO = new CategoryVO();
         Category category = categoryMapper.selectById(categoryId);
 
@@ -70,7 +70,7 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public ProductVO getProduct(String productId, HttpSession session) {
+    public ProductVO getProduct(String productId) {
         ProductVO productVO = new ProductVO();
         Product product = productMapper.selectById(productId);
         QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
@@ -86,7 +86,7 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public ItemVO getItem(String itemId, HttpSession session) {
+    public ItemVO getItem(String itemId) {
         ItemVO itemVO = new ItemVO();
         Item item = itemMapper.selectById(itemId);
         Product product = productMapper.selectById(item.getProductId());
