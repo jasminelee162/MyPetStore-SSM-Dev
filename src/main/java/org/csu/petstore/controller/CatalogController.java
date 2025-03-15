@@ -40,7 +40,10 @@ public class CatalogController {
         //异常处理，检测到获取账户信息空异常，则直接跳往登陆界面
         try {
             CategoryVO categoryVO = catalogService.getCategory(categoryId, session);
+            session.setAttribute("category", categoryVO);
             model.addAttribute("category", categoryVO);
+            //记录日志
+            catalogService.setLog("category", session, categoryId);
         }catch (Exception e){
             return "account/signOnForm";
         }
@@ -53,6 +56,10 @@ public class CatalogController {
         ProductVO productVO = catalogService.getProduct(productId, session);
         session.setAttribute("product", productVO);
         model.addAttribute("product", productVO);
+
+        //记录日志
+        catalogService.setLog("product", session, productId);
+
         return "catalog/product";
     }
 
@@ -62,6 +69,10 @@ public class CatalogController {
         ItemVO itemVO = catalogService.getItem(itemId, session);
         session.setAttribute("item", itemVO);
         model.addAttribute("item", itemVO);
+
+        //记录日志
+        catalogService.setLog("item", session, itemId);
+
         return "catalog/item";
     }
 
@@ -73,8 +84,5 @@ public class CatalogController {
         logger.info(logMessage);
         logService.logInfo(logMessage);
     }
-
-
-
 
 }

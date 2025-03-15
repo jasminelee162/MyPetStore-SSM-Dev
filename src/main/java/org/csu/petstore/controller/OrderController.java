@@ -2,6 +2,7 @@ package org.csu.petstore.controller;
 
 import org.csu.petstore.entity.Account;
 import org.csu.petstore.service.CatalogService;
+import org.csu.petstore.service.LogService;
 import org.csu.petstore.service.OrderService;
 import org.csu.petstore.service.impl.OrderServiceImpl;
 import org.csu.petstore.vo.*;
@@ -26,7 +27,7 @@ public class OrderController {
     private OrderService orderService;
 
     @Autowired
-    private CatalogService catalogService;
+    private LogService logService;
 
     @GetMapping("index")
     public String index() {

@@ -9,6 +9,7 @@ import org.csu.petstore.entity.*;
 import org.csu.petstore.persistence.*;
 import org.csu.petstore.entity.Product;
 import org.csu.petstore.service.CatalogService;
+import org.csu.petstore.service.LogService;
 import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.AccountVO;
 import org.csu.petstore.vo.CategoryVO;
@@ -37,9 +38,8 @@ public class CatalogServiceImpl implements CatalogService {
     private ItemQuantityMapper itemQuantityMapper;
 
     @Autowired
-    private LogMapper logMapper;
+    private LogService logService;
 
-    private static final Logger logger = LogManager.getLogger(OrderService.class);
 
     @Override
     public CategoryVO getCategory(String categoryId, HttpSession session) {
@@ -53,9 +53,6 @@ public class CatalogServiceImpl implements CatalogService {
         categoryVO.setProductList(productList);
         categoryVO.setCategoryName(category.getName());
         categoryVO.setCategoryId(categoryId);
-
-        //记录日志
-        setLog("category", session, categoryId);
 
         return categoryVO;
     }
@@ -72,8 +69,6 @@ public class CatalogServiceImpl implements CatalogService {
         productVO.setProductName(product.getName());
         productVO.setProductId(productId);
         productVO.setCategoryId(product.getCategoryId());
-
-        setLog("product", session, productId);
 
         return productVO;
     }
@@ -96,21 +91,14 @@ public class CatalogServiceImpl implements CatalogService {
 
         itemVO.setQuantity(itemQuantity.getQuantity());
 
-        setLog("item", session, itemId);
         return itemVO;
     }
 
     @Override
     public void setLog(String type, HttpSession session, String typeId) {
-        // 记录日志
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
         String username = account.getUsername();
-        if(!username.isEmpty()){
-            String message = "User " + username + " viewed " + type + ": " + typeId;
-            logger.info(message);
-            logMapper.insertLog(new LogRecord("INFO", message));
-        }
+        String message = "User " + username + " viewed " + type + ": " + typeId;
+        logService.setLog(message);
     }
-
-
 }

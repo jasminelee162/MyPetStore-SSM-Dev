@@ -5,19 +5,18 @@ import org.csu.petstore.entity.CartItem;
 import org.csu.petstore.persistence.CartItemMapper;
 import org.csu.petstore.service.CartService;
 import org.csu.petstore.service.CatalogService;
+import org.csu.petstore.service.LogService;
 import org.csu.petstore.vo.CartItemVO;
 import org.csu.petstore.vo.CartVO;
 import org.csu.petstore.vo.ItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -27,6 +26,10 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private CatalogService catalogService;
+
+    @Autowired
+    private LogService logService;
+
 
     @Override
     public void addCartItem(String username, String itemId) {
@@ -40,6 +43,11 @@ public class CartServiceImpl implements CartService {
             // 如果没有该商品，插入新商品到购物车
             cartItemMapper.insertCartItem(username,itemId,1);
         }
+
+        //记录日志
+        String message = "User" + username + " added " + itemId + " to cart ";
+        logService.setLog(message);
+
     }
 
     @Override
@@ -51,8 +59,12 @@ public class CartServiceImpl implements CartService {
     @Override
     public ItemVO removeCartItem(String username, String itemId, HttpSession session) {
         ItemVO itemVO = catalogService.getItem(itemId, session);
-
         cartItemMapper.deleteCartItem(username, itemId);
+
+        //记录日志
+        String message = "User" + username + " removed " + itemId + " from cart ";
+        logService.setLog(message);
+
         return itemVO;
     }
 
@@ -111,4 +123,5 @@ public class CartServiceImpl implements CartService {
         // 清空购物车
         cartItemMapper.clearCart(username);
     }
+
 }

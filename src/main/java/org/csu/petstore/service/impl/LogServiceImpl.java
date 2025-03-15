@@ -25,4 +25,10 @@ public class LogServiceImpl implements LogService {
         logger.info(message);
         logMapper.insertLog(new LogRecord("INFO", message));
     }
+
+    @Override
+    public void setLog(String message) {
+        logger.info(message);
+        logMapper.insertLog(new LogRecord("INFO", message));
+    }
 }
