@@ -20,13 +20,11 @@
                 <a href="/cart/viewCart"><img align="middle" name="img_cart" src="../images/cart.gif"/></a>
                 <img align="middle" src="../images/separator.gif"/>
                 <a th:if="${session.loginAccount} == null" href="/account/signOnForm">Sign In</a>
-                <a th:if="(${session.loginAccount} != null) and (${session.authenticated} ?: true) " href="/account/signOnForm">Sign
-                    In</a>
-                <a th:if="(${session.loginAccount} != null) and (${session.authenticated} ?: true)" href="/account/signOut">Sign
+                <a th:if="(${session.loginAccount} != null) and ((${session.authenticated} == null) ? 0 : true)" href="/account/signOut">Sign
                     Out</a>
-                <img th:if="(${session.loginAccount} != null) and (${session.authenticated} ?: true)" align="middle"
+                <img th:if="(${session.loginAccount} != null) and ((${session.authenticated} == null) ? 0 : true)" align="middle"
                      src="../images/separator.gif"/>
-                <a th:if="(${session.loginAccount} != null) and (${session.authenticated} ?: true)" href="/account/editAccountForm">My
+                <a th:if="(${session.loginAccount} != null) and ((${session.authenticated} == null) ? 0 : true)" href="/account/editAccountForm">My
                     Account</a>
                 <img align="middle" src="../images/separator.gif"/>
                 <a href="../help.html">?</a>

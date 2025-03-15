@@ -16,7 +16,7 @@
 
     <p>Please enter your username and password.</p>
         <!-- 使用Thymeleaf的条件注释和变量表达式 -->
-        <p th:if="${msg != null}">
+        <p th:if="${msg}!=null">
             <font color="red" th:text="${msg}"></font>
         </p>
         <table>
