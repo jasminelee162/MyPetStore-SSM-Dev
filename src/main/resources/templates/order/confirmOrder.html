@@ -1,72 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Confirm Order</title>
-    <link rel="StyleSheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
 
-<header th:replace="common/top"></header>
+<header th:replace="~{common/top}"></header>
 
-<div id="Content">
+<div id="Catalog" style="max-width: 900px; margin: 0 auto; padding: 2em; background-color: #ffffff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+    <h2>Order Confirmation</h2>
 
-    <!-- 返回主菜单 -->
-    <div id="BackLink">
-        <a th:href="@{/mainForm}">Return to Main Menu</a>
-    </div>
+    <p>Please confirm the information below and then press continue...</p>
 
-    <!-- 订单确认 -->
-    <div id="Catalog">
-        <h2>Order Confirmation</h2>
+    <table>
+        <!-- Order Header -->
+<!--        <tr>-->
+<!--            <th colspan="2" style="text-align: center;">-->
+<!--                Order Date:-->
+<!--                <span th:text="${#dates.format(order.orderDate, 'yyyy/MM/dd HH:mm:ss')}">2025/03/10 12:00:00</span>-->
+<!--            </th>-->
+<!--        </tr>-->
 
-        <p>Please confirm the information below and then press continue...</p>
+        <!-- Billing Address -->
+        <tr><th colspan="2">Billing Address</th></tr>
+        <tr><td>First Name:</td><td th:text="${order.billToFirstName}">John</td></tr>
+        <tr><td>Last Name:</td><td th:text="${order.billToLastName}">Doe</td></tr>
+        <tr><td>Address 1:</td><td th:text="${order.billAddr1}">123 Main St</td></tr>
+        <tr><td>Address 2:</td><td th:text="${order.billAddr2}">Apt 4B</td></tr>
+        <tr><td>City:</td><td th:text="${order.billCity}">New York</td></tr>
+        <tr><td>State:</td><td th:text="${order.billState}">NY</td></tr>
+        <tr><td>Zip:</td><td th:text="${order.billZip}">10001</td></tr>
+        <tr><td>Country:</td><td th:text="${order.billCountry}">USA</td></tr>
 
-        <table>
-            <!-- Order Header -->
-            <tr>
-                <th colspan="2" style="text-align: center;">
-                    Order Date:
-                    <span th:text="${#dates.format(order.timestamp, 'yyyy/MM/dd HH:mm:ss')}">2025/03/10 12:00:00</span>
-                </th>
-            </tr>
+        <!-- Shipping Address -->
+        <tr><th colspan="2">Shipping Address</th></tr>
+        <tr><td>First Name:</td><td th:text="${order.shipToFirstName}">John</td></tr>
+        <tr><td>Last Name:</td><td th:text="${order.shipToLastName}">Doe</td></tr>
+        <tr><td>Address 1:</td><td th:text="${order.shipAddr1}">123 Main St</td></tr>
+        <tr><td>Address 2:</td><td th:text="${order.shipAddr2}">Apt 4B</td></tr>
+        <tr><td>City:</td><td th:text="${order.shipCity}">New York</td></tr>
+        <tr><td>State:</td><td th:text="${order.shipState}">NY</td></tr>
+        <tr><td>Zip:</td><td th:text="${order.shipZip}">10001</td></tr>
+        <tr><td>Country:</td><td th:text="${order.shipCountry}">USA</td></tr>
+    </table>
 
-            <!-- Billing Address -->
-            <tr><th colspan="2">Billing Address</th></tr>
-            <tr><td>First Name:</td><td th:text="${order.billToFirstName}">John</td></tr>
-            <tr><td>Last Name:</td><td th:text="${order.billToLastName}">Doe</td></tr>
-            <tr><td>Address 1:</td><td th:text="${order.billAddr1}">123 Main St</td></tr>
-            <tr><td>Address 2:</td><td th:text="${order.billAddr2}">Apt 4B</td></tr>
-            <tr><td>City:</td><td th:text="${order.billCity}">New York</td></tr>
-            <tr><td>State:</td><td th:text="${order.billState}">NY</td></tr>
-            <tr><td>Zip:</td><td th:text="${order.billZip}">10001</td></tr>
-            <tr><td>Country:</td><td th:text="${order.billCountry}">USA</td></tr>
-
-            <!-- Shipping Address -->
-            <tr><th colspan="2">Shipping Address</th></tr>
-            <tr><td>First Name:</td><td th:text="${order.shipToFirstName}">John</td></tr>
-            <tr><td>Last Name:</td><td th:text="${order.shipToLastName}">Doe</td></tr>
-            <tr><td>Address 1:</td><td th:text="${order.shipAddr1}">123 Main St</td></tr>
-            <tr><td>Address 2:</td><td th:text="${order.shipAddr2}">Apt 4B</td></tr>
-            <tr><td>City:</td><td th:text="${order.shipCity}">New York</td></tr>
-            <tr><td>State:</td><td th:text="${order.shipState}">NY</td></tr>
-            <tr><td>Zip:</td><td th:text="${order.shipZip}">10001</td></tr>
-            <tr><td>Country:</td><td th:text="${order.shipCountry}">USA</td></tr>
-        </table>
-
-        <!-- Confirm Button -->
-        <div style="text-align: center; margin-top: 20px;">
-            <form th:action="@{/order}" method="post">
-                <input type="hidden" name="confirmed" value="true"/>
-                <button type="submit">Confirmed</button>
-            </form>
-        </div>
-
+    <!-- Confirm Button -->
+    <div style="text-align: center; margin-top: 20px;">
+        <form th:action="@{/order}" method="post">
+            <input type="hidden" name="confirmed" value="true"/>
+            <button type="submit">Confirmed</button>
+        </form>
     </div>
 
 </div>
 
-<footer th:replace="common/bottom"></footer>
+<footer th:replace="~{common/bottom}"></footer>
 
 </body>
 </html>

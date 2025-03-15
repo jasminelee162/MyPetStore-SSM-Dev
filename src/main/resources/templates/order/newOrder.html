@@ -12,7 +12,7 @@
 <header th:replace="common/top"></header>
 
 <div id="Catalog" style="max-width: 900px; margin: 0 auto; padding: 2em; background-color: #ffffff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); border-radius: 8px;">
-    <form th:action="@{/order/confirm}" th:object="${orderForm}" method="post">
+    <form th:action="@{/order/confirmOrder}" th:object="${orderForm}" method="post">
 
         <table style="width: 100%; border-collapse: collapse;">
             <!-- Payment Details Section -->

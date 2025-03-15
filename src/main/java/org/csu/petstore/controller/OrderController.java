@@ -42,11 +42,23 @@ public class OrderController {
 //    }
 
     //订单确认页面控制：新订单request获得填写信息的Parameter，并放入session
-    @GetMapping("confirmOrder")
-    public String confirmOrder(String orderId, Model model) {
-        OrderVO orderVO = new OrderVO();
-        orderVO.setOrderId(orderId);
+    @PostMapping("/confirmOrder")
+    public String confirmOrder(OrderVO orderVO, HttpSession session, Model model) {
+        // 获取账户
+        AccountVO loginAccount = (AccountVO) session.getAttribute("loginAccount");
+        if (loginAccount == null) {
+            return "redirect:/signonForm";
+        }
+
+        // 设置用户 ID 和订单日期
+        orderVO.setUserId(loginAccount.getUsername());
+        orderVO.setOrderDate(new java.sql.Date(System.currentTimeMillis()).toString());
+        orderVO.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
+
+        // 将 OrderVO 对象添加到模型中
         model.addAttribute("order", orderVO);
+
+        // 跳转到订单确认页面
         return "order/confirmOrder";
     }
 
@@ -90,22 +102,9 @@ public class OrderController {
 
             // 检查用户是否登录
             AccountVO loginAccount = (AccountVO) session.getAttribute("loginAccount");
-//            if (loginAccount == null) {
-//                return "redirect:/signonForm";
-//            }
-            // 判断 loginAccount 是否为空，并打印相关信息
             if (loginAccount == null) {
-                System.out.println("session中的loginAccount是null");
-            } else {
-                // 如果你的 AccountVO 重写了 toString() 方法，可以直接打印对象
-                System.out.println("session中的loginAccount: " + loginAccount);
-                // 如果没有重写 toString()，可以逐个字段打印
-                System.out.println("loginAccount.username: " + loginAccount.getUsername());
-                System.out.println("loginAccount.firstname: " + loginAccount.getFirstname());
-                System.out.println("loginAccount.lastname: " + loginAccount.getLastname());
-                // 根据需要继续打印其他字段...
+                return "redirect:/signonForm";
             }
-
 
             // 获取选中的商品 ID
             if (selectedItemsParam == null || selectedItemsParam.isEmpty()) {
