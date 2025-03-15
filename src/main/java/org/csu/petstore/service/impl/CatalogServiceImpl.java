@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("catalogService")
 public class CatalogServiceImpl implements CatalogService {
@@ -40,6 +41,17 @@ public class CatalogServiceImpl implements CatalogService {
     @Autowired
     private LogService logService;
 
+
+    @Override
+    public List<CategoryVO> getAllCategories() {
+        List<Category> categories = categoryMapper.selectList(null);
+        return categories.stream().map(category -> {
+            CategoryVO vo = new CategoryVO();
+            vo.setCategoryId(category.getCategoryId());
+            vo.setCategoryName(category.getName());
+            return vo;
+        }).collect(Collectors.toList());
+    }
 
     @Override
     public CategoryVO getCategory(String categoryId, HttpSession session) {

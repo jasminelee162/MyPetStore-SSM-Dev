@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品详情</title>
+</head>
+<body>
+<header th:replace="common/top"></header>
+
+<h1 th:text="'商品名称：' + ${product.productName}">商品名称</h1>
+<p>分类编号: <span th:text="${product.categoryId}"></span></p>
+
+<!-- 商品项列表 -->
+<table border="1" th:unless="${#lists.isEmpty(product.itemList)}">
+    <tr>
+        <th>商品项编号</th>
+        <th>价格</th>
+        <th>库存</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="item : ${product.itemList}">
+        <td th:text="${item.itemId}">商品项ID</td>
+        <td th:text="${item.listPrice}">价格</td>
+        <!--        <td th:text="${item.quantity}">库存</td>-->
+        <td>
+            <a th:href="@{/admin/item(itemId=${item.itemId})}">查看详情</a>
+        </td>
+    </tr>
+</table>
+
+<!-- 如果商品项为空 -->
+<div th:if="${#lists.isEmpty(product.itemList)}">
+    <p>暂无商品项</p>
+</div>
+
+<!-- 添加商品项 -->
+<h2>添加新商品项</h2>
+<form action="/admin/addItem" method="post">
+    <input type="hidden" name="productId" th:value="${product.productId}"/>
+
+    <label for="itemId">商品项编号：</label>
+    <input type="text" id="itemId" name="itemId" required>
+
+    <label for="listPrice">价格：</label>
+    <input type="text" id="listPrice" name="listPrice" required>
+
+    <label for="quantity">库存：</label>
+    <input type="text" id="quantity" name="quantity" required>
+
+    <button type="submit">添加商品项</button>
+</form>
+
+
+
+<a th:href="@{/admin/index}">返回后台管理首页</a>
+<a th:href="@{/admin/category(categoryId=${product.categoryId})}">返回分类</a>
+
+<footer th:replace="common/bottom"></footer>
+</body>
+</html>
