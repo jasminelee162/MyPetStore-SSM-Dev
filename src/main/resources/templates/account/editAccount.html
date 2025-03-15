@@ -72,20 +72,22 @@
                 <td><label for="languagePreference">语言偏好:</label></td>
                 <td>
                     <select id="languagePreference" name="languagePreference">
-                        <option value="english" ${account.languagePreference == 'english' ? 'selected' : ''}>English</option>
-                        <option value="japanese" ${account.languagePreference == 'japanese' ? 'selected' : ''}>Japanese</option>
+                        <option value="english">English</option>
+                        <option value="japanese" }>Japanese</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td><label for="favouriteCategoryId">喜欢的类别:</label></td>
                 <td>
-                    <select id="favouriteCategoryId" name="favouriteCategoryId">
-                        <option value="FISH"}>Fish</option>
-                        <option value="DOGS" }>Dogs</option>
-                        <option value="REPTILES" }>Reptiles</option>
-                        <option value="CATS" }>Cats</option>
-                        <option value="BIRDS" }>Birds</option>
+                    <select id="favouriteCategoryId" name="favcategory">
+
+                            <option value="FISH" selected>FISH</option>
+                            <option value="DOGS" >DOGS</option>
+                            <option value="REPTILES" >REPTILES</option>
+                            <option value="CATS">CATS</option>
+                            <option value="BIRDS">BIRDS</option>
+
                     </select>
                 </td>
             </tr>
