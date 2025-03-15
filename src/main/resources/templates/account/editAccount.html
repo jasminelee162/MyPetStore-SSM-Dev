@@ -3,83 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>编辑账户</title>
-    <link rel="StyleSheet" href="/css/signon.css" type="text/css" media="screen"/>
-
+    <title>编辑账户信息</title>
 </head>
 <body>
-<!--<h2>编辑账户信息</h2>-->
-<div id="on">
-<form action="edit" method="post">
-    <p>编辑账户信息</p>
+<h2>编辑账户信息</h2>
+<form action="submit_account_info" method="POST">
     <!-- 隐藏字段：用户名 -->
     <input type="hidden" name="username" value="${account.username}"/>
 
-<!--    &lt;!&ndash; 姓名 &ndash;&gt;-->
-<!--    <label>姓名:</label>-->
-<!--    <input type="text" name="firstName" value="${account.firstName}" required placeholder="请输入姓名"/>-->
+    <fieldset>
+        <legend>账户信息</legend>
+        <table>
+            <tr>
+                <td><label for="firstName">姓名:</label></td>
+                <td><input type="text" id="firstName" name="firstName" value="${account.firstName}" required placeholder="请输入姓名"/></td>
+            </tr>
+            <tr>
+                <td><label for="lastName">姓氏:</label></td>
+                <td><input type="text" id="lastName" name="lastName" value="${account.lastName}" required placeholder="请输入姓氏"/></td>
+            </tr>
+            <tr>
+                <td><label for="email">邮箱:</label></td>
+                <td><input type="email" id="email" name="email" value="${account.email}" required placeholder="请输入邮箱"/></td>
+            </tr>
+            <tr>
+                <td><label for="phone">电话:</label></td>
+                <td><input type="tel" id="phone" name="phone" value="${account.phone}" required placeholder="请输入电话"/></td>
+            </tr>
+            <tr>
+                <td><label for="password">新密码:</label></td>
+                <td><input type="password" id="password" name="password" placeholder="请输入新密码"/></td>
+            </tr>
+            <tr>
+                <td><label for="repeatedPassword">确认密码:</label></td>
+                <td><input type="password" id="repeatedPassword" name="repeatedPassword" placeholder="请确认新密码"/></td>
+            </tr>
+            <tr>
+                <td><label for="address1">地址 1:</label></td>
+                <td><input type="text" id="address1" name="address1" value="${account.address1}" placeholder="请输入地址 1"/></td>
+            </tr>
+            <tr>
+                <td><label for="address2">地址 2:</label></td>
+                <td><input type="text" id="address2" name="address2" value="${account.address2}" placeholder="请输入地址 2"/></td>
+            </tr>
+            <tr>
+                <td><label for="city">城市:</label></td>
+                <td><input type="text" id="city" name="city" value="${account.city}" placeholder="请输入城市"/></td>
+            </tr>
+            <tr>
+                <td><label for="state">州/省:</label></td>
+                <td><input type="text" id="state" name="state" value="${account.state}" placeholder="请输入州/省"/></td>
+            </tr>
+            <tr>
+                <td><label for="zip">邮编:</label></td>
+                <td><input type="text" id="zip" name="zip" value="${account.zip}" placeholder="请输入邮编"/></td>
+            </tr>
+            <tr>
+                <td><label for="country">国家:</label></td>
+                <td><input type="text" id="country" name="country" value="${account.country}" required placeholder="请输入国家"/></td>
+            </tr>
+        </table>
+    </fieldset>
 
-<!--    &lt;!&ndash; 姓氏 &ndash;&gt;-->
-<!--    <label>姓氏:</label>-->
-<!--    <input type="text" name="lastName" value="${account.lastName}" required placeholder="请输入姓氏"/>-->
+    <fieldset>
+        <legend>个人信息</legend>
+        <table>
+            <tr>
+                <td><label for="languagePreference">语言偏好:</label></td>
+                <td>
+                    <select id="languagePreference" name="languagePreference">
+                        <option value="english" ${account.languagePreference == 'english' ? 'selected' : ''}>English</option>
+                        <option value="japanese" ${account.languagePreference == 'japanese' ? 'selected' : ''}>Japanese</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="favouriteCategoryId">喜欢的类别:</label></td>
+                <td>
+                    <select id="favouriteCategoryId" name="favouriteCategoryId">
+                        <option value="FISH"}>Fish</option>
+                        <option value="DOGS" }>Dogs</option>
+                        <option value="REPTILES" }>Reptiles</option>
+                        <option value="CATS" }>Cats</option>
+                        <option value="BIRDS" }>Birds</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="listOption">启用我的列表:</label></td>
+                <td><input type="checkbox" id="listOption" name="listOption" value="true"}/></td>
+            </tr>
+            <tr>
+                <td><label for="bannerOption">启用我的横幅:</label></td>
+                <td><input type="checkbox" id="bannerOption" name="bannerOption" value="true" }/></td>
+            </tr>
+        </table>
+    </fieldset>
 
-<!--    &lt;!&ndash; 邮箱 &ndash;&gt;-->
-<!--    <label>邮箱:</label>-->
-<!--    <input type="email" name="email" value="${account.email}" required placeholder="请输入邮箱"/>-->
-
-<!--    &lt;!&ndash; 电话 &ndash;&gt;-->
-<!--    <label>电话:</label>-->
-<!--    <input type="tel" name="phone" value="${account.phone}" required placeholder="请输入电话"/>-->
-
-<!--    &lt;!&ndash; 新密码 &ndash;&gt;-->
-<!--    <label>新密码:</label>-->
-<!--    <input type="password" name="password" placeholder="请输入新密码"/>-->
-
-<!--    &lt;!&ndash; 确认密码 &ndash;&gt;-->
-<!--    <label>确认密码:</label>-->
-<!--    <input type="password" name="repeatedPassword" placeholder="请确认新密码"/>-->
-
-<!--    &lt;!&ndash; 国家 &ndash;&gt;-->
-<!--    <label>国家:</label>-->
-<!--    <input type="text" name="country" value="${account.country}" required placeholder="请输入国家"/>-->
-    <div class="form-group">
-        <label>姓名:</label>
-        <input type="text" name="firstName" value="${account.firstName}" required/>
+    <div class="form-actions">
+        <button type="submit">保存修改</button>
     </div>
-
-    <div class="form-group">
-        <label>姓氏:</label>
-        <input type="text" name="lastName" value="${account.lastName}" required/>
-    </div>
-
-    <div class="form-group">
-        <label>邮箱:</label>
-        <input type="email" name="email" value="${account.email}" required/>
-    </div>
-
-    <div class="form-group">
-        <label>电话:</label>
-        <input type="text" name="phone" value="${account.phone}" required/>
-    </div>
-
-    <div class="form-group">
-        <label>新密码:</label>
-        <input type="password" name="password"/>
-    </div>
-
-    <div class="form-group">
-        <label>确认密码:</label>
-        <input type="password" name="repeatedPassword"/>
-    </div>
-
-    <div class="form-group">
-        <label>国家:</label>
-        <input type="text" name="country" value="${account.country}" required/>
-    </div>
-    <!-- 提交按钮 -->
-    <input type="submit" value="保存修改"/>
 </form>
-</div>
+
 <!-- 错误信息显示 -->
 <div class="error">${error}</div>
 </body>
