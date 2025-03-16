@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品项详情</title>
+</head>
+<body>
+<header th:replace="common/top"></header>
+
+<h1 th:text="'商品项ID：' + ${item.itemId}">商品项ID</h1>
+<p>产品ID: <span th:text="${item.productId}"></span></p>
+<p>列表价格: <span th:text="${item.listPrice}"></span></p>
+<p>单位成本: <span th:text="${item.unitCost}"></span></p>
+<p>库存数量: <span th:text="${item.quantity}"></span></p>
+<p>是否可用: <span th:text="${item.status}"></span></p>
+
+<a th:href="@{/admin/index}">返回后台管理首页</a>
+<a th:href="@{/admin/product(productId=${item.productId})}">返回商品详情</a>
+
+<footer th:replace="common/bottom"></footer>
+</body>
+</html>

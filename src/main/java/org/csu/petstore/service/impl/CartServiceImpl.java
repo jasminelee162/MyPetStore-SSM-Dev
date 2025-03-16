@@ -57,8 +57,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public ItemVO removeCartItem(String username, String itemId, HttpSession session) {
-        ItemVO itemVO = catalogService.getItem(itemId, session);
+    public ItemVO removeCartItem(String username, String itemId) {
+        ItemVO itemVO = catalogService.getItem(itemId);
         cartItemMapper.deleteCartItem(username, itemId);
 
         //记录日志
@@ -69,18 +69,18 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartVO getCartByUsername(String username, HttpSession session) {
+    public CartVO getCartByUsername(String username) {
         // 获取该用户的购物车商品
         List<CartItem> cartItems = cartItemMapper.getCartItemsByUsername(username);
 
         // 调用封装的方法，转换为 CartVO
-        return convertToCartVO(cartItems, session);
+        return convertToCartVO(cartItems);
     }
 
     /**
      * 将购物车数据转换为 CartVO
      */
-    private CartVO convertToCartVO(List<CartItem> cartItems, HttpSession session) {
+    private CartVO convertToCartVO(List<CartItem> cartItems) {
         CartVO cartVO = new CartVO();
         BigDecimal subTotal = BigDecimal.ZERO;
 
@@ -92,7 +92,7 @@ public class CartServiceImpl implements CartService {
             cartItemVO.setQuantity(cartItem.getQuantity());
 
             // 获取商品数据
-            ItemVO item = catalogService.getItem(cartItem.getItemId(), session);
+            ItemVO item = catalogService.getItem(cartItem.getItemId());
             cartItemVO.setItem(item);
 
             // 计算商品总价

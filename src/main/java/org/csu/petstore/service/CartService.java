@@ -16,10 +16,10 @@ public interface CartService {
     void updateCartItem(String username, String itemId,int quantity);
 
     // 删除购物车项
-    ItemVO removeCartItem(String username, String itemId, HttpSession session);
+    ItemVO removeCartItem(String username, String itemId);
 
     // 获取用户购物车
-    CartVO getCartByUsername(String username, HttpSession session);
+    CartVO getCartByUsername(String username);
 
     // 清空购物车
     void clearCart(String username);

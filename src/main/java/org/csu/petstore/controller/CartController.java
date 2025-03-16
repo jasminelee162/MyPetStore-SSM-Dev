@@ -34,16 +34,19 @@ public class CartController {
     private CatalogService catalogService;
 
     @GetMapping("viewCart")
-    public String viewCart(HttpSession session) {
+    public String viewCart(HttpSession session,Model model) {
         // 检查 session 是否有账户信息
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
+        String username = null;
         if (account == null) {
-            account = new AccountVO(); // 创建一个空的 AccountVO
-            session.setAttribute("loginAccount", account);
+            model.addAttribute("msg", "请先登录后再使用购物车！");
+            return "/account/signOnForm";
+        } else {
+            username = account.getUsername();
         }
 
         // 获取购物车信息
-        CartVO cart = cartService.getCartByUsername("j2ee", session);
+        CartVO cart = cartService.getCartByUsername(username);
         if (cart == null) {
             cart = new CartVO(); // 创建一个新的购物车对象
             session.setAttribute("cart", cart);
@@ -55,16 +58,19 @@ public class CartController {
     }
 
     @GetMapping("/addItemToCart")
-    public String addItemToCart(@RequestParam("workingItemId") String itemId, HttpSession session) {
+    public String addItemToCart(@RequestParam("workingItemId") String itemId, HttpSession session, Model model) {
         //从 session 中获取登录用户的 username
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-        String username = "j2ee"; // 或者 account.getUsername()
-
+        if (account == null) {
+            model.addAttribute("msg", "请先登录后再使用购物车！");
+            return "/account/signOnForm";
+        }
+        String username = account.getUsername();
         //调用 CartService 的方法将商品添加到购物车
         cartService.addCartItem(username, itemId);
 
         //获取购物车
-        CartVO cart = cartService.getCartByUsername(username, session);
+        CartVO cart = cartService.getCartByUsername(username);
         if (cart != null) {
             session.setAttribute("cart", cart);  //更新 session 中的购物车
         }
@@ -94,7 +100,7 @@ public class CartController {
         if (cartItemVO != null) {
             if (quantity < 1) {
                 // 如果数量小于 1，则从购物车中移除该商品
-                cartService.removeCartItem(username, itemId, session);
+                cartService.removeCartItem(username, itemId);
 
                 // **手动移除 itemMap 里的 itemId，防止空指针异常**
                 cart.getItemMap().remove(itemId);
@@ -140,7 +146,7 @@ public class CartController {
     public String removeCartItem(@RequestParam String itemId, HttpSession session) {
         CartVO cart = (CartVO) session.getAttribute("cart");
         if (cart != null) {
-            cartService.removeCartItem(cart.getUsername(), itemId, session);
+            cartService.removeCartItem(cart.getUsername(), itemId);
             session.setAttribute("cart", cart);  // 更新 session 中的购物车
         }
         return "redirect:/cart/viewCart";

@@ -1,32 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Order Confirmation</title>
     <link rel="stylesheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>
 </head>
-
 <body>
-<!-- 通用头部 -->
+
 <header th:replace="common/top"></header>
 
 <div id="Content">
-    <!-- 返回链接 -->
     <div id="BackLink">
-        <a href="/catalog/index">Return to Main Menu</a>
+        <a th:href="@{/catalog/index}">Return to Main Menu</a>
     </div>
 
-    <!-- 感谢信息 -->
     <ul class="message" style="text-align: center; font-size: 1.2em; margin: 1.5em 0;">
         <li>Thank you, your order has been submitted.</li>
     </ul>
 
-    <!-- 订单详细信息 -->
     <div id="Catalog" style="max-width: 1000px; margin: 0 auto; padding: 2em; background-color: #ffffff; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); border-radius: 8px;">
         <table style="width: 100%; border-collapse: collapse;">
 
-            <!-- 订单信息 -->
             <tr>
                 <th colspan="2" style="background-color: #1d4886; color: white; padding: 1em; text-align: center; font-size: 1.5em; border-radius: 8px 8px 0 0;">
                     Order #
@@ -35,7 +29,6 @@
                 </th>
             </tr>
 
-            <!-- 支付信息 -->
             <tr>
                 <th colspan="2" class="section-header">Payment Details</th>
             </tr>
@@ -52,7 +45,6 @@
                 <td th:text="${order.exprDate}">12/2026</td>
             </tr>
 
-            <!-- 账单地址 -->
             <tr>
                 <th colspan="2" class="section-header">Billing Address</th>
             </tr>
@@ -65,7 +57,6 @@
             <tr><td class="label">Zip:</td><td th:text="${order.billZip}">62704</td></tr>
             <tr><td class="label">Country:</td><td th:text="${order.billCountry}">USA</td></tr>
 
-            <!-- 收货地址 -->
             <tr>
                 <th colspan="2" class="section-header">Shipping Address</th>
             </tr>
@@ -85,7 +76,6 @@
                 </td>
             </tr>
 
-            <!-- 订单商品 -->
             <tr>
                 <td colspan="2">
                     <table style="width: 100%; border-collapse: collapse; margin-top: 1.5em;">
@@ -124,7 +114,6 @@
     </div>
 </div>
 
-<!-- 通用底部 -->
 <footer th:replace="common/bottom"></footer>
 
 </body>

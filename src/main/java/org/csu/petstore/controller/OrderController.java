@@ -56,8 +56,10 @@ public class OrderController {
         orderVO.setOrderDate(new java.sql.Date(System.currentTimeMillis()).toString());
         orderVO.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
 
-        // 将 OrderVO 对象添加到模型中
+        // 将 OrderVO 对象添加到模型中和session中
         model.addAttribute("order", orderVO);
+        session.setAttribute("order", orderVO);
+
 
         // 跳转到订单确认页面
         return "order/confirmOrder";
@@ -72,11 +74,59 @@ public class OrderController {
     }
 
     //查看最终订单页面控制：session信息打印
-    @GetMapping("viewOrder")
-    public String viewOrder(String orderId, Model model) {
-        OrderVO orderVO = new OrderVO();
-        orderVO.setOrderId(orderId);
+    @PostMapping("viewOrder")
+    public String viewOrder(HttpSession session, Model model) {
+        // 从会话中获取当前订单对象
+        OrderVO orderVO = (OrderVO) session.getAttribute("order");
+        if (orderVO == null) {
+            return "redirect:/error"; // 如果订单不存在重定向到错误页面
+        }
+
+        // 将订单对象添加到模型中
         model.addAttribute("order", orderVO);
+
+        orderVO.setOrderId("9875");
+        System.out.println("111111111111111111111111111111111111111111");
+        System.out.println(orderVO.getOrderId());
+        System.out.println(orderVO.getCourier());
+        orderVO.setCourier("UIO");
+        orderVO.setTotalPrice("123");
+        orderVO.setLocale("ads");
+        // 将订单保存到数据库
+        boolean insertSuccess = orderService.insertOrder(orderVO);
+        System.out.println("Order ID: " + orderVO.getOrderId());
+        if (!insertSuccess) {
+            return "redirect:/error"; // 如果保存失败，重定向到错误页面
+        }
+
+        // 获取购物车和选中的商品
+        CartVO cartVO = (CartVO) session.getAttribute("cart");
+        CartVO selectedCart = (CartVO) session.getAttribute("selectedCart");
+
+        if (selectedCart != null) {
+            List<CartItemVO> selectedItems = selectedCart.getItemList();
+
+            // 遍历已选商品并从购物车中移除
+            for (CartItemVO selectedItem : selectedItems) {
+                cartVO.getItemMap().remove(selectedItem.getItem().getItemId());
+                cartVO.getItemList().remove(selectedItem);
+            }
+
+            // 重新计算购物车的小计
+            BigDecimal subTotal = BigDecimal.ZERO;
+            for (CartItemVO cartItem : cartVO.getItemMap().values()) {
+                subTotal = subTotal.add(cartItem.getTotalPrice());
+            }
+            cartVO.setSubTotal(subTotal);
+
+            // 清空已购买的商品记录
+            session.removeAttribute("selectedCart");
+        }
+
+        // 更新 session 中的购物车
+        session.setAttribute("cart", cartVO);
+
+        // 跳转到查看订单页面
         return "order/viewOrder";
     }
 

@@ -32,5 +32,5 @@ public interface OrderService {
     //Order初始化，根据loginAccount和cart
     OrderVO initOrder(AccountVO accountVO, CartVO cartvo);
 
-
+    int getNextId(String name);
 }

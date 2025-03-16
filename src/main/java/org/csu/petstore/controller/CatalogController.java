@@ -39,7 +39,7 @@ public class CatalogController {
 
         //异常处理，检测到获取账户信息空异常，则直接跳往登陆界面
         try {
-            CategoryVO categoryVO = catalogService.getCategory(categoryId, session);
+            CategoryVO categoryVO = catalogService.getCategory(categoryId);
             session.setAttribute("category", categoryVO);
             model.addAttribute("category", categoryVO);
             //记录日志
@@ -53,7 +53,7 @@ public class CatalogController {
     @GetMapping("viewProduct")
     public String viewProduct(String productId, Model model, HttpSession session, HttpServletRequest request) {
         logRequest(request, "User viewed product: " + productId);
-        ProductVO productVO = catalogService.getProduct(productId, session);
+        ProductVO productVO = catalogService.getProduct(productId);
         session.setAttribute("product", productVO);
         model.addAttribute("product", productVO);
 
@@ -66,7 +66,7 @@ public class CatalogController {
     @GetMapping("viewItem")
     public String viewItem(String itemId, Model model, HttpSession session, HttpServletRequest request) {
         logRequest(request, "User viewed item: " + itemId);
-        ItemVO itemVO = catalogService.getItem(itemId, session);
+        ItemVO itemVO = catalogService.getItem(itemId);
         session.setAttribute("item", itemVO);
         model.addAttribute("item", itemVO);
 
