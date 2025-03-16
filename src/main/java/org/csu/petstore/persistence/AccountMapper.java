@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.csu.petstore.entity.Account;
 import org.csu.petstore.entity.Profile;
 import org.csu.petstore.entity.SignOn;
@@ -41,13 +42,26 @@ public interface AccountMapper extends BaseMapper<Account> {
     @Insert("INSERT INTO SIGNON (USERNAME, PASSWORD) VALUES (#{username}, #{password})")
     void insertSignon(SignOn signon);
 
-    void updateAccount(AccountVO account);
 
-    void updateProfile(AccountVO account);
 
-    void updateSignon(Account account);
+    // 获取账户信息
+    @Select("SELECT * FROM account WHERE ACCOUNT.USERID = #{username}")
+    AccountVO getAccountByUsername(@Param("username") String username);
+
 
     boolean isUsernameExists(String username);
+    @Update("UPDATE ACCOUNT SET " +
+            "EMAIL = #{email}, " +
+            "FIRSTNAME = #{firstname}, " +
+            "LASTNAME = #{lastname}, " +
+            "ADDR1 = #{addr1}, " +
+            "ADDR2 = #{addr2}, " +
+            "CITY = #{city}, " +
+            "STATE = #{state}, " +
+            "ZIP = #{zip}, " +
+            "COUNTRY = #{country}, " +
+            "PHONE = #{phone} " +
+            "WHERE USERID = #{username}")
+    void updateAccount(Account accountVO);
 
-    AccountVO getAccountByUsername(String username);
 }

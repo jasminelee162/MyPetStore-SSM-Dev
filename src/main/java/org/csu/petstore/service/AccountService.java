@@ -1,6 +1,7 @@
 package org.csu.petstore.service;
 
 import org.apache.ibatis.annotations.Update;
+import org.csu.petstore.persistence.AccountMapper;
 import org.csu.petstore.vo.AccountVO;
 
 
@@ -13,11 +14,9 @@ public interface AccountService {
 
 
     boolean validatePassword(String username, String password);
+    AccountVO getAccountByUsername(String username);
+    void updateAccount(AccountVO account);
 
-    @Update("UPDATE ACCOUNT SET EMAIL = #{email}, FIRSTNAME = #{firstname}, LASTNAME = #{lastname}, " +
-            "ADDR1 = #{address1}, ADDR2 = #{address2}, CITY = #{city}, STATE = #{state}, ZIP = #{zip}, " +
-            "COUNTRY = #{country}, PHONE = #{phone} WHERE USERID = #{username}")
-    void updateAccount(AccountVO accountVO);
 
 
 }

@@ -72,14 +72,39 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
-    @Override
-    @Transactional
-    public void updateAccount(AccountVO account) {
-        accountMapper.updateAccount(account);
-        accountMapper.updateProfile(account);
 
+
+
+    @Override
+    public AccountVO getAccountByUsername(String username) {
+        return accountMapper.getAccountByUsername(username);
     }
 
+
+
+    @Override
+    public void updateAccount(AccountVO accountVO) {
+        // 将VO转换为Entity并更新
+        Account account = new Account();
+        account.setUsername(accountVO.getUsername());
+        account.setPassword(accountVO.getPassword());
+        account.setEmail(accountVO.getEmail());
+        account.setFirstname(accountVO.getFirstname());
+        account.setLastname(accountVO.getLastname());
+        account.setStatus(accountVO.getStatus());
+        account.setAddr1(accountVO.getAddr1());
+        account.setAddr2(accountVO.getAddr2());
+        account.setCity(accountVO.getCity());
+        account.setState(accountVO.getState());
+        account.setZip(accountVO.getZip());
+        account.setCountry(accountVO.getCountry());
+        account.setPhone(accountVO.getPhone());
+        System.out.println(account.toString());
+        System.out.println(accountVO.toString());
+
+        // 调用Mapper进行更新操作
+        accountMapper.updateAccount(account);
+    }
     @Override
     public boolean validatePassword(String username, String password) {
         return false;
