@@ -86,5 +86,31 @@ public class AdminController {
         return "redirect:/admin/product?productId=" + productId;  // 返回商品详情页面
     }
 
+    @PostMapping("/updateCategory")
+    public String updateCategory(@RequestParam String categoryId,
+                                    @RequestParam String categoryName,
+                                 @RequestParam String description) {
+        // 调用服务层更新类别信息
+        adminService.updateCategory(categoryId, categoryName, description);
+        return "redirect:/admin/category?categoryId=" + categoryId;  // 返回类别列表页面
+    }
+
+    @PostMapping("/updateProduct")
+    public String updateProduct(@RequestParam String productId,
+                                @RequestParam String productName,
+                                @RequestParam String description) {
+        // 调用服务层更新商品信息
+        adminService.updateProduct(productId, productName, description);
+        return "redirect:/admin/product?productId=" + productId;  // 返回该类别的商品页面
+    }
+
+    @PostMapping("/updateItem")
+    public String updateItem(@RequestParam String itemId,
+                             @RequestParam String listPrice,
+                             @RequestParam String quantity) {
+        // 调用服务层更新商品项信息
+        adminService.updateItem(itemId, listPrice, quantity);
+        return "redirect:/admin/item?itemId=" + itemId;  // 返回商品详情页面
+    }
 
 }

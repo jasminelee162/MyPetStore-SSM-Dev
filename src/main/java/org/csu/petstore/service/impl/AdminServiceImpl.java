@@ -7,10 +7,13 @@ import org.csu.petstore.persistence.CategoryMapper;
 import org.csu.petstore.persistence.ItemMapper;
 import org.csu.petstore.persistence.ProductMapper;
 import org.csu.petstore.service.AdminService;
+import org.csu.petstore.service.CatalogService;
+import org.csu.petstore.vo.ItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 
 @Service("adminService")
 public class AdminServiceImpl implements AdminService {
@@ -23,6 +26,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private ItemMapper itemMapper;
+
+    @Autowired
+    private CatalogService catalogService;
 
     @Override
     public void addCategory(String categoryId, String categoryName, String description) {
@@ -58,4 +64,21 @@ public class AdminServiceImpl implements AdminService {
         // 插入商品项到数据库
         itemMapper.insert(item);
     }
+
+    @Override
+    public void updateItem(String itemId, String listPrice, String quantity) {
+
+    }
+
+    @Override
+    public void updateProduct(String productId, String productName, String description) {
+
+    }
+
+    @Override
+    public void updateCategory(String categoryId, String categoryName, String description) {
+
+    }
+
+
 }
