@@ -11,5 +11,6 @@ import java.util.List;
 public class CategoryVO {
     private String categoryId;
     private String categoryName;
+    private String description;
     private List<Product> productList;
 }

@@ -14,8 +14,8 @@
 <p>库存数量: <span th:text="${item.quantity}"></span></p>
 <p>是否可用: <span th:text="${item.status}"></span></p>
 
-<a th:href="@{/admin/index}">返回后台管理首页</a>
-<a th:href="@{/admin/product(productId=${item.productId})}">返回商品详情</a>
+<a th:href="@{/templates/adminShop/index}">返回后台管理首页</a>
+<a th:href="@{/templates/adminShop/product(productId=${item.productId})}">返回商品详情</a>
 
 <footer th:replace="common/bottom"></footer>
 </body>

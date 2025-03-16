@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品管理</title>
+    <script>
+        function showEditForm(categoryId, categoryName, description) {
+            let existingRow = document.getElementById('editRow');
+            if (existingRow) {
+                existingRow.remove();
+            }
+
+            let currentRow = document.getElementById('categoryRow-' + categoryId);
+            if (!currentRow) return;
+
+            let newRow = document.createElement('tr');
+            newRow.id = 'editRow';
+            newRow.innerHTML = `
+            <td colspan="3">
+                <form action="/adminShop/updateCategory" method="post">
+                    <input type="hidden" name="categoryId" value="${categoryId}">
+
+                    <label>分类名称：</label>
+                    <input type="text" name="categoryName" value="${categoryName}" required>
+
+                    <label>分类描述：</label>
+                    <input type="text" name="description" id="editDescription">
+
+                    <button type="submit">保存</button>
+                    <button type="button" onclick="document.getElementById('editRow').remove()">取消</button>
+                </form>
+            </td>
+        `;
+
+            currentRow.parentNode.insertBefore(newRow, currentRow.nextSibling);
+
+            //确保 description 以纯文本形式赋值
+            document.getElementById('editDescription').setAttribute("value", description);
+        }
+    </script>
+</head>
+<body>
+<header th:replace="common/top"></header>
+
+<h1>商品分类管理</h1>
+
+<table border="1" th:if="${categories != null}">
+    <tr>
+        <th>分类编号</th>
+        <th>分类名称</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="category : ${categories}" th:id="'categoryRow-' + ${category.categoryId}">
+        <td th:text="${category.categoryId}">分类ID</td>
+        <td th:text="${category.categoryName}">分类名称</td>
+        <td>
+            <a th:href="@{/adminShop/category(categoryId=${category.categoryId})}">查看商品</a>
+
+            <!-- 点击修改时，在当前行下方插入修改框 -->
+            <button th:attr="onclick=|showEditForm('${category.categoryId}', '${category.categoryName}', '${category.description}')|">修改</button>
+
+            <!-- 删除分类 -->
+            <form action="/adminShop/deleteCategory" method="post" style="display:inline;">
+                <input type="hidden" name="categoryId" th:value="${category.categoryId}">
+                <button type="submit" onclick="return confirm('确定删除该分类？')">删除</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<!-- 如果没有分类，则显示空提示 -->
+<p th:if="${categories == null}">无类别。</p>
+
+
+<!-- 添加新类别表单 -->
+<h2>添加新类别</h2>
+<form action="/adminShop/addCategory" method="post">
+    <label for="categoryId">分类编号：</label>
+    <input type="text" id="categoryId" name="categoryId" required>
+
+    <label for="categoryName">分类名称：</label>
+    <input type="text" id="categoryName" name="categoryName" required>
+
+    <label for="description">分类描述：</label>
+    <input type="text" id="description" name="description">
+
+    <button type="submit">添加类别</button>
+</form>
+
+<a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
+
+<footer th:replace="common/bottom"></footer>
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>分类详情</title>
+    <script>
+        function showEditForm(categoryId,productId, productName, productDescription) {
+            let existingRow = document.getElementById('editRow');
+            if (existingRow) {
+                existingRow.remove();
+            }
+
+            // 获取当前商品行
+            let currentRow = document.getElementById('productRow-' + productId);
+            if (!currentRow) return;
+
+            // 创建新的修改表单行
+            let newRow = document.createElement('tr');
+            newRow.id = 'editRow';
+            newRow.innerHTML = `
+            <td colspan="3">
+                <form action="/adminShop/updateProduct" method="post">
+                    <input type="hidden" name="categoryId" value="${categoryId}">
+                    <input type="hidden" name="productId" value="${productId}">
+
+                    <label>商品名称：</label>
+                    <input type="text" name="productName" value="${productName}" required>
+
+                    <label>商品描述：</label>
+                    <input type="text" name="description" id="editDescription-${productId}" value="${productDescription}">
+
+                    <button type="submit">保存</button>
+                    <button type="button" onclick="document.getElementById('editRow-${productId}').remove()">取消</button>
+                </form>
+            </td>
+        `;
+
+            // 插入修改表单行到当前商品行的下方
+            currentRow.parentNode.insertBefore(newRow, currentRow.nextSibling);
+        }
+    </script>
+
+</head>
+<body>
+<header th:replace="common/top"></header>
+
+<h1 th:text="'分类：' + ${category.categoryName}">分类名称</h1>
+
+<!-- 商品列表 -->
+<table border="1" th:if="${category.productList != null and category.productList.size() > 0}">
+    <tr>
+        <th>商品编号</th>
+        <th>商品名称</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="product : ${category.productList}" th:id="'productRow-'+${product.productId}">
+        <td th:text="${product.productId}">商品ID</td>
+        <td th:text="${product.name}">商品名称</td>
+        <td>
+            <a th:href="@{/adminShop/product(productId=${product.productId})}">查看详情</a>
+
+            <!-- 修改商品 -->
+            <button type="button"
+                    th:attr="onclick=|showEditForm('${category.categoryId}','${product.productId}', '${product.name}', '${product.description}')|">
+                修改
+            </button>
+
+            <!-- 删除商品 -->
+            <form action="/adminShop/deleteProduct" method="post" style="display:inline;">
+                <input type="hidden" name="productId" th:value="${product.productId}">
+                <button type="submit" onclick="return confirm('确定删除该商品？')">删除</button>
+            </form>
+        </td>
+    </tr>
+
+</table>
+
+<!-- 如果没有商品，则显示空提示 -->
+<p th:if="${category.productList == null or category.productList.size() == 0}">该类别下暂无商品。</p>
+
+<!-- 添加商品表单 -->
+<h2>添加新商品</h2>
+<form action="/adminShop/addProduct" method="post">
+    <input type="hidden" name="categoryId" th:value="${category.categoryId}"/>
+
+    <label for="productId">商品编号：</label>
+    <input type="text" id="productId" name="productId" required>
+
+    <label for="productName">商品名称：</label>
+    <input type="text" id="productName" name="productName" required>
+
+    <label for="description">商品描述：</label>
+    <input type="text" id="description" name="description">
+
+    <button type="submit">添加商品</button>
+</form>
+
+<a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
+<a th:href="@{/adminShop/catalog}">返回商品管理</a>
+
+<footer th:replace="common/bottom"></footer>
+</body>
+</html>

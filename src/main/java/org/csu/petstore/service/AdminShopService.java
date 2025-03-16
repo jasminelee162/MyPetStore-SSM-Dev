@@ -1,11 +1,6 @@
 package org.csu.petstore.service;
 
-import org.csu.petstore.entity.Item;
-import org.csu.petstore.entity.Product;
-
-import java.math.BigDecimal;
-
-public interface AdminService {
+public interface AdminShopService {
 
     void addCategory(String categoryId, String categoryName, String description);
 
