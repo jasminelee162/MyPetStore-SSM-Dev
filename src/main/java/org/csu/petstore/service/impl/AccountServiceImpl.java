@@ -1,13 +1,10 @@
 package org.csu.petstore.service.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.csu.petstore.entity.Account;
 import org.csu.petstore.entity.Profile;
 import org.csu.petstore.entity.SignOn;
 import org.csu.petstore.persistence.AccountMapper;
 import org.csu.petstore.service.AccountService;
-import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.AccountVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,11 +74,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public int updateAccount(AccountVO account) {
+    public void updateAccount(AccountVO account) {
         accountMapper.updateAccount(account);
         accountMapper.updateProfile(account);
 
-        return 0;
     }
 
     @Override

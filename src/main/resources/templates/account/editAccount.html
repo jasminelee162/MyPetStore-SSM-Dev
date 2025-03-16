@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,60 +7,60 @@
 </head>
 <body>
 <h2>编辑账户信息</h2>
-<form action="submit_account_info" method="POST">
+<form th:action="@{/account/submitAccountInfo}" method="post" enctype="application/x-www-form-urlencoded">
     <!-- 隐藏字段：用户名 -->
-    <input type="hidden" name="username" value="${account.username}"/>
+    <input type="hidden" th:field="*{account.username}" />
 
     <fieldset>
         <legend>账户信息</legend>
         <table>
             <tr>
                 <td><label for="firstName">姓名:</label></td>
-                <td><input type="text" id="firstName" name="firstName" value="${account.firstName}" required placeholder="请输入姓名"/></td>
+                <td><input type="text" id="firstName" th:field="*{account.firstname}" required placeholder="请输入姓名" /></td>
             </tr>
             <tr>
                 <td><label for="lastName">姓氏:</label></td>
-                <td><input type="text" id="lastName" name="lastName" value="${account.lastName}" required placeholder="请输入姓氏"/></td>
+                <td><input type="text" id="lastName" th:field="*{account.lastname}" required placeholder="请输入姓氏" /></td>
             </tr>
             <tr>
                 <td><label for="email">邮箱:</label></td>
-                <td><input type="email" id="email" name="email" value="${account.email}" required placeholder="请输入邮箱"/></td>
+                <td><input type="email" id="email" th:field="*{account.email}" required placeholder="请输入邮箱" /></td>
             </tr>
             <tr>
                 <td><label for="phone">电话:</label></td>
-                <td><input type="tel" id="phone" name="phone" value="${account.phone}" required placeholder="请输入电话"/></td>
+                <td><input type="tel" id="phone" th:field="*{account.phone}" required placeholder="请输入电话" /></td>
             </tr>
             <tr>
                 <td><label for="password">新密码:</label></td>
-                <td><input type="password" id="password" name="password" placeholder="请输入新密码"/></td>
+                <td><input type="password" id="password" th:field="*{account.password}" placeholder="请输入新密码" /></td>
             </tr>
             <tr>
                 <td><label for="repeatedPassword">确认密码:</label></td>
-                <td><input type="password" id="repeatedPassword" name="repeatedPassword" placeholder="请确认新密码"/></td>
+                <td><input type="password" id="repeatedPassword" th:field="*{account.password}" placeholder="请确认新密码" /></td>
             </tr>
             <tr>
                 <td><label for="address1">地址 1:</label></td>
-                <td><input type="text" id="address1" name="address1" value="${account.address1}" placeholder="请输入地址 1"/></td>
+                <td><input type="text" id="address1" th:field="*{account.addr1}" placeholder="请输入地址 1" /></td>
             </tr>
             <tr>
                 <td><label for="address2">地址 2:</label></td>
-                <td><input type="text" id="address2" name="address2" value="${account.address2}" placeholder="请输入地址 2"/></td>
+                <td><input type="text" id="address2" th:field="*{account.addr2}" placeholder="请输入地址 2" /></td>
             </tr>
             <tr>
                 <td><label for="city">城市:</label></td>
-                <td><input type="text" id="city" name="city" value="${account.city}" placeholder="请输入城市"/></td>
+                <td><input type="text" id="city" th:field="*{account.city}" placeholder="请输入城市" /></td>
             </tr>
             <tr>
                 <td><label for="state">州/省:</label></td>
-                <td><input type="text" id="state" name="state" value="${account.state}" placeholder="请输入州/省"/></td>
+                <td><input type="text" id="state" th:field="*{account.state}" placeholder="请输入州/省" /></td>
             </tr>
             <tr>
                 <td><label for="zip">邮编:</label></td>
-                <td><input type="text" id="zip" name="zip" value="${account.zip}" placeholder="请输入邮编"/></td>
+                <td><input type="text" id="zip" th:field="*{account.zip}" placeholder="请输入邮编" /></td>
             </tr>
             <tr>
                 <td><label for="country">国家:</label></td>
-                <td><input type="text" id="country" name="country" value="${account.country}" required placeholder="请输入国家"/></td>
+                <td><input type="text" id="country" th:field="*{account.country}" required placeholder="请输入国家" /></td>
             </tr>
         </table>
     </fieldset>
@@ -71,31 +71,31 @@
             <tr>
                 <td><label for="languagePreference">语言偏好:</label></td>
                 <td>
-                    <select id="languagePreference" name="languagePreference">
-                        <option value="english" ${account.languagePreference == 'english' ? 'selected' : ''}>English</option>
-                        <option value="japanese" ${account.languagePreference == 'japanese' ? 'selected' : ''}>Japanese</option>
+                    <select id="languagePreference" th:field="*{account.langpref}">
+                        <option value="english" th:selected="${account.langpref == 'english'}">English</option>
+                        <option value="japanese" th:selected="${account.langpref == 'japanese'}">Japanese</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td><label for="favouriteCategoryId">喜欢的类别:</label></td>
                 <td>
-                    <select id="favouriteCategoryId" name="favouriteCategoryId">
-                        <option value="FISH"}>Fish</option>
-                        <option value="DOGS" }>Dogs</option>
-                        <option value="REPTILES" }>Reptiles</option>
-                        <option value="CATS" }>Cats</option>
-                        <option value="BIRDS" }>Birds</option>
+                    <select id="favouriteCategoryId" th:field="*{account.favcategory}">
+                        <option value="FISH" th:selected="${account.favcategory == 'FISH'}">FISH</option>
+                        <option value="DOGS" th:selected="${account.favcategory == 'DOGS'}">DOGS</option>
+                        <option value="REPTILES" th:selected="${account.favcategory == 'REPTILES'}">REPTILES</option>
+                        <option value="CATS" th:selected="${account.favcategory == 'CATS'}">CATS</option>
+                        <option value="BIRDS" th:selected="${account.favcategory == 'BIRDS'}">BIRDS</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td><label for="listOption">启用我的列表:</label></td>
-                <td><input type="checkbox" id="listOption" name="listOption" value="true"}/></td>
+                <td><input type="checkbox" id="listOption" th:field="*{account.mylistopt}" /></td>
             </tr>
             <tr>
                 <td><label for="bannerOption">启用我的横幅:</label></td>
-                <td><input type="checkbox" id="bannerOption" name="bannerOption" value="true" }/></td>
+                <td><input type="checkbox" id="bannerOption" th:field="*{account.banneropt}" /></td>
             </tr>
         </table>
     </fieldset>
@@ -106,6 +106,8 @@
 </form>
 
 <!-- 错误信息显示 -->
-<div class="error">${error}</div>
+<div class="error" th:text="${error}"></div>
 </body>
 </html>
+
+
