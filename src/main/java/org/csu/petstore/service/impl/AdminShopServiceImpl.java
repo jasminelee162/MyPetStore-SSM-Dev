@@ -6,17 +6,15 @@ import org.csu.petstore.entity.Product;
 import org.csu.petstore.persistence.CategoryMapper;
 import org.csu.petstore.persistence.ItemMapper;
 import org.csu.petstore.persistence.ProductMapper;
-import org.csu.petstore.service.AdminService;
+import org.csu.petstore.service.AdminShopService;
 import org.csu.petstore.service.CatalogService;
-import org.csu.petstore.vo.ItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 
-@Service("adminService")
-public class AdminServiceImpl implements AdminService {
+@Service("adminShopService")
+public class AdminShopServiceImpl implements AdminShopService {
 
     @Autowired
     private CategoryMapper categoryMapper;
@@ -37,11 +35,12 @@ public class AdminServiceImpl implements AdminService {
         category.setName(categoryName);
         category.setDescription(description);
 
-        categoryMapper.insert(category);  // 使用 MyBatis 插入新类别
+        categoryMapper.insert(category);
     }
 
 
     // 添加商品方法
+    @Override
     public void addProduct(String categoryId, String productId, String productName, String description) {
         Product product = new Product();
         product.setCategoryId(categoryId);
@@ -54,6 +53,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     // 添加商品项方法
+    @Override
     public void addItem(String productId, String itemId, String listPrice, String quantity) {
         Item item = new Item();
         item.setProductId(productId);
@@ -66,18 +66,33 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void updateItem(String itemId, String listPrice, String quantity) {
+    public void updateCategory(String categoryId, String categoryName, String description) {
+        Category category = new Category();
+        category.setCategoryId(categoryId);
+        category.setName(categoryName);
+        category.setDescription(description);
 
+        categoryMapper.updateById(category);
     }
 
     @Override
     public void updateProduct(String productId, String productName, String description) {
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setName(productName);
+        product.setDescription(description);
 
+        productMapper.updateById(product);
     }
 
     @Override
-    public void updateCategory(String categoryId, String categoryName, String description) {
-
+    public void updateItem(String itemId, String listPrice, String quantity) {
+        Item item = new Item();
+        item.setItemId(itemId);
+        item.setListPrice(BigDecimal.valueOf(Double.parseDouble(listPrice)));
+//        item.setQuantity(Integer.parseInt(quantity));
+        item.setSupplierId(1);
+        itemMapper.updateById(item);
     }
 
 

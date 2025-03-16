@@ -49,6 +49,7 @@ public class CatalogServiceImpl implements CatalogService {
             CategoryVO vo = new CategoryVO();
             vo.setCategoryId(category.getCategoryId());
             vo.setCategoryName(category.getName());
+            vo.setDescription(category.getDescription());
             return vo;
         }).collect(Collectors.toList());
     }
@@ -65,6 +66,7 @@ public class CatalogServiceImpl implements CatalogService {
         categoryVO.setProductList(productList);
         categoryVO.setCategoryName(category.getName());
         categoryVO.setCategoryId(categoryId);
+        categoryVO.setDescription(category.getDescription());
 
         return categoryVO;
     }
@@ -94,7 +96,7 @@ public class CatalogServiceImpl implements CatalogService {
 
         itemVO.setItemId(itemId);
         itemVO.setListPrice(item.getListPrice());
-        itemVO.setAttributes(item.getAttribute1());
+        itemVO.setAttribute1(item.getAttribute1());
         itemVO.setProductId(product.getProductId());
         itemVO.setProductName(product.getName());
         String[] temp = product.getDescription().split("_");

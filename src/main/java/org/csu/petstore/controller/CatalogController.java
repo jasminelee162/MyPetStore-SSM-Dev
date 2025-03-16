@@ -28,14 +28,18 @@ public class CatalogController {
     private static final Logger logger = LogManager.getLogger(CatalogController.class);
 
 
-
     @GetMapping("index")
-    public String index(){
+    public String index() {
         return "catalog/main";
     }
 
+    @GetMapping("adminIndex")
+    public String adminIndex() {
+        return "admin/main";
+    }
+
     @GetMapping("viewCategory")
-    public String viewCategory(String categoryId, Model model, HttpSession session){
+    public String viewCategory(String categoryId, Model model, HttpSession session) {
 
         //异常处理，检测到获取账户信息空异常，则直接跳往登陆界面
         try {
@@ -44,7 +48,7 @@ public class CatalogController {
             model.addAttribute("category", categoryVO);
             //记录日志
             catalogService.setLog("category", session, categoryId);
-        }catch (Exception e){
+        } catch (Exception e) {
             return "account/signOnForm";
         }
         return "catalog/category";

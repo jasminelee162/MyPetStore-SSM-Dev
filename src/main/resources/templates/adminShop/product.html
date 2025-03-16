@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品详情</title>
+    <script>
+        function showEditItemForm(productId,itemId, listPrice, quantity) {
+            // 移除已有的编辑行
+            let existingRow = document.getElementById('editRow');
+            if (existingRow) {
+                existingRow.remove();
+            }
+
+            // 获取当前商品项所在的行
+            let currentRow = document.getElementById('itemRow-' + itemId);
+            if (!currentRow) return;
+
+            // 创建新的修改表单行
+            let newRow = document.createElement('tr');
+            newRow.id = 'editRow';
+            newRow.innerHTML = `
+        <td colspan="4">
+            <form action="/adminShop/updateItem" method="post">
+                <input type="hidden" name="productId" value="${productId}">
+                <input type="hidden" name="itemId" value="${itemId}">
+
+                <label>价格：</label>
+                <input type="text" name="listPrice" value="${listPrice.replace(/"/g, '&quot;')}" required>
+
+                <label>库存：</label>
+                <input type="text" name="quantity" value="${quantity.replace(/"/g, '&quot;')}" required>
+
+                <button type="submit">保存修改</button>
+                <button type="button" onclick="document.getElementById('editRow-${itemId}').remove()">取消</button>
+            </form>
+        </td>
+    `;
+
+            // 插入到当前商品项行的下方
+            currentRow.parentNode.insertBefore(newRow, currentRow.nextSibling);
+        }
+    </script>
+</head>
+<body>
+<header th:replace="common/top"></header>
+
+<h1 th:text="'商品名称：' + ${product.productName}">商品名称</h1>
+<p>分类编号: <span th:text="${product.categoryId}"></span></p>
+
+<!-- 商品项列表 -->
+<table border="1" th:unless="${#lists.isEmpty(product.itemList)}">
+    <tr>
+        <th>商品项编号</th>
+        <th>价格</th>
+        <th>库存</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="item : ${product.itemList}" th:id="'itemRow-'+${item.itemId}">
+        <td th:text="${item.itemId}">商品项ID</td>
+        <td th:text="${item.listPrice}">价格</td>
+<!--        <td th:text="${item.quantity}">库存</td>-->
+        <td th:text="1">库存</td>
+<!--        <td th:text="${item.isAvailable ? '已上架' : '未上架'}"></td>-->
+        <td>
+            <a th:href="@{/adminShop/item(itemId=${item.itemId})}">查看详情</a>
+
+            <!-- 修改商品项 -->
+            <button type="button"
+                    th:attr="onclick=|showEditItemForm('${product.productId}','${item.itemId}', '${item.listPrice}', '1')|">
+                修改
+            </button>
+
+            <!-- 删除商品项 -->
+            <form action="/adminShop/deleteItem" method="post" style="display:inline;">
+                <input type="hidden" name="itemId" th:value="${item.itemId}">
+                <button type="submit" onclick="return confirm('确定删除该商品项？')">删除</button>
+            </form>
+
+<!--            &lt;!&ndash; 上架/下架 &ndash;&gt;-->
+<!--            <form action="/adminShop/toggleItemStatus" method="post" style="display:inline;">-->
+<!--                <input type="hidden" name="itemId" th:value="${item.itemId}">-->
+<!--                <button type="submit" th:text="${item.isAvailable ? '下架' : '上架'}"></button>-->
+<!--            </form>-->
+        </td>
+    </tr>
+</table>
+
+<!-- 添加商品项 -->
+<h2>添加新商品项</h2>
+<form action="/adminShop/addItem" method="post">
+    <input type="hidden" name="productId" th:value="${product.productId}"/>
+
+    <label for="itemId">商品项编号：</label>
+    <input type="text" id="itemId" name="itemId" required>
+
+    <label for="listPrice">价格：</label>
+    <input type="text" id="listPrice" name="listPrice" required>
+
+    <label for="quantity">库存：</label>
+    <input type="text" id="quantity" name="quantity" required>
+
+    <button type="submit">添加商品项</button>
+</form>
+
+
+<a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
+<a th:href="@{/adminShop/category(categoryId=${product.categoryId})}">返回分类</a>
+
+<footer th:replace="common/bottom"></footer>
+
+</body>
+</html>

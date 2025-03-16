@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 
-
 @Controller
 @RequestMapping("/cart")
 public class CartController {
@@ -34,7 +33,7 @@ public class CartController {
     private CatalogService catalogService;
 
     @GetMapping("viewCart")
-    public String viewCart(HttpSession session,Model model) {
+    public String viewCart(HttpSession session, Model model) {
         // 检查 session 是否有账户信息
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
         String username = null;
@@ -59,20 +58,21 @@ public class CartController {
 
     @GetMapping("/addItemToCart")
     public String addItemToCart(@RequestParam("workingItemId") String itemId, HttpSession session, Model model) {
-        //从 session 中获取登录用户的 username
+        // 从 session 中获取登录用户的 username
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
         if (account == null) {
             model.addAttribute("msg", "请先登录后再使用购物车！");
             return "/account/signOnForm";
         }
         String username = account.getUsername();
-        //调用 CartService 的方法将商品添加到购物车
+
+        // 调用 CartService 的方法将商品添加到购物车
         cartService.addCartItem(username, itemId);
 
-        //获取购物车
+        // 获取购物车
         CartVO cart = cartService.getCartByUsername(username);
         if (cart != null) {
-            session.setAttribute("cart", cart);  //更新 session 中的购物车
+            session.setAttribute("cart", cart);  // 更新 session 中的购物车
         }
 
         // 跳转回购物车页面
@@ -88,8 +88,7 @@ public class CartController {
 
         // 获取用户信息
         AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-//    String username = (account != null) ? account.getUsername() : null;
-        String username = "j2ee";
+        String username = (account != null) ? account.getUsername() : null;
 
         // 获取购物车信息（不重新查询）
         CartVO cart = (CartVO) session.getAttribute("cart");
@@ -102,36 +101,31 @@ public class CartController {
                 // 如果数量小于 1，则从购物车中移除该商品
                 cartService.removeCartItem(username, itemId);
 
-                // **手动移除 itemMap 里的 itemId，防止空指针异常**
+                // 同步更新 itemMap 和 itemList
                 cart.getItemMap().remove(itemId);
+                cart.getItemList().removeIf(item -> item.getItem().getItemId().equals(itemId));
             } else {
                 // 更新商品数量
                 cartService.updateCartItem(username, itemId, quantity);
 
-                // **手动更新 cartItemVO 的数量和总价**
+                // 同步更新 cartItemVO 的数量和总价
                 cartItemVO.setQuantity(quantity);
                 BigDecimal newTotalPrice = cartItemVO.getItem().getListPrice().multiply(BigDecimal.valueOf(quantity));
                 cartItemVO.setTotalPrice(newTotalPrice);
             }
         }
 
-        // **手动计算 subTotal**
+        // 重新计算 subTotal
         BigDecimal subTotal = BigDecimal.ZERO;
         for (CartItemVO item : cart.getItemMap().values()) {
             subTotal = subTotal.add(item.getTotalPrice());
         }
 
-        // **避免 NullPointerException**
-        BigDecimal totalPrice = cart.getItemMap().containsKey(itemId) ? cart.getItemMap().get(itemId).getTotalPrice() : BigDecimal.ZERO;
-
-        System.out.println("totalPrice: " + totalPrice);
-        System.out.println("subTotal: " + subTotal);
-
         // 更新 session 中的购物车数据
         session.setAttribute("cart", cart);
 
         // 封装 JSON 数据
-        ItemDTO responseDTO = new ItemDTO(totalPrice, subTotal);
+        ItemDTO responseDTO = new ItemDTO(cartItemVO != null ? cartItemVO.getTotalPrice() : BigDecimal.ZERO, subTotal);
         String jsonResult = JSON.toJSONString(responseDTO);
         System.out.println(jsonResult);
 
@@ -141,13 +135,18 @@ public class CartController {
         out.println(jsonResult);
     }
 
-
     @PostMapping("/removeCartItem")
     public String removeCartItem(@RequestParam String itemId, HttpSession session) {
         CartVO cart = (CartVO) session.getAttribute("cart");
         if (cart != null) {
             cartService.removeCartItem(cart.getUsername(), itemId);
-            session.setAttribute("cart", cart);  // 更新 session 中的购物车
+
+            // 同步更新 itemMap 和 itemList
+            cart.getItemMap().remove(itemId);
+            cart.getItemList().removeIf(item -> item.getItem().getItemId().equals(itemId));
+
+            // 更新 session 中的购物车
+            session.setAttribute("cart", cart);
         }
         return "redirect:/cart/viewCart";
     }
@@ -157,7 +156,13 @@ public class CartController {
         CartVO cart = (CartVO) session.getAttribute("cart");
         if (cart != null) {
             cartService.clearCart(cart.getUsername());
-            session.setAttribute("cart", cart);  // 更新 session 中的购物车
+
+            // 清空 itemMap 和 itemList
+            cart.getItemMap().clear();
+            cart.getItemList().clear();
+
+            // 更新 session 中的购物车
+            session.setAttribute("cart", cart);
         }
         return "redirect:/cart/viewCart";
     }

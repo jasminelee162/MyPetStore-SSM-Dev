@@ -1,6 +1,6 @@
 package org.csu.petstore.controller;
 
-import org.csu.petstore.service.AdminService;
+import org.csu.petstore.service.AdminShopService;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.vo.CategoryVO;
 import org.csu.petstore.vo.ItemVO;
@@ -16,38 +16,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/adminShop")
+public class AdminShopController {
     @Autowired
     private CatalogService catalogService;
 
     @Autowired
-    private AdminService adminService;
+    private AdminShopService adminShopService;
 
-    @GetMapping("/index")
-    public String index() {
-        return "admin/index";
-    }
 
     @GetMapping("/catalog")
     public String viewCatalog(Model model) {
         List<CategoryVO> categories = catalogService.getAllCategories();
         model.addAttribute("categories", categories);
-        return "admin/catalog";
+        return "adminShop/catalog";
     }
 
     @GetMapping("/category")
     public String viewCategory(String categoryId, Model model) {
         CategoryVO categoryVO = catalogService.getCategory(categoryId);
         model.addAttribute("category", categoryVO);
-        return "admin/category";
+        return "adminShop/category";
     }
 
     @GetMapping("/product")
     public String viewProduct(String productId, Model model) {
         ProductVO productVO = catalogService.getProduct(productId);
         model.addAttribute("product", productVO);
-        return "admin/product";
+        return "adminShop/product";
     }
 
     @GetMapping("/item")
@@ -59,58 +55,60 @@ public class AdminController {
 
     @PostMapping("/addCategory")
     public String addCategory(@RequestParam String categoryId,
-                               @RequestParam String categoryName,
-                               @RequestParam String description) {
+                              @RequestParam String categoryName,
+                              @RequestParam String description) {
         // 调用服务层保存类别信息
-        adminService.addCategory(categoryId, categoryName, description);
-        return "redirect:/admin/catalog";
+        adminShopService.addCategory(categoryId, categoryName, description);
+        return "redirect:/adminShop/catalog";
     }
 
     @PostMapping("/addProduct")
     public String addProduct(@RequestParam String categoryId,
-                              @RequestParam String productId,
-                              @RequestParam String productName,
-                              @RequestParam String description) {
+                             @RequestParam String productId,
+                             @RequestParam String productName,
+                             @RequestParam String description) {
         // 调用服务层保存商品信息
-        adminService.addProduct(categoryId, productId, productName, description);
-        return "redirect:/admin/category?categoryId=" + categoryId;  // 返回商品类别页面
+        adminShopService.addProduct(categoryId, productId, productName, description);
+        return "redirect:/adminShop/category?categoryId=" + categoryId;  // 返回商品类别页面
     }
 
     @PostMapping("/addItem")
     public String addItem(@RequestParam String productId,
-                           @RequestParam String itemId,
-                           @RequestParam String listPrice,
-                           @RequestParam String quantity) {
+                          @RequestParam String itemId,
+                          @RequestParam String listPrice,
+                          @RequestParam String quantity) {
         // 调用服务层保存商品项信息
-        adminService.addItem(productId, itemId, listPrice, quantity);
-        return "redirect:/admin/product?productId=" + productId;  // 返回商品详情页面
+        adminShopService.addItem(productId, itemId, listPrice, quantity);
+        return "redirect:/adminShop/product?productId=" + productId;  // 返回商品详情页面
     }
 
     @PostMapping("/updateCategory")
     public String updateCategory(@RequestParam String categoryId,
-                                    @RequestParam String categoryName,
+                                 @RequestParam String categoryName,
                                  @RequestParam String description) {
         // 调用服务层更新类别信息
-        adminService.updateCategory(categoryId, categoryName, description);
-        return "redirect:/admin/category?categoryId=" + categoryId;  // 返回类别列表页面
+        adminShopService.updateCategory(categoryId, categoryName, description);
+        return "redirect:/adminShop/catalog";
     }
 
     @PostMapping("/updateProduct")
-    public String updateProduct(@RequestParam String productId,
+    public String updateProduct(@RequestParam String categoryId,
+                                @RequestParam String productId,
                                 @RequestParam String productName,
                                 @RequestParam String description) {
         // 调用服务层更新商品信息
-        adminService.updateProduct(productId, productName, description);
-        return "redirect:/admin/product?productId=" + productId;  // 返回该类别的商品页面
+        adminShopService.updateProduct(productId, productName, description);
+        return "redirect:/adminShop/category?categoryId=" + categoryId;  // 返回该类别的商品页面
     }
 
     @PostMapping("/updateItem")
-    public String updateItem(@RequestParam String itemId,
+    public String updateItem(@RequestParam String productId,
+                             @RequestParam String itemId,
                              @RequestParam String listPrice,
                              @RequestParam String quantity) {
         // 调用服务层更新商品项信息
-        adminService.updateItem(itemId, listPrice, quantity);
-        return "redirect:/admin/item?itemId=" + itemId;  // 返回商品详情页面
+        adminShopService.updateItem(itemId, listPrice, quantity);
+        return "redirect:/adminShop/product?productId=" + productId;  // 返回商品详情页面
     }
 
 }
