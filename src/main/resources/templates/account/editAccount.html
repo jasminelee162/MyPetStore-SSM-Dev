@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>编辑账户信息</title>
+    <link rel="StyleSheet" href="/css/account.css" type="text/css" media="screen"/>
+
 </head>
 <body>
-<header th:replace="~{common/top}"></header>
+
+<!--<header th:replace="~{common/top}"></header>-->
 <h2>编辑账户信息</h2>
+<div class="registration-form" id="registration-form">
+    <div id="BackLink">
+        <a href="/catalog/index">Return to Main Menu</a>
+    </div>
 <form th:action="@{/account/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
 
     <input type="hidden" th:field="*{account.username}" />
@@ -101,7 +108,7 @@
 
 <!-- 错误信息显示 -->
 <div class="error" th:text="${error}"></div>
-
+</div>
 </body>
-<footer th:replace="~{common/bottom}"></footer>
+<!--<footer th:replace="~{common/bottom}"></footer>-->
 </html>

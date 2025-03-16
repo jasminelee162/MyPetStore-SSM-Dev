@@ -188,3 +188,17 @@ body {
     height: auto;
     margin: 0;
 }
+.form-actions{
+    margin-top:5px;
+    text-align:center;
+}
+#BackLink{
+    padding: 1ex;
+    float: right;
+    border-width: .1ex 0ex .1ex 0px;
+    border-style: solid;
+    /*border-color: #000;*/
+    /* margin-right:100px; */
+    margin-top:280px;
+
+}
