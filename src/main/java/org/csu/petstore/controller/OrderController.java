@@ -7,6 +7,7 @@ import org.csu.petstore.service.OrderService;
 import org.csu.petstore.service.impl.OrderServiceImpl;
 import org.csu.petstore.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.pulsar.PulsarConnectionDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -82,8 +83,8 @@ public class OrderController {
             return "redirect:/error"; // 如果订单不存在重定向到错误页面
         }
 
-        // 将订单对象添加到模型中
-        model.addAttribute("order", orderVO);
+//        // 将订单对象添加到模型中
+//        model.addAttribute("order", orderVO);
 
         orderVO.setOrderId("9875");
         System.out.println("111111111111111111111111111111111111111111");
@@ -103,6 +104,72 @@ public class OrderController {
         CartVO cartVO = (CartVO) session.getAttribute("cart");
         CartVO selectedCart = (CartVO) session.getAttribute("selectedCart");
 
+        if (orderVO.getLineItems() == null || orderVO.getLineItems().isEmpty()) {
+            List<LineItemVO> lineItems = new ArrayList<>();
+
+            if (selectedCart != null) {
+                List<CartItemVO> selectedItems = selectedCart.getItemList();
+
+                int lineNumber = 1;
+                for (CartItemVO cartItem : selectedItems) {
+                    LineItemVO lineItem = new LineItemVO();
+                    lineItem.setLineNumber(lineNumber++);
+                    lineItem.setQuantity(cartItem.getQuantity());
+                    lineItem.setUnitPrice(cartItem.getItem().getListPrice());
+                    lineItem.setItem(cartItem.getItem());
+
+                    lineItems.add(lineItem);
+
+                    System.out.println("LineItem: itemId = " + cartItem.getItem().getItemId() +
+                            ", quantity = " + cartItem.getQuantity() +
+                            ", price = " + cartItem.getItem().getListPrice());
+                }
+
+                orderVO.setLineItems(lineItems);
+
+                // 打印 lineItems 验证
+                if (orderVO.getLineItems() != null) {
+                    System.out.println("LineItems 数量: " + orderVO.getLineItems().size());
+
+                    // 遍历 lineItems 给 item.attribute1 赋值
+                    for (LineItemVO lineItem : orderVO.getLineItems()) {
+                        ItemVO item = lineItem.getItem();
+                        if (item != null) {
+                            item.setAttribute1(item.getDescriptionText());
+                            System.out.println("itemId = " + item.getItemId() + ", attribute1 = " + item.getAttribute1());
+                        }
+                    }
+                }
+
+            } else {
+                System.out.println("selectedCart 为 null，无法初始化 lineItems！");
+            }
+        }
+
+        if (orderVO.getLineItems() != null && !orderVO.getLineItems().isEmpty()) {
+            BigDecimal totalPrice = BigDecimal.ZERO;
+
+            for (LineItemVO lineItem : orderVO.getLineItems()) {
+                BigDecimal unitPrice = lineItem.getUnitPrice();
+                int quantity = lineItem.getQuantity();
+                BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
+
+                totalPrice = totalPrice.add(itemTotal);
+            }
+
+            orderVO.setTotalPrice(cartVO.getSubTotal().toString());
+
+            System.out.println("计算出来的 TotalPrice = " + orderVO.getTotalPrice());
+        } else {
+            System.out.println("订单明细为空，无法计算总价");
+        }
+
+        // 打印 lineItems 验证
+        if (orderVO.getLineItems() != null) {
+            System.out.println("LineItems 数量: " + orderVO.getLineItems().size());
+        }
+
+
         if (selectedCart != null) {
             List<CartItemVO> selectedItems = selectedCart.getItemList();
 
@@ -119,12 +186,15 @@ public class OrderController {
             }
             cartVO.setSubTotal(subTotal);
 
+
             // 清空已购买的商品记录
             session.removeAttribute("selectedCart");
         }
 
         // 更新 session 中的购物车
         session.setAttribute("cart", cartVO);
+        // 将订单对象添加到模型中
+        model.addAttribute("order", orderVO);
 
         // 跳转到查看订单页面
         return "order/viewOrder";
@@ -136,6 +206,8 @@ public class OrderController {
         model.addAttribute("item", itemVO);
         return "catalog/item";
     }
+
+
 
     //新Order页面控制
     // 新订单页面控制
