@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
 
         itemVO.setItemId(itemId);
         itemVO.setListPrice(item.getListPrice());
-        itemVO.setAttributes(item.getAttribute1());
+        itemVO.setAttribute1(item.getAttribute1());
         itemVO.setProductId(product.getProductId());
         itemVO.setProductName(product.getName());
         String[] temp = product.getDescription().split("_");
@@ -139,19 +139,21 @@ public class OrderServiceImpl implements OrderService {
             // 转换 OrderVO 到 Order 实体
             Order order = convertOrderVOToOrder(orderVO);
 
+            System.out.println(orderVO.getLineItems());
+
             // 更新库存数量
-//            for (LineItemVO lineItemVO : orderVO.getLineItems()) {
-//                String itemId = lineItemVO.getItemId();
-//                Integer increment = lineItemVO.getQuantity();
-//
-//                // 更新库存数量
-//                QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
-//                queryWrapper.eq("itemid", itemId);
-//                Item item = itemMapper.selectOne(queryWrapper);
-//                if (item != null) {
-//                    itemMapper.updateById(item);
-//                }
-//            }
+            for (LineItemVO lineItemVO : orderVO.getLineItems()) {
+                String itemId = lineItemVO.getItemId();
+                Integer increment = lineItemVO.getQuantity();
+
+                // 更新库存数量
+                QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("itemid", itemId);
+                Item item = itemMapper.selectOne(queryWrapper);
+                if (item != null) {
+                    itemMapper.updateById(item);
+                }
+            }
 
             // 插入订单
             orderMapper.insert(order);
@@ -165,10 +167,10 @@ public class OrderServiceImpl implements OrderService {
             orderStatusMapper.insert(orderStatus);
 
             // 插入订单明细
-//            for (LineItemVO lineItemVO : orderVO.getLineItems()) {
-//                LineItem lineItem = convertLineItemVOToLineItem(lineItemVO, orderId);
-//                lineItemMapper.insert(lineItem);
-//            }
+            for (LineItemVO lineItemVO : orderVO.getLineItems()) {
+                LineItem lineItem = convertLineItemVOToLineItem(lineItemVO, orderId);
+                lineItemMapper.insert(lineItem);
+            }
 
             return true;
         } catch (Exception e) {
@@ -232,6 +234,7 @@ public class OrderServiceImpl implements OrderService {
         orderVO.setLocale("CA");
         orderVO.setStatus("P");
 
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         orderVO.setTimestamp(Timestamp.valueOf(LocalDateTime.now().format(formatter)));
 
@@ -241,6 +244,9 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
 
         orderVO.setLineItems(lineItems);
+
+        System.out.println("init test point");
+        System.out.println(orderVO.getLineItems());
 
         return orderVO;
     }

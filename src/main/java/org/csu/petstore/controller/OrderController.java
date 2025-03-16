@@ -1,6 +1,8 @@
 package org.csu.petstore.controller;
 
 import org.csu.petstore.entity.Account;
+import org.csu.petstore.entity.LineItem;
+import org.csu.petstore.service.CartService;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.LogService;
 import org.csu.petstore.service.OrderService;
@@ -26,6 +28,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CartService cartService;
 
     @Autowired
     private LogService logService;
@@ -57,6 +62,15 @@ public class OrderController {
         orderVO.setOrderDate(new java.sql.Date(System.currentTimeMillis()).toString());
         orderVO.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
 
+        //属性在confirmOrder表单中遗失
+        orderVO.setCourier("UPS");
+        orderVO.setLocale("CA");
+        String totalPrice = (String) session.getAttribute("totalPrice");
+        orderVO.setTotalPrice(totalPrice);
+        orderVO.setStatus("P");
+        List<LineItemVO> lineItems = (List<LineItemVO>) session.getAttribute("LineItems");
+        orderVO.setLineItems(lineItems);
+
         // 将 OrderVO 对象添加到模型中和session中
         model.addAttribute("order", orderVO);
         session.setAttribute("order", orderVO);
@@ -86,13 +100,9 @@ public class OrderController {
 //        // 将订单对象添加到模型中
 //        model.addAttribute("order", orderVO);
 
-        orderVO.setOrderId("9875");
-        System.out.println("111111111111111111111111111111111111111111");
-        System.out.println(orderVO.getOrderId());
-        System.out.println(orderVO.getCourier());
-        orderVO.setCourier("UIO");
-        orderVO.setTotalPrice("123");
-        orderVO.setLocale("ads");
+        System.out.println("OrderController test point");
+        System.out.println(orderVO.getLineItems());
+
         // 将订单保存到数据库
         boolean insertSuccess = orderService.insertOrder(orderVO);
         System.out.println("Order ID: " + orderVO.getOrderId());
@@ -176,12 +186,13 @@ public class OrderController {
             // 遍历已选商品并从购物车中移除
             for (CartItemVO selectedItem : selectedItems) {
                 cartVO.getItemMap().remove(selectedItem.getItem().getItemId());
-                cartVO.getItemList().remove(selectedItem);
+                cartVO.getItemList().remove(selectedItem); // 确保同时更新 itemList
+                cartService.removeCartItem("j2ee",selectedItem.getItem().getItemId());
             }
 
             // 重新计算购物车的小计
             BigDecimal subTotal = BigDecimal.ZERO;
-            for (CartItemVO cartItem : cartVO.getItemMap().values()) {
+            for (CartItemVO cartItem : cartVO.getItemList()) { // 使用 itemList 计算
                 subTotal = subTotal.add(cartItem.getTotalPrice());
             }
             cartVO.setSubTotal(subTotal);
@@ -189,17 +200,20 @@ public class OrderController {
 
             // 清空已购买的商品记录
             session.removeAttribute("selectedCart");
-        }
 
-        // 更新 session 中的购物车
-        session.setAttribute("cart", cartVO);
+            // 更新 session 中的购物车
+            session.setAttribute("cart", cartVO);
         // 将订单对象添加到模型中
         model.addAttribute("order", orderVO);
+
+
+            System.out.println("Updated cart: " + cartVO.getItemList());
+            System.out.println("Updated cart subTotal: " + cartVO.getSubTotal());
+        }
 
         // 跳转到查看订单页面
         return "order/viewOrder";
     }
-
     @GetMapping("viewItem")
     public String viewItem(String itemId, Model model) {
         ItemVO itemVO = orderService.getItem(itemId);
@@ -257,11 +271,18 @@ public class OrderController {
             // 设置新的购物车到 session 中
             session.setAttribute("selectedCart", newCartVO);
 
+            System.out.println(cartVO);
+            System.out.println(newCartVO);
+
             // 初始化订单
             OrderVO orderVO = orderService.initOrder(loginAccount, newCartVO);
 
+
+            //防止遗失
             // 设置信用卡类型
             session.setAttribute("creditCardTypes", orderVO.getCardType());
+            session.setAttribute("LineItems",orderVO.getLineItems());
+            session.setAttribute("totalPrice",orderVO.getTotalPrice());
 
             // 将 OrderVO 对象添加到模型中，键为 "orderForm"
             model.addAttribute("orderForm", orderVO);
