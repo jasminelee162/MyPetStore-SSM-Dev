@@ -111,4 +111,21 @@ public class AdminShopController {
         return "redirect:/adminShop/product?productId=" + productId;  // 返回商品详情页面
     }
 
+    @PostMapping("/deleteCategory")
+    public String deleteCategory(@RequestParam String categoryId) {
+        adminShopService.deleteCategory(categoryId);
+        return "redirect:/adminShop/catalog";  // 返回商品分类管理页面
+    }
+
+    @PostMapping("/deleteProduct")
+    public String deleteProduct(@RequestParam String categoryId, @RequestParam String productId) {
+        adminShopService.deleteProduct(productId);
+        return "redirect:/adminShop/category?categoryId=" + categoryId;  // 返回商品类别页面
+    }
+
+    @PostMapping("/deleteItem")
+    public String deleteItem(@RequestParam String productId, @RequestParam String itemId) {
+        adminShopService.deleteItem(itemId);
+        return "redirect:/adminShop/product?productId=" + productId;  // 返回商品详情页面
+    }
 }

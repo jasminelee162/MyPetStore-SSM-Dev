@@ -30,7 +30,7 @@
                     <input type="text" name="description" id="editDescription-${productId}" value="${productDescription}">
 
                     <button type="submit">保存</button>
-                    <button type="button" onclick="document.getElementById('editRow-${productId}').remove()">取消</button>
+                    <button type="button" onclick="document.getElementById('editRow').remove()">取消</button>
                 </form>
             </td>
         `;
@@ -67,6 +67,7 @@
 
             <!-- 删除商品 -->
             <form action="/adminShop/deleteProduct" method="post" style="display:inline;">
+                <input type="hidden" name="categoryId" th:value="${category.categoryId}">
                 <input type="hidden" name="productId" th:value="${product.productId}">
                 <button type="submit" onclick="return confirm('确定删除该商品？')">删除</button>
             </form>
@@ -76,7 +77,7 @@
 </table>
 
 <!-- 如果没有商品，则显示空提示 -->
-<p th:if="${category.productList == null or category.productList.size() == 0}">该类别下暂无商品。</p>
+<p th:if="${category.productList == null or category.productList.size() == 0}">该类别下暂无产品。</p>
 
 <!-- 添加商品表单 -->
 <h2>添加新商品</h2>
