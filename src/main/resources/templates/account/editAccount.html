@@ -6,10 +6,12 @@
     <title>编辑账户信息</title>
 </head>
 <body>
+<header th:replace="~{common/top}"></header>
 <h2>编辑账户信息</h2>
-<form th:action="@{/account/submitAccountInfo}" method="post" enctype="application/x-www-form-urlencoded">
-    <!-- 隐藏字段：用户名 -->
+<form th:action="@{/account/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
+
     <input type="hidden" th:field="*{account.username}" />
+    <input type="hidden" th:field="*{account.password}" />
 
     <fieldset>
         <legend>账户信息</legend>
@@ -24,19 +26,11 @@
             </tr>
             <tr>
                 <td><label for="email">邮箱:</label></td>
-                <td><input type="email" id="email" th:field="*{account.email}" required placeholder="请输入邮箱" /></td>
+                <td><input type="email" id="email" th:field="*{account.email}" required placeholder="请输入邮箱"  /></td>
             </tr>
             <tr>
                 <td><label for="phone">电话:</label></td>
                 <td><input type="tel" id="phone" th:field="*{account.phone}" required placeholder="请输入电话" /></td>
-            </tr>
-            <tr>
-                <td><label for="password">新密码:</label></td>
-                <td><input type="password" id="password" th:field="*{account.password}" placeholder="请输入新密码" /></td>
-            </tr>
-            <tr>
-                <td><label for="repeatedPassword">确认密码:</label></td>
-                <td><input type="password" id="repeatedPassword" th:field="*{account.password}" placeholder="请确认新密码" /></td>
             </tr>
             <tr>
                 <td><label for="address1">地址 1:</label></td>
@@ -107,7 +101,7 @@
 
 <!-- 错误信息显示 -->
 <div class="error" th:text="${error}"></div>
+
 </body>
+<footer th:replace="~{common/bottom}"></footer>
 </html>
-
-
