@@ -15,6 +15,7 @@ public class CartItem {
     @TableField(value = "itemid")
     private String itemId;
 
+    @TableField(value = "quantity")
     private int quantity;
 
     @TableField(value = "in_stock")

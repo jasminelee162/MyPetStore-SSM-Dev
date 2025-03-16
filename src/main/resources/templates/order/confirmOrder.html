@@ -14,14 +14,14 @@
 
     <p>Please confirm the information below and then press continue...</p>
 
+    <form th:action="@{/order/viewOrder}" th:object="${order}" method="post">
     <table>
-        <!-- Order Header -->
-<!--        <tr>-->
-<!--            <th colspan="2" style="text-align: center;">-->
-<!--                Order Date:-->
-<!--                <span th:text="${#dates.format(order.orderDate, 'yyyy/MM/dd HH:mm:ss')}">2025/03/10 12:00:00</span>-->
-<!--            </th>-->
-<!--        </tr>-->
+        <tr>
+            <th colspan="2" style="text-align: center;">
+                Order Date:
+                <span th:text="${order.orderDate}">2025/03/10 12:00:00</span>
+            </th>
+        </tr>
 
         <!-- Billing Address -->
         <tr><th colspan="2">Billing Address</th></tr>
@@ -53,7 +53,7 @@
             <button type="submit">Confirmed</button>
         </form>
     </div>
-
+    </form>
 </div>
 
 <footer th:replace="~{common/bottom}"></footer>

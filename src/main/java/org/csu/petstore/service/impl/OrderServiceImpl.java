@@ -8,8 +8,11 @@ import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +37,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderStatusMapper orderStatusMapper;
+
+    @Autowired
+    private SequenceMapper sequenceMapper;
+
+    @Autowired
+    private LineItemMapper lineItemMapper;
 
     @Override
     public ItemVO getItem(String itemId) {
@@ -120,42 +129,53 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean insertOrder(OrderVO orderVO) {
-        // 将 OrderVO 转换为 Order 实体类
-        Order order = new Order();
-        order.setOrderId(orderVO.getOrderId());
-        order.setUserId(orderVO.getUserId());
-        order.setOrderDate(orderVO.getOrderDate());
-        order.setShipAddr1(orderVO.getShipAddr1());
-        order.setShipAddr2(orderVO.getShipAddr2());
-        order.setShipCity(orderVO.getShipCity());
-        order.setShipState(orderVO.getShipState());
-        order.setShipZip(orderVO.getShipZip());
-        order.setShipCountry(orderVO.getShipCountry());
-        order.setBillAddr1(orderVO.getBillAddr1());
-        order.setBillAddr2(orderVO.getBillAddr2());
-        order.setBillCity(orderVO.getBillCity());
-        order.setBillState(orderVO.getBillState());
-        order.setBillZip(orderVO.getBillZip());
-        order.setBillCountry(orderVO.getBillCountry());
-        order.setCourier(orderVO.getCourier());
-        order.setTotalPrice(orderVO.getTotalPrice());
-        order.setBillToFirstName(orderVO.getBillToFirstName());
-        order.setBillToLastName(orderVO.getBillToLastName());
-        order.setShipToFirstName(orderVO.getShipToFirstName());
-        order.setShipToLastName(orderVO.getShipToLastName());
-        order.setCreditCard(orderVO.getCreditCard());
-        order.setExprDate(orderVO.getExprDate());
-        order.setCardType(orderVO.getCardType());
-        order.setLocale(orderVO.getLocale());
+        try {
+            // 获取订单 ID
+            int orderId = getNextId("ordernum");
+            orderVO.setOrderId(String.valueOf(orderId));
 
-        // 调用 Mapper 的 insert 方法
-        int result = orderMapper.insert(order);
+            // 转换 OrderVO 到 Order 实体
+            Order order = convertOrderVOToOrder(orderVO);
 
-        // 返回插入是否成功
-        return result > 0;
+            // 更新库存数量
+//            for (LineItemVO lineItemVO : orderVO.getLineItems()) {
+//                String itemId = lineItemVO.getItemId();
+//                Integer increment = lineItemVO.getQuantity();
+//
+//                // 更新库存数量
+//                QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
+//                queryWrapper.eq("itemid", itemId);
+//                Item item = itemMapper.selectOne(queryWrapper);
+//                if (item != null) {
+//                    itemMapper.updateById(item);
+//                }
+//            }
+
+            // 插入订单
+            orderMapper.insert(order);
+
+            // 插入订单状态
+            OrderStatus orderStatus = new OrderStatus();
+            orderStatus.setOrderId(orderId);
+            orderStatus.setLinenum(orderId);
+            orderStatus.setStatus("P");
+            orderStatus.setTimestamp(new Date());
+            orderStatusMapper.insert(orderStatus);
+
+            // 插入订单明细
+//            for (LineItemVO lineItemVO : orderVO.getLineItems()) {
+//                LineItem lineItem = convertLineItemVOToLineItem(lineItemVO, orderId);
+//                lineItemMapper.insert(lineItem);
+//            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-
 
     @Override
     public boolean insertOrderStatus(OrderStatusVO orderStatusVO) {
@@ -235,4 +255,66 @@ public class OrderServiceImpl implements OrderService {
         lineItemVO.setTotal(cartItemVO.getTotalPrice());
         return lineItemVO;
     }
+
+    @Override
+    public int getNextId(String name) {
+        // 获取当前序列值
+        Sequence sequence = sequenceMapper.selectById(name);
+        if (sequence == null) {
+            throw new RuntimeException("Error: A null sequence was returned from the database (could not get next " + name + " sequence).");
+        }
+
+        // 更新序列值
+        int nextId = sequence.getNextId();
+        sequence.setNextId(nextId + 1);
+        sequenceMapper.updateById(sequence);
+
+        return nextId;
+    }
+
+    private Order convertOrderVOToOrder(OrderVO orderVO) {
+        Order order = new Order();
+        order.setOrderId(orderVO.getOrderId());
+        order.setUserId(orderVO.getUserId());
+
+        // 使用 SimpleDateFormat 格式化日期
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = dateFormat.format(new Date());
+        order.setOrderDate(formattedDate);
+
+        order.setShipAddr1(orderVO.getShipAddr1());
+        order.setShipAddr2(orderVO.getShipAddr2());
+        order.setShipCity(orderVO.getShipCity());
+        order.setShipState(orderVO.getShipState());
+        order.setShipZip(orderVO.getShipZip());
+        order.setShipCountry(orderVO.getShipCountry());
+        order.setBillAddr1(orderVO.getBillAddr1());
+        order.setBillAddr2(orderVO.getBillAddr2());
+        order.setBillCity(orderVO.getBillCity());
+        order.setBillState(orderVO.getBillState());
+        order.setBillZip(orderVO.getBillZip());
+        order.setBillCountry(orderVO.getBillCountry());
+        order.setCourier(orderVO.getCourier());
+        order.setTotalPrice(String.valueOf(new BigDecimal(orderVO.getTotalPrice())));
+        order.setBillToFirstName(orderVO.getBillToFirstName());
+        order.setBillToLastName(orderVO.getBillToLastName());
+        order.setShipToFirstName(orderVO.getShipToFirstName());
+        order.setShipToLastName(orderVO.getShipToLastName());
+        order.setCreditCard(orderVO.getCreditCard());
+        order.setExprDate(orderVO.getExprDate());
+        order.setCardType(orderVO.getCardType());
+        order.setLocale(orderVO.getLocale());
+        return order;
+    }
+
+    private LineItem convertLineItemVOToLineItem(LineItemVO lineItemVO, int orderId) {
+        LineItem lineItem = new LineItem();
+        lineItem.setOrderid(orderId);
+        lineItem.setLinenum(lineItemVO.getLineNumber());
+        lineItem.setItemid(lineItemVO.getItemId());
+        lineItem.setQuantity(lineItemVO.getQuantity());
+        lineItem.setUnitprice(lineItemVO.getUnitPrice());
+        return lineItem;
+    }
+
 }

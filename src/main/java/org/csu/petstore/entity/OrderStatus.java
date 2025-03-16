@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-@TableName("order_status") // 数据库表名为 order_status
+@TableName("orderstatus") // 数据库表名为 orderstatus
 public class OrderStatus {
     @TableId(value = "orderid")
     private Integer orderId; // orderid 是整型
