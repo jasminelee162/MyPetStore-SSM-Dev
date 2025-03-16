@@ -18,16 +18,22 @@ h2{
 
 /* Cart Section */
 #Cart {
-    margin: 20px;
-    width:95%;
-    background-color: #fff;
+    margin-left:150px;
+    background-color: transparent; /* 透明背景 */
     padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow:
+            0 0 15px rgba(255, 255, 255, 0.8),
+            0 0 30px #039,
+            0 0 50px #69f;
+    border-radius: 100px;
+
 }
+
 
 h2 {
     font-size: 24px;
     margin-bottom: 20px;
+
 }
 
 /* Table Styles */
@@ -128,10 +134,12 @@ input[type="checkbox"] {
 #cart-summary {
     display: flex;
     justify-content: space-between;
-    background-color: #fff;
+    background-color: #ffffff4f;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     font-size: 16px;
+    border-radius: 100px;
+
 }
 
 #cart-summary .Button {
@@ -154,3 +162,12 @@ input[type="checkbox"] {
     color: #888;
 }
 
+#Catalog {
+    padding: 1ex;
+    background:inherit;
+    text-align:center;
+    margin-top:150px;
+    margin-left:100px;
+    border-radius: 100px; /* 调整数值增大或减小圆角大小 */
+
+}
