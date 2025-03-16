@@ -2,97 +2,299 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
-    <link rel="stylesheet" href="../css/cart.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="/css/cart.css" type="text/css" media="screen"/>
+    <style>
+        /* Header */
+        .large-header {
+            position: relative;
+            width: 100%;
+            background: #333;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center center;
+            z-index: 1;
+        }
+
+        #large-header {
+            background-image: url('https://www.marcoguglie.it/Codepen/AnimatedHeaderBg/demo-1/img/demo-1-bg.jpg');
+        }
+
+        .main-title {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            color: #f9f1e9;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate3d(-50%, -50%, 0);
+        }
+        #demo-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 让鼠标事件透过 canvas */
+        }
+        .demo-1 .main-title {
+            text-transform: uppercase;
+            font-size: 4.2em;
+            letter-spacing: 0.1em;
+        }
+
+        .main-title .thin {
+            font-weight: 200;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .demo-1 .main-title {
+                font-size: 3em;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <header th:replace="common/top"></header>
 
-<div id="BackLink">
-    <a th:href="@{/catalog/index}">Return to Main Menu</a>
-</div>
 
-<div id="Catalog">
-    <div id="Cart">
-        <h2>Shopping Cart</h2>
-        <form id="cart-form" th:action="@{/order/newOrder}"  method="post">
-            <input type="hidden" id="selected-items" name="selectedItems" value="">
+<div id="large-header" class="large-header">
+    <canvas id="demo-canvas"></canvas>
+<!--        <h1 class="main-title">Connect <span class="thin">Three</span></h1>-->
+    <div id="BackLink">
+        <a th:href="@{/catalog/index}">Return to Main Menu</a>
+    </div>
+    <div id="Catalog">
 
-            <table>
-                <thead>
-                <tr>
-                    <th><input type="checkbox" id="select-all"> Select All</th>
-                    <th>Item ID</th>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody id="cart-items">
-                <!-- 购物车为空时的提示 -->
-                <tr id="empty-cart-message" style="display:none;">
-                    <td colspan="7"><b>Your cart is empty.</b></td>
-                </tr>
+        <div id="Cart">
+            <h2>Shopping Cart</h2>
+            <form id="cart-form" th:action="@{/order/newOrder}"  method="post">
+                <input type="hidden" id="selected-items" name="selectedItems" value="">
 
-                <!-- 购物车商品循环展示 -->
-                <tr th:each="cartItem : ${session.cart.itemList}" th:id="|rank-${cartItem.item.itemId}|" class="item-id">
-                    <td>
-                        <input type="checkbox" class="item-select" th:data-item-id="${cartItem.item.itemId}">
-                    </td>
-                    <td>
-                        <a th:href="'/catalog/viewItem?itemId='+${cartItem.item.itemId}" th:text="${cartItem.item.itemId}"></a>
-                    </td>
-                    <td class="item-info">
-                        <div class="item-details">
-                            <img th:src="'../'+${cartItem.item.descriptionImage}">
-<!--                            <label th:text="${cartItem.item.descriptionText}"></label>-->
-                        </div>
-                    </td>
-                    <td th:id="|single-price-${cartItem.item.itemId}|">
-                        <span th:text="${#numbers.formatCurrency(cartItem.item.listPrice)}"></span>
-                    </td>
-                    <td>
-                        <button type="button" class="quantity-decrease" th:data-item-id="${cartItem.item.itemId}">-</button>
-                        <input type="text" th:name="${cartItem.item.itemId}" th:value="${cartItem.quantity}"
-                               class="item-quantity" th:id="|item-quantity-${cartItem.item.itemId}|"
-                               th:data-item-id="${cartItem.item.itemId}">
-                        <button type="button" class="quantity-increase" th:data-item-id="${cartItem.item.itemId}">+</button>
-                    </td>
-                    <td th:id="|total-price-${cartItem.item.itemId}|">
-                        <span th:text="${#numbers.formatCurrency(cartItem.totalPrice)}"></span>
-                    </td>
-                    <td>
-                        <button type="button" class="Button" th:id="remove-item" th:data-item-id="${cartItem.item.itemId}">Remove</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
+                <table>
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" id="select-all"> Select All</th>
+                        <th>Item ID</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="cart-items">
+                    <!-- 购物车为空时的提示 -->
+                    <tr id="empty-cart-message" style="display:none;">
+                        <td colspan="7"><b>Your cart is empty.</b></td>
+                    </tr>
 
-        <div id="cart-summary">
-            <span>Total items: <span id="selected-count" th:text="${session.cart.numberOfItems}"></span></span>
-            <span>Subtotal: <span id="subTotal" th:text="${#numbers.formatCurrency(session.cart.subTotal)}"></span></span>
-            <button type="submit" id="proceed-checkout" class="Button">Proceed to Checkout</button>
+                    <!-- 购物车商品循环展示 -->
+                    <tr th:each="cartItem : ${session.cart.itemList}" th:id="|rank-${cartItem.item.itemId}|" class="item-id">
+                        <td>
+                            <input type="checkbox" class="item-select" th:data-item-id="${cartItem.item.itemId}">
+                        </td>
+                        <td>
+                            <a th:href="'/catalog/viewItem?itemId='+${cartItem.item.itemId}" th:text="${cartItem.item.itemId}"></a>
+                        </td>
+                        <td class="item-info">
+                            <div class="item-details">
+                                <img th:src="'../'+${cartItem.item.descriptionImage}">
+                                <!--                            <label th:text="${cartItem.item.descriptionText}"></label>-->
+                            </div>
+                        </td>
+                        <td th:id="|single-price-${cartItem.item.itemId}|">
+                            <span th:text="${#numbers.formatCurrency(cartItem.item.listPrice)}"></span>
+                        </td>
+                        <td>
+                            <button type="button" class="quantity-decrease" th:data-item-id="${cartItem.item.itemId}">-</button>
+                            <input type="text" th:name="${cartItem.item.itemId}" th:value="${cartItem.quantity}"
+                                   class="item-quantity" th:id="|item-quantity-${cartItem.item.itemId}|"
+                                   th:data-item-id="${cartItem.item.itemId}">
+                            <button type="button" class="quantity-increase" th:data-item-id="${cartItem.item.itemId}">+</button>
+                        </td>
+                        <td th:id="|total-price-${cartItem.item.itemId}|">
+                            <span th:text="${#numbers.formatCurrency(cartItem.totalPrice)}"></span>
+                        </td>
+                        <td>
+                            <button type="button" class="Button" th:id="remove-item" th:data-item-id="${cartItem.item.itemId}">Remove</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+
+            <div id="cart-summary">
+                <span>Total items: <span id="selected-count" th:text="${session.cart.numberOfItems}"></span></span>
+                <span>Subtotal: <span id="subTotal" th:text="${#numbers.formatCurrency(session.cart.subTotal)}"></span></span>
+                <button type="submit" id="proceed-checkout" class="Button">Proceed to Checkout</button>
+            </div>
         </div>
+
+        <!--    <div id="MyList" th:if="${session.loginAccount != null}">-->
+        <!--        <div th:if="${session.loginAccount.listOption}">-->
+        <!--            <div th:replace="includeMyList"></div>-->
+        <!--        </div>-->
+
+        <!--    </div>-->
+
+        <div id="Separator">&nbsp;</div>
+
+        <div id="tooltip" class="tooltip"></div>
     </div>
 
-<!--    <div id="MyList" th:if="${session.loginAccount != null}">-->
-<!--        <div th:if="${session.loginAccount.listOption}">-->
-<!--            <div th:replace="includeMyList"></div>-->
-<!--        </div>-->
 
-<!--    </div>-->
-
-    <div id="Separator">&nbsp;</div>
-
-    <div id="tooltip" class="tooltip"></div>
 </div>
 
-<script src="../js/updateAuto.js"></script>
 
+<script src="../js/updateAuto.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenLite.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/easing/EasePack.min.js"></script>
+
+<script>
+    (function() {
+        var width, height, largeHeader, canvas, ctx, points, target, animateHeader = true;
+
+        // Main
+        initHeader();
+        initAnimation();
+        addListeners();
+
+        function initHeader() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            target = { x: width , y: height / 2 };
+
+            largeHeader = document.getElementById('large-header');
+            largeHeader.style.height = height + 'px';
+
+            canvas = document.getElementById('demo-canvas');
+            canvas.width = width;  // ✅ 确保 canvas 宽度等于窗口宽度
+            canvas.height = height;
+            ctx = canvas.getContext('2d');
+
+            points = [];
+            for (var x = 0; x <= width; x += width / 20) {  // ✅ 遍历到 width，不留空白
+                for (var y = 0; y <= height; y += height / 20) {
+                    var px = x + Math.random() * width / 20;
+                    var py = y + Math.random() * height / 20;
+                    var p = { x: px, originX: px, y: py, originY: py };
+                    points.push(p);
+                }
+            }
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            largeHeader.style.height = height + 'px';
+
+            canvas.width = width;  // ✅ 重新调整 canvas 宽度
+            canvas.height = height;
+        }
+
+
+        function addListeners() {
+            if (!('ontouchstart' in window)) {
+                window.addEventListener('mousemove', mouseMove);
+            }
+            window.addEventListener('scroll', scrollCheck);
+            window.addEventListener('resize', resize);
+        }
+
+        // function mouseMove(e) {
+        //     var posx = e.pageX || e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        //     var posy = e.pageY || e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        //     target.x = posx;
+        //     target.y = posy;
+        // }
+
+        function scrollCheck() {
+            animateHeader = document.body.scrollTop <= height;
+        }
+
+        // function resize() {
+        //     width = window.innerWidth;
+        //     height = window.innerHeight;
+        //     largeHeader.style.height = height + 'px';
+        //     canvas.width = width;
+        //     canvas.height = height;
+        // }
+
+        function initAnimation() {
+            for (var i in points) {
+                shiftPoint(points[i]);
+            }
+            animate();
+        }
+        function mouseMove(e) {
+            var posx = e.pageX || e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            var posy = e.pageY || e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+            target.x = posx;
+            target.y = posy;
+
+            // 让鼠标附近的点移动
+            for (var i in points) {
+                var p = points[i];
+                if (Math.abs(getDistance(target, p)) < 6000) {
+                    shiftPoint(p);
+                }
+            }
+        }
+
+        function shiftPoint(p) {
+            TweenLite.to(p, 0.8 + Math.random() * 0.5, {
+                x: p.originX - 20 + Math.random() * 40,
+                y: p.originY - 20 + Math.random() * 40,
+                ease: Power1.easeInOut
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (var i in points) {
+                var p = points[i];
+
+                // 只绘制靠近鼠标的点
+                if (Math.abs(getDistance(target, p)) < 10000) {
+                    // 画点
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 3, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = "rgba(0, 153, 255, 0.2)";
+                    ctx.fill();
+
+                    // 连接距离小于 8000 的点
+                    for (var j in points) {
+                        var p2 = points[j];
+                        if (getDistance(p, p2) < 8000) {
+                            var gradientLine = ctx.createLinearGradient(p.x, p.y, p2.x, p2.y);
+                            gradientLine.addColorStop(0, "rgba(0, 51, 102, 0.6)"); // 开始颜色
+                            gradientLine.addColorStop(1, "rgba(0, 153, 255, 0.2)"); // 结束颜色
+
+                            ctx.strokeStyle = gradientLine;
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+
+
+        function getDistance(p1, p2) {
+            return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
+        }
+    })();
+</script>
 <footer th:replace="common/bottom"></footer>
 
 </body>
