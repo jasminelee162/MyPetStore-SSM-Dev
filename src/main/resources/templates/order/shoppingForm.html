@@ -3,8 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Shipping Address</title>
-    <link rel="stylesheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="../css/mypetstore.css" type="text/css" media="screen"/>
+    <style>
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 7px;
+            width: 100%;
+            /*background-color: #f8f9fa; !* 根据你的设计调整颜色 *!*/
+            text-align: center;
+            /*padding: 10px 0;*/
+        }
+        body {
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle linear infinite;
+        }
+
+        @keyframes twinkle {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0.6;
+            }
+            25% {
+                transform: translate(-5px, 5px);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(5px, -5px);
+                opacity: 0.8;
+            }
+            75% {
+                transform: translate(-1px, -1px);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, 0);
+                opacity: 0.6;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
 <!-- Top 导航栏 -->
@@ -82,6 +131,30 @@
 
 <!-- Footer -->
 <footer th:replace="common/bottom"></footer>
+<script>
+    function createStars(count, sizeRange, speedRange) {
+        for (let i = 0; i < count; i++) {
+            let star = document.createElement("div");
+            star.classList.add("star");
 
+            // 随机大小
+            let size = Math.random() * (sizeRange[1] - sizeRange[0]) + sizeRange[0];
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+
+            // 随机位置
+            star.style.left = `${Math.random() * window.innerWidth}px`;
+            star.style.top = `${Math.random() * window.innerHeight}px`;
+
+            // 随机动画时间
+            let speed = Math.random() * (speedRange[1] - speedRange[0]) + speedRange[0];
+            star.style.animationDuration = `${speed}s`;
+
+            document.body.appendChild(star);
+        }
+    }
+
+    createStars(300, [1, 5], [3, 12]); // 100 颗星星，大小 1px~3px，动画时间 3s~6s
+</script>
 </body>
 </html>
