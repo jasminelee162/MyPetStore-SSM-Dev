@@ -1,5 +1,8 @@
 package org.csu.petstore.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import jakarta.transaction.Transactional;
 import org.csu.petstore.entity.Category;
 import org.csu.petstore.entity.Item;
 import org.csu.petstore.entity.Product;
@@ -12,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("adminShopService")
 public class AdminShopServiceImpl implements AdminShopService {
@@ -95,5 +100,48 @@ public class AdminShopServiceImpl implements AdminShopService {
         itemMapper.updateById(item);
     }
 
+    @Override
+    @Transactional
+    public void deleteCategory(String categoryId) {
+        // 1. 先删除该 Category 下的所有 Product
+        QueryWrapper<Product> productQuery = new QueryWrapper<>();
+        productQuery.eq("category", categoryId);
+        List<Product> products = productMapper.selectList(productQuery);
+
+        if (!products.isEmpty()) {
+            List<String> productIds = products.stream().map(Product::getProductId).collect(Collectors.toList());
+
+            // 2. 删除所有 Product 关联的 Item
+            QueryWrapper<Item> itemQuery = new QueryWrapper<>();
+            itemQuery.in("productid", productIds);
+            itemMapper.delete(itemQuery);
+
+            // 3. 删除所有 Product
+            productMapper.delete(productQuery);
+        }
+
+        // 4. 删除 Category
+        categoryMapper.deleteById(categoryId);
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteProduct(String productId) {
+        // 1. 先删除该 Product 关联的所有 Item
+        QueryWrapper<Item> itemQuery = new QueryWrapper<>();
+        itemQuery.eq("productid", productId);
+        itemMapper.delete(itemQuery);
+
+        // 2. 删除 Product
+        productMapper.deleteById(productId);
+    }
+
+
+    @Override
+    public void deleteItem(String itemId) {
+        // 直接删除 Item
+        itemMapper.deleteById(itemId);
+    }
 
 }

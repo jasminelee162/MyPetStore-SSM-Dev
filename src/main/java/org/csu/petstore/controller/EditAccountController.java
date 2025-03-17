@@ -30,26 +30,46 @@ public class EditAccountController {
     @PostMapping("/editAccount")
     public String submitAccountInfo(@Validated @ModelAttribute("account") AccountVO account,
                                     @RequestParam(value = "password", required = false) String password,
-                                    Model model) {
+                                    Model model,
+                                    @SessionAttribute("loginAccount") AccountVO loginAccount) {
 
-        // 如果密码不为空，更新账户的密码
         if (password != null && !password.isEmpty()) {
             account.setPassword(password);
         }
 
         try {
-            // 更新账户信息
+            // 更新数据库
             accountService.updateAccount(account);
-            model.addAttribute("msg", "账户信息更新成功");
 
-            // 保存成功后重定向到 catalog/main
+            // 更新 Session 里的 loginAccount
+            loginAccount.setUsername(account.getUsername());
+            loginAccount.setFirstname(account.getFirstname());
+            loginAccount.setLastname(account.getLastname());
+            loginAccount.setEmail(account.getEmail());
+            loginAccount.setPhone(account.getPhone());
+
+            loginAccount.setAddr1(account.getAddr1());
+            loginAccount.setAddr2(account.getAddr2());
+            loginAccount.setCity(account.getCity());
+            loginAccount.setState(account.getState());
+            loginAccount.setZip(account.getZip());
+            loginAccount.setCountry(account.getCountry());
+            loginAccount.setBannerName(account.getBannerName());
+            loginAccount.setFavcategory(account.getFavcategory());
+            loginAccount.setMylistopt(account.isMylistopt());
+            loginAccount.setBanneropt(account.isBanneropt());
+            if (password != null && !password.isEmpty()) {
+                loginAccount.setPassword(password);
+            }
+
+            model.addAttribute("msg", "账户信息更新成功");
             return "account/editAccount";
 
         } catch (Exception e) {
-            // 记录异常信息
             logger.error("更新账户信息失败", e);
             model.addAttribute("error", "更新账户信息失败：" + e.getMessage());
-            return "account/editAccount"; // 返回编辑页面
+            return "account/editAccount";
         }
     }
+
 }
