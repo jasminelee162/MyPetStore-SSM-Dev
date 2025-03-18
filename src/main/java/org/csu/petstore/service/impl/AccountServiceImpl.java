@@ -104,6 +104,7 @@ public class AccountServiceImpl implements AccountService {
 
         // 调用Mapper进行更新操作
         accountMapper.updateAccount(account);
+         accountMapper.updatePassword(account.getUsername(), account.getPassword());
     }
     @Override
     public boolean validatePassword(String username, String password) {
