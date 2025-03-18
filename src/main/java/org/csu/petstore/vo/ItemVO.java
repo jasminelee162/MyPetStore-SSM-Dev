@@ -14,6 +14,7 @@ public class  ItemVO {
     private String descriptionText;
 
     private BigDecimal listPrice;
+    private BigDecimal unitCost;
 
     private String attribute1;
     private String attribute2;
