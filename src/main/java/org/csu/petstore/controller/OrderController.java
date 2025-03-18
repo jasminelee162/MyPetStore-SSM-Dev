@@ -48,6 +48,83 @@ public class OrderController {
 //        return "order/newOrder";
 //    }
 
+
+    //新Order页面控制
+    // 新订单页面控制
+    @PostMapping("newOrder")
+    public String newOrder(@RequestParam(value = "selectedItems", required = false) String selectedItemsParam,
+                           HttpSession session,
+                           Model model) {
+        try {
+            // 获取购物车
+            CartVO cartVO = (CartVO) session.getAttribute("cart");
+            if (cartVO == null) {
+                cartVO = new CartVO();
+                session.setAttribute("cart", cartVO);
+            }
+
+            // 检查用户是否登录
+            AccountVO loginAccount = (AccountVO) session.getAttribute("loginAccount");
+            if (loginAccount == null) {
+                return "redirect:/signonForm";
+            }
+
+            // 获取选中的商品 ID
+            if (selectedItemsParam == null || selectedItemsParam.isEmpty()) {
+                return "redirect:/cartForm";
+            }
+
+            String[] selectedItemIds = selectedItemsParam.split(",");
+            List<CartItemVO> selectedItems = new ArrayList<>();
+
+            // 创建一个新的购物车
+            CartVO newCartVO = new CartVO();
+
+            // 根据选中的 ID 筛选商品，并添加到新的购物车
+            BigDecimal newSubTotal = BigDecimal.ZERO;
+            for (String itemId : selectedItemIds) {
+                CartItemVO cartItemVO = cartVO.getItemMap().get(itemId);
+                if (cartItemVO != null) {
+                    selectedItems.add(cartItemVO);
+                    newCartVO.getItemList().add(cartItemVO); // 添加商品到新的购物车
+                    newSubTotal = newSubTotal.add(cartItemVO.getTotalPrice()); // 计算新的小计
+                }
+            }
+
+            // 更新新的购物车小计
+            newCartVO.setSubTotal(newSubTotal);
+
+            // 设置新的购物车到 session 中
+            session.setAttribute("selectedCart", newCartVO);
+
+            System.out.println(cartVO);
+            System.out.println(newCartVO);
+
+            // 初始化订单
+            OrderVO orderVO = orderService.initOrder(loginAccount, newCartVO);
+
+
+            //防止遗失
+            // 设置信用卡类型
+            session.setAttribute("creditCardTypes", orderVO.getCardType());
+            session.setAttribute("LineItems",orderVO.getLineItems());
+            session.setAttribute("totalPrice",orderVO.getTotalPrice());
+
+            // 将 OrderVO 对象添加到模型中，键为 "orderForm"
+            model.addAttribute("orderForm", orderVO);
+
+            System.out.println(orderVO.getBillAddr1());
+
+            return "order/newOrder";
+        } catch (Exception e) {
+            // 记录异常信息
+            e.printStackTrace();
+            // 返回错误页面或重定向到错误页面
+            return "redirect:/error";
+        }
+    }
+
+
     //订单确认页面控制：新订单request获得填写信息的Parameter，并放入session
     @PostMapping("/confirmOrder")
     public String confirmOrder(OrderVO orderVO, HttpSession session, Model model) {
@@ -80,13 +157,6 @@ public class OrderController {
         return "order/confirmOrder";
     }
 
-    @GetMapping("listOrders")
-    public String listOrders(String orderId, Model model) {
-        OrderVO orderVO = new OrderVO();
-        orderVO.setOrderId(orderId);
-        model.addAttribute("order", orderVO);
-        return "order/listOrders";
-    }
 
     //查看最终订单页面控制：session信息打印
     @PostMapping("viewOrder")
@@ -203,8 +273,8 @@ public class OrderController {
 
             // 更新 session 中的购物车
             session.setAttribute("cart", cartVO);
-        // 将订单对象添加到模型中
-        model.addAttribute("order", orderVO);
+            // 将订单对象添加到模型中
+            model.addAttribute("order", orderVO);
 
 
             System.out.println("Updated cart: " + cartVO.getItemList());
@@ -214,6 +284,16 @@ public class OrderController {
         // 跳转到查看订单页面
         return "order/viewOrder";
     }
+
+
+    @GetMapping("listOrders")
+    public String listOrders(String orderId, Model model) {
+        OrderVO orderVO = new OrderVO();
+        orderVO.setOrderId(orderId);
+        model.addAttribute("order", orderVO);
+        return "order/listOrders";
+    }
+
     @GetMapping("viewItem")
     public String viewItem(String itemId, Model model) {
         ItemVO itemVO = orderService.getItem(itemId);
@@ -221,82 +301,6 @@ public class OrderController {
         return "catalog/item";
     }
 
-
-
-    //新Order页面控制
-    // 新订单页面控制
-    @PostMapping("newOrder")
-    public String newOrder(@RequestParam(value = "selectedItems", required = false) String selectedItemsParam,
-                           HttpSession session,
-                           Model model) {
-        try {
-            // 获取购物车
-            CartVO cartVO = (CartVO) session.getAttribute("cart");
-            if (cartVO == null) {
-                cartVO = new CartVO();
-                session.setAttribute("cart", cartVO);
-            }
-
-            // 检查用户是否登录
-            AccountVO loginAccount = (AccountVO) session.getAttribute("loginAccount");
-            if (loginAccount == null) {
-                return "redirect:/signonForm";
-            }
-
-            // 获取选中的商品 ID
-            if (selectedItemsParam == null || selectedItemsParam.isEmpty()) {
-                return "redirect:/cartForm";
-            }
-
-            String[] selectedItemIds = selectedItemsParam.split(",");
-            List<CartItemVO> selectedItems = new ArrayList<>();
-
-            // 创建一个新的购物车
-            CartVO newCartVO = new CartVO();
-
-            // 根据选中的 ID 筛选商品，并添加到新的购物车
-            BigDecimal newSubTotal = BigDecimal.ZERO;
-            for (String itemId : selectedItemIds) {
-                CartItemVO cartItemVO = cartVO.getItemMap().get(itemId);
-                if (cartItemVO != null) {
-                    selectedItems.add(cartItemVO);
-                    newCartVO.getItemList().add(cartItemVO); // 添加商品到新的购物车
-                    newSubTotal = newSubTotal.add(cartItemVO.getTotalPrice()); // 计算新的小计
-                }
-            }
-
-            // 更新新的购物车小计
-            newCartVO.setSubTotal(newSubTotal);
-
-            // 设置新的购物车到 session 中
-            session.setAttribute("selectedCart", newCartVO);
-
-            System.out.println(cartVO);
-            System.out.println(newCartVO);
-
-            // 初始化订单
-            OrderVO orderVO = orderService.initOrder(loginAccount, newCartVO);
-
-
-            //防止遗失
-            // 设置信用卡类型
-            session.setAttribute("creditCardTypes", orderVO.getCardType());
-            session.setAttribute("LineItems",orderVO.getLineItems());
-            session.setAttribute("totalPrice",orderVO.getTotalPrice());
-
-            // 将 OrderVO 对象添加到模型中，键为 "orderForm"
-            model.addAttribute("orderForm", orderVO);
-
-            System.out.println(orderVO.getBillAddr1());
-
-            return "order/newOrder";
-        } catch (Exception e) {
-            // 记录异常信息
-            e.printStackTrace();
-            // 返回错误页面或重定向到错误页面
-            return "redirect:/error";
-        }
-    }
 
     @GetMapping("shoppingForm")
     public String shippingForm(String orderId, Model model) {

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>编辑账户信息</title>
+  <link rel="StyleSheet" href="/css/account.css" type="text/css" media="screen"/>
+
+</head>
+<body>
+
+<!--<header th:replace="~{common/top}"></header>-->
+<h2>编辑账户信息</h2>
+<div class="registration-form" id="registration-form">
+  <form th:action="@{/account/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
+
+    <input type="hidden" th:field="*{loginAccount.username}" />
+    <input type="hidden" th:field="*{loginAccount.password}" />
+
+    <fieldset>
+      <legend>账户信息</legend>
+      <table>
+        <tr>
+          <td><label for="email">邮箱:</label></td>
+          <td><input type="email" id="email" th:field="*{loginAccount.email}" required placeholder="请输入邮箱"  /></td>
+        </tr>
+        <tr>
+          <td><label for="phone">电话:</label></td>
+          <td><input type="tel" id="phone" th:field="*{loginAccount.phone}" required placeholder="请输入电话" /></td>
+        </tr>
+        <tr>
+          <td><label for="address1">地址 1:</label></td>
+          <td><input type="text" id="address1" th:field="*{loginAccount.addr1}" placeholder="请输入地址 1" /></td>
+        </tr>
+        <tr>
+          <td><label for="address2">地址 2:</label></td>
+          <td><input type="text" id="address2" th:field="*{loginAccount.addr2}" placeholder="请输入地址 2" /></td>
+        </tr>
+        <tr>
+          <td><label for="city">城市:</label></td>
+          <td><input type="text" id="city" th:field="*{loginAccount.city}" placeholder="请输入城市" /></td>
+        </tr>
+        <tr>
+          <td><label for="state">州/省:</label></td>
+          <td><input type="text" id="state" th:field="*{loginAccount.state}" placeholder="请输入州/省" /></td>
+        </tr>
+        <tr>
+          <td><label for="zip">邮编:</label></td>
+          <td><input type="text" id="zip" th:field="*{loginAccount.zip}" placeholder="请输入邮编" /></td>
+        </tr>
+        <tr>
+          <td><label for="country">国家:</label></td>
+          <td><input type="text" id="country" th:field="*{loginAccount.country}" required placeholder="请输入国家" /></td>
+        </tr>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend>个人信息</legend>
+      <table>
+        <tr>
+          <td><label for="languagePreference">语言偏好:</label></td>
+          <td>
+            <select id="languagePreference" th:field="*{loginAccount.langpref}">
+              <option value="english" th:selected="${loginAccount.langpref == 'english'}">English</option>
+              <option value="japanese" th:selected="${loginAccount.langpref == 'japanese'}">Japanese</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="submit">保存修改</button>
+    </div>
+  </form>
+
+  <!-- 错误信息显示 -->
+  <div class="error" th:text="${error}"></div>
+</div>
+<a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
+<footer th:replace="common/bottom"></footer>
+</body>
+
+</html>

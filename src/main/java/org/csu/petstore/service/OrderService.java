@@ -25,6 +25,9 @@ public interface OrderService {
 
     boolean insertOrderStatus(OrderStatusVO orderStatus);
 
+    //获得所有订单
+    List<Order> getAllOrders();
+
 
 
     //非数据库方法定义

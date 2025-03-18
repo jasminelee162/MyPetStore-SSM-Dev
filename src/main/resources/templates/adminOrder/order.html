@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理模块</title>
+    <link rel="stylesheet" href="/css/adminOrder_orderList.css">
+</head>
+<body>
+<header>
+    <h1>JPetStore订单管理模块</h1>
+</header>
+<main>
+    <section class="order-search">
+        <h2>订单查询</h2>
+        <form id="order-search-form">
+            <label for="order-id">订单编号：</label>
+            <input type="text" id="order-id" name="order-id" placeholder="请输入订单编号">
+            <button type="submit">查询</button>
+        </form>
+    </section>
+    <section class="order-list">
+        <h2>订单列表</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>订单编号</th>
+                <th>用户账号</th>
+                <th>订单金额</th>
+                <th>订单状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 动态生成订单数据 -->
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.orderId}"></td>
+                <td th:text="${order.userId}"></td>
+                <td th:text="'￥' + ${order.totalPrice}"></td>
+                <td th:text="P"></td>
+                <td>
+                    <button class="order-detail-btn">详情</button>
+                    <button class="order-edit-btn">修改</button>
+                    <button class="order-delete-btn">删除</button>
+                    <button class="order-ship-btn">发货</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<footer>
+    <p>&copy; 2025 JPetStore. All rights reserved.</p>
+</footer>
+</body>
+</html>

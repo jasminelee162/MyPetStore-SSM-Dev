@@ -7,15 +7,38 @@
 <body>
 <header th:replace="common/top"></header>
 
-<h1 th:text="'商品项ID：' + ${item.itemId}">商品项ID</h1>
-<p>产品ID: <span th:text="${item.productId}"></span></p>
-<p>列表价格: <span th:text="${item.listPrice}"></span></p>
-<p>单位成本: <span th:text="${item.unitCost}"></span></p>
-<p>库存数量: <span th:text="${item.quantity}"></span></p>
-<p>是否可用: <span th:text="${item.status}"></span></p>
+<div class="container">
+    <h1>商品项详情</h1>
+    <table>
+        <tr>
+            <th>属性</th>
+            <th>值</th>
+        </tr>
+        <tr>
+            <td>商品项 ID</td>
+            <td th:text="${item.itemId}"></td>
+        </tr>
+        <tr>
+            <td>产品 ID</td>
+            <td th:text="${item.productId}"></td>
+        </tr>
+        <tr>
+            <td>列表价格</td>
+            <td th:text="${item.listPrice}"></td>
+        </tr>
+        <tr>
+            <td>单位成本</td>
+            <td th:text="${item.unitCost}"></td>
+        </tr>
+        <tr>
+            <td>库存数量</td>
+            <td th:text="${item.quantity}"></td>
+        </tr>
+    </table>
 
-<a th:href="@{/templates/adminShop/index}">返回后台管理首页</a>
-<a th:href="@{/templates/adminShop/product(productId=${item.productId})}">返回商品详情</a>
+    <a th:href="@{/adminShop/index}" class="btn">返回后台管理首页</a>
+    <a th:href="@{/adminShop/product(productId=${item.productId})}" class="btn">返回商品详情</a>
+</div>
 
 <footer th:replace="common/bottom"></footer>
 </body>

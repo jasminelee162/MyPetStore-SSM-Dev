@@ -195,6 +195,11 @@ public class OrderServiceImpl implements OrderService {
         return result > 0;
     }
 
+    @Override
+    public List<Order> getAllOrders() {
+        // 调用 Mapper 的 selectList 方法查询所有订单
+        return orderMapper.selectList(null); // 不传入任何查询条件，表示查询所有数据
+    }
 
 
     //非数据库方法实现
