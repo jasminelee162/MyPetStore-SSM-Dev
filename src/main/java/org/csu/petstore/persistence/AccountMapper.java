@@ -29,7 +29,6 @@ public interface AccountMapper extends BaseMapper<Account> {
             "WHERE ACCOUNT.USERID = #{username} AND SIGNON.PASSWORD = #{password}")
     AccountVO getAccountVOByUsernameAndPassword(String username, String password);
 
-   // Account getAccountByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
     @Insert("INSERT INTO ACCOUNT (USERID, EMAIL, FIRSTNAME, LASTNAME, STATUS, ADDR1, ADDR2, CITY, STATE, ZIP, COUNTRY, PHONE) " +
             "VALUES (#{username}, #{email}, #{firstname}, #{lastname}, #{status}, #{addr1}, #{addr2}, #{city}, #{state}, #{zip}, #{country}, #{phone})")

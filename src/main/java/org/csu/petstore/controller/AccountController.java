@@ -41,6 +41,7 @@ public class AccountController {
     public String signOn(@RequestParam("username") String username,
                          @RequestParam("password") String password,
                          @RequestParam("captcha") String gotCaptcha, // 接收前端验证码
+                         @RequestParam(value = "admin", required = false) boolean admin,
                          Model model) {
 
 
@@ -69,9 +70,9 @@ public class AccountController {
                 if (cart != null) {
                     model.addAttribute("cart", cart);
                 }*/
-
                 String message = "User " + username + " login success!";
                 logService.setLog(message);
+                if(admin) return "admin/main";
 
                 return "catalog/main"; //返回主页
 

@@ -45,8 +45,6 @@ public class AccountServiceImpl implements AccountService {
         account.setZip(accountVO.getZip());
         account.setCountry(accountVO.getCountry());
         account.setPhone(accountVO.getPhone());
-        System.out.println(account.toString());
-        System.out.println(accountVO.toString());
 
         // 插入账户信息
         accountMapper.insertAccount(account);

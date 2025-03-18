@@ -37,7 +37,10 @@
                     <!-- 使用Thymeleaf的src表达式 -->
                     <img src="#" th:src="@{/account/captcha}" alt="Captcha Image" id="captchaImage" style="cursor: pointer; margin-left: 10px; vertical-align: middle;" onclick="refreshCaptcha()" />
                 </td>
-            </tr>
+
+                <td><label for="admin">merchant?</label></td>
+                <td><input type="checkbox" name="admin" id="admin">
+                </td>
         </table>
 
         <input type="submit" value="Login">
