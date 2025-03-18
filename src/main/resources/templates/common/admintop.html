@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar Navigation</title>
+    <link rel="StyleSheet" href="../css/admintop.css" type="text/css" media="screen"/>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+</head>
+<body>
+<!-- 侧边栏 -->
+<div id="Sidebar" th:fragment="top">
+    <!-- Logo -->
+    <a href="/catalog/index" class="logo"><img src="../images/logo-topbar.gif"/></a>
+
+<!--    <div class="separator"></div>-->
+
+    <!-- 购物车、登录等 -->
+<!--    <a href="/cart/viewCart"><img src="/static/images/cart.gif"/> Cart</a>-->
+    <a href="/cart/viewCart">Cart</a>
+
+    <a th:if="${session.loginAccount} == null" href="/account/signOnForm">Sign In</a>
+    <a th:if="(${session.loginAccount} != null) and ((${session.authenticated} == null) ? 0 : true)" href="/account/signOut">Sign Out</a>
+    <a th:if="(${session.loginAccount} != null) and ((${session.authenticated} == null) ? 0 : true)" href="/account/editAccount">My Account</a>
+
+    <div class="separator"></div>
+
+    <!-- 搜索栏 -->
+    <form action="/catalog/searchProducts" method="post">
+        <input type="text" name="keyword" placeholder="Search..."/>
+        <input type="submit" name="searchProducts" value="Search"/>
+    </form>
+
+    <div class="separator"></div>
+
+<!--    &lt;!&ndash; 快捷链接 &ndash;&gt;-->
+<!--    <a href="/catalog/viewCategory?categoryId=FISH"><img src="../images/sm_fish.gif"/> Fish</a>-->
+<!--    <a href="/catalog/viewCategory?categoryId=DOGS"><img src="../images/sm_dogs.gif"/> Dogs</a>-->
+<!--    <a href="/catalog/viewCategory?categoryId=REPTILES"><img src="../images/sm_reptiles.gif"/> Reptiles</a>-->
+<!--    <a href="/catalog/viewCategory?categoryId=CATS"><img src="../images/sm_cats.gif"/> Cats</a>-->
+<!--    <a href="/catalog/viewCategory?categoryId=BIRDS"><img src="../images/sm_birds.gif"/> Birds</a>-->
+</div>
+</body>
+</html>

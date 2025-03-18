@@ -2,7 +2,14 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>商品管理</title>
+    <style>
+        #mainContent {
+            margin-left: 250px; /* 确保内容不被侧边栏覆盖 */
+            padding: 20px;
+        }
+    </style>
     <script>
         function showEditForm(categoryId, categoryName, description) {
             let existingRow = document.getElementById('editRow');
@@ -40,8 +47,10 @@
     </script>
 </head>
 <body>
-<header th:replace="common/top"></header>
+<!--<header th:replace="common/top"></header>-->
+<div th:replace="~{common/admintop}"></div>
 
+<div id="mainContent">
 <h1>商品分类管理</h1>
 
 <table border="1" th:if="${categories != null}">
@@ -88,8 +97,8 @@
 </form>
 
 <a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
-
-<footer th:replace="common/bottom"></footer>
+</div>
+<!--<footer th:replace="common/bottom"></footer>-->
 
 </body>
 </html>
