@@ -50,7 +50,7 @@ public class AdminShopController {
     public String viewItem(String itemId, Model model) {
         ItemVO itemVO = catalogService.getItem(itemId);
         model.addAttribute("item", itemVO);
-        return "catalog/item";
+        return "adminShop/item";
     }
 
     @PostMapping("/addCategory")

@@ -96,6 +96,7 @@ public class CatalogServiceImpl implements CatalogService {
 
         itemVO.setItemId(itemId);
         itemVO.setListPrice(item.getListPrice());
+        itemVO.setUnitCost(item.getUnitCost());
         itemVO.setAttribute1(item.getAttribute1());
         itemVO.setProductId(product.getProductId());
         itemVO.setProductName(product.getName());

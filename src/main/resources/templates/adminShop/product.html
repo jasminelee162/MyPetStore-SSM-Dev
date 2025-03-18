@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>商品详情</title>
     <script>
-        function showEditItemForm(productId,itemId, listPrice, quantity) {
+        function showEditItemForm(productId, itemId, listPrice, unitCost, quantity) {
             // 移除已有的编辑行
             let existingRow = document.getElementById('editRow');
             if (existingRow) {
@@ -19,13 +19,16 @@
             let newRow = document.createElement('tr');
             newRow.id = 'editRow';
             newRow.innerHTML = `
-        <td colspan="4">
+        <td colspan="6">
             <form action="/adminShop/updateItem" method="post">
                 <input type="hidden" name="productId" value="${productId}">
                 <input type="hidden" name="itemId" value="${itemId}">
 
                 <label>价格：</label>
                 <input type="text" name="listPrice" value="${listPrice.replace(/"/g, '&quot;')}" required>
+
+                <label>单位成本：</label>
+                <input type="text" name="unitCost" value="${unitCost.replace(/"/g, '&quot;')}" required>
 
                 <label>库存：</label>
                 <input type="text" name="quantity" value="${quantity.replace(/"/g, '&quot;')}" required>
@@ -52,6 +55,7 @@
     <tr>
         <th>商品项编号</th>
         <th>价格</th>
+        <th>单位成本</th>
         <th>库存</th>
         <th>状态</th>
         <th>操作</th>
@@ -59,15 +63,15 @@
     <tr th:each="item : ${product.itemList}" th:id="'itemRow-'+${item.itemId}">
         <td th:text="${item.itemId}">商品项ID</td>
         <td th:text="${item.listPrice}">价格</td>
-<!--        <td th:text="${item.quantity}">库存</td>-->
+        <td th:text="${item.unitCost}">单位成本</td>
         <td th:text="1">库存</td>
-<!--        <td th:text="${item.isAvailable ? '已上架' : '未上架'}"></td>-->
+        <td th:text="已上架"></td>
         <td>
             <a th:href="@{/adminShop/item(itemId=${item.itemId})}">查看详情</a>
 
             <!-- 修改商品项 -->
             <button type="button"
-                    th:attr="onclick=|showEditItemForm('${product.productId}','${item.itemId}', '${item.listPrice}', '1')|">
+                    th:attr="onclick=|showEditItemForm('${product.productId}','${item.itemId}', '${item.listPrice}', '${item.unitCost}', '1')|">
                 修改
             </button>
 
@@ -77,12 +81,6 @@
                 <input type="hidden" name="itemId" th:value="${item.itemId}">
                 <button type="submit" onclick="return confirm('确定删除该商品项？')">删除</button>
             </form>
-
-<!--            &lt;!&ndash; 上架/下架 &ndash;&gt;-->
-<!--            <form action="/adminShop/toggleItemStatus" method="post" style="display:inline;">-->
-<!--                <input type="hidden" name="itemId" th:value="${item.itemId}">-->
-<!--                <button type="submit" th:text="${item.isAvailable ? '下架' : '上架'}"></button>-->
-<!--            </form>-->
         </td>
     </tr>
 </table>
@@ -101,12 +99,14 @@
     <label for="listPrice">价格：</label>
     <input type="text" id="listPrice" name="listPrice" required>
 
+    <label for="unitCost">单位成本：</label>
+    <input type="text" id="unitCost" name="unitCost" required>
+
     <label for="quantity">库存：</label>
     <input type="text" id="quantity" name="quantity" required>
 
     <button type="submit">添加商品项</button>
 </form>
-
 
 <a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
 <a th:href="@{/adminShop/category(categoryId=${product.categoryId})}">返回分类</a>
