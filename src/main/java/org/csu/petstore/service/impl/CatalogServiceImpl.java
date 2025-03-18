@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service("catalogService")
@@ -52,6 +54,15 @@ public class CatalogServiceImpl implements CatalogService {
             vo.setDescription(category.getDescription());
             return vo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Integer> getItemQuantities(List<String> itemIds) {
+        if (itemIds == null || itemIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        List<ItemQuantity> quantities = itemQuantityMapper.selectBatchIds(itemIds);
+        return quantities.stream().collect(Collectors.toMap(ItemQuantity::getItemId, ItemQuantity::getQuantity));
     }
 
     @Override
@@ -97,6 +108,7 @@ public class CatalogServiceImpl implements CatalogService {
         itemVO.setItemId(itemId);
         itemVO.setListPrice(item.getListPrice());
         itemVO.setUnitCost(item.getUnitCost());
+        itemVO.setStatus(item.getStatus());
         itemVO.setAttribute1(item.getAttribute1());
         itemVO.setProductId(product.getProductId());
         itemVO.setProductName(product.getName());

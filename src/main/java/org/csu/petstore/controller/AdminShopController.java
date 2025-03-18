@@ -1,5 +1,7 @@
 package org.csu.petstore.controller;
 
+import org.csu.petstore.entity.Item;
+import org.csu.petstore.entity.ItemQuantity;
 import org.csu.petstore.service.AdminShopService;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.vo.CategoryVO;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/adminShop")
@@ -42,15 +46,17 @@ public class AdminShopController {
     @GetMapping("/product")
     public String viewProduct(String productId, Model model) {
         ProductVO productVO = catalogService.getProduct(productId);
-        model.addAttribute("product", productVO);
-        return "adminShop/product";
-    }
 
-    @GetMapping("/item")
-    public String viewItem(String itemId, Model model) {
-        ItemVO itemVO = catalogService.getItem(itemId);
-        model.addAttribute("item", itemVO);
-        return "adminShop/item";
+        // 获取商品项 ID 列表
+        List<String> itemIds = productVO.getItemList().stream().map(Item::getItemId).collect(Collectors.toList());
+
+        // 获取库存信息
+        Map<String, Integer> itemQuantities = catalogService.getItemQuantities(itemIds);
+
+        model.addAttribute("product", productVO);
+        model.addAttribute("itemQuantities", itemQuantities);
+
+        return "adminShop/product";
     }
 
     @PostMapping("/addCategory")
@@ -76,9 +82,10 @@ public class AdminShopController {
     public String addItem(@RequestParam String productId,
                           @RequestParam String itemId,
                           @RequestParam String listPrice,
+                          @RequestParam String unitCost,
                           @RequestParam String quantity) {
         // 调用服务层保存商品项信息
-        adminShopService.addItem(productId, itemId, listPrice, quantity);
+        adminShopService.addItem(productId, itemId, listPrice, unitCost, quantity);
         return "redirect:/adminShop/product?productId=" + productId;  // 返回商品详情页面
     }
 
@@ -105,9 +112,10 @@ public class AdminShopController {
     public String updateItem(@RequestParam String productId,
                              @RequestParam String itemId,
                              @RequestParam String listPrice,
+                             @RequestParam String unitCost,
                              @RequestParam String quantity) {
         // 调用服务层更新商品项信息
-        adminShopService.updateItem(itemId, listPrice, quantity);
+        adminShopService.updateItem(itemId, listPrice, unitCost, quantity);
         return "redirect:/adminShop/product?productId=" + productId;  // 返回商品详情页面
     }
 
@@ -128,4 +136,15 @@ public class AdminShopController {
         adminShopService.deleteItem(itemId);
         return "redirect:/adminShop/product?productId=" + productId;  // 返回商品详情页面
     }
+
+
+    //上下架
+    @PostMapping("/updateItemStatus")
+    public String updateItemStatus(@RequestParam String productId,
+                                   @RequestParam String itemId,
+                                   @RequestParam String status) {
+        adminShopService.updateItemStatus(itemId, status);
+        return "redirect:/adminShop/product?productId=" + productId;
+    }
+
 }

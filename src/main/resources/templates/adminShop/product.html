@@ -64,16 +64,24 @@
         <td th:text="${item.itemId}">商品项ID</td>
         <td th:text="${item.listPrice}">价格</td>
         <td th:text="${item.unitCost}">单位成本</td>
-        <td th:text="1">库存</td>
-        <td th:text="已上架"></td>
+        <td th:text="${itemQuantities[item.itemId] ?: '0'}">库存</td>
+        <td th:text="${item.status == 'P' ? '已上架' : '已下架'}"></td>
         <td>
             <a th:href="@{/adminShop/item(itemId=${item.itemId})}">查看详情</a>
 
             <!-- 修改商品项 -->
             <button type="button"
-                    th:attr="onclick=|showEditItemForm('${product.productId}','${item.itemId}', '${item.listPrice}', '${item.unitCost}', '1')|">
+                    th:attr="onclick=|showEditItemForm('${product.productId}','${item.itemId}', '${item.listPrice}', '${item.unitCost}', '${itemQuantities[item.itemId] ?: '0'}')|">
                 修改
             </button>
+
+            <!-- 上架/下架 -->
+            <form action="/adminShop/updateItemStatus" method="post" style="display:inline;">
+                <input type="hidden" name="productId" th:value="${product.productId}">
+                <input type="hidden" name="itemId" th:value="${item.itemId}">
+                <input type="hidden" name="status" th:value="${item.status == 'P' ? 'N' : 'P'}">
+                <button type="submit" th:text="${item.status == 'P' ? '下架' : '上架'}"></button>
+            </form>
 
             <!-- 删除商品项 -->
             <form action="/adminShop/deleteItem" method="post" style="display:inline;">

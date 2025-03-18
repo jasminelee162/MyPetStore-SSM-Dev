@@ -23,7 +23,7 @@
             let newRow = document.createElement('tr');
             newRow.id = 'editRow';
             newRow.innerHTML = `
-            <td colspan="3">
+            <td colspan="4">
                 <form action="/adminShop/updateCategory" method="post">
                     <input type="hidden" name="categoryId" value="${categoryId}">
 
@@ -57,11 +57,13 @@
     <tr>
         <th>分类编号</th>
         <th>分类名称</th>
+        <th>分类描述</th>
         <th>操作</th>
     </tr>
     <tr th:each="category : ${categories}" th:id="'categoryRow-' + ${category.categoryId}">
         <td th:text="${category.categoryId}">分类ID</td>
         <td th:text="${category.categoryName}">分类名称</td>
+        <td th:text="${category.description}">分类名称</td>
         <td>
             <a th:href="@{/adminShop/category(categoryId=${category.categoryId})}">查看商品</a>
 

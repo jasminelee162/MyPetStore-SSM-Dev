@@ -5,13 +5,15 @@ import org.csu.petstore.vo.CategoryVO;
 import org.csu.petstore.vo.ItemVO;
 import org.csu.petstore.vo.ProductVO;
 
-import org.csu.petstore.entity.Product;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CatalogService {
 
     List<CategoryVO> getAllCategories();
+
+    Map<String, Integer> getItemQuantities(List<String> itemIds); // 新增方法
 
     public CategoryVO getCategory(String categoryId);
 
