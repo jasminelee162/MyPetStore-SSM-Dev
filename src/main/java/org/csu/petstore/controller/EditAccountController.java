@@ -30,10 +30,16 @@ public class EditAccountController {
     @PostMapping("/editAccount")
     public String submitAccountInfo(@Validated @ModelAttribute("account") AccountVO account,
                                     @RequestParam(value = "password", required = false) String password,
+                                    @RequestParam("confirmPassword") String confirmPassword,
                                     Model model,
                                     @SessionAttribute("loginAccount") AccountVO loginAccount) {
+// 判断密码和确认密码是否一致
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("error", "密码和确认密码不一致，请重新输入！");
+            return "user/updatePassword";  // 跳回修改密码页面
+        }
 
-        if (password != null && !password.isEmpty()) {
+         else {
             account.setPassword(password);
         }
 
@@ -42,6 +48,7 @@ public class EditAccountController {
             accountService.updateAccount(account);
 
             // 更新 Session 里的 loginAccount
+            loginAccount.setPassword(account.getPassword());
             loginAccount.setUsername(account.getUsername());
             loginAccount.setFirstname(account.getFirstname());
             loginAccount.setLastname(account.getLastname());

@@ -47,8 +47,13 @@ public interface AccountMapper extends BaseMapper<Account> {
     @Select("SELECT * FROM account WHERE ACCOUNT.USERID = #{username}")
     AccountVO getAccountByUsername(@Param("username") String username);
 
-
     boolean isUsernameExists(String username);
+
+    // Update password in the SIGNON table
+    @Update("UPDATE SIGNON SET PASSWORD = #{password} WHERE USERNAME = #{username}")
+    void updatePassword(@Param("username") String username, @Param("password") String password);
+
+    // Update account information in the ACCOUNT table
     @Update("UPDATE ACCOUNT SET " +
             "EMAIL = #{email}, " +
             "FIRSTNAME = #{firstname}, " +
@@ -62,5 +67,6 @@ public interface AccountMapper extends BaseMapper<Account> {
             "PHONE = #{phone} " +
             "WHERE USERID = #{username}")
     void updateAccount(Account accountVO);
+
 
 }
