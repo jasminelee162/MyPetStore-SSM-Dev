@@ -3,18 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <title>后台管理</title>
+    <link rel="stylesheet" th:href="@{/css/adminMain.css}" />
+    <script th:src="@{/js/adminMain.js}"></script>
 </head>
 <body>
-<header th:replace="common/top"></header>
+<div th:replace="~{common/admintop}"></div>
 
 <h1>后台管理系统</h1>
+<nav>
+    <a th:href="@{/adminShop/catalog}"><i>商品管理</i></a>
+    <a th:href="@{/adminAccount/editAccountFrom}"><i>用户管理</i></a>
+    <a th:href="@{/adminOrder/order}"><i>订单管理</i></a>
 
-<ul>
-    <li><a th:href="@{/adminShop/catalog}">商品管理</a></li>
-    <li><a th:href="@{/adminAccount/editAccountFrom}">用户管理</a></li>
-    <li><a th:href="@{/adminOrder/order}">订单管理</a></li>
-</ul>
 
+
+</nav>
+<div style="width: 800px; height: 800px; filter: drop-shadow(10px 30px 20px #cccccc);margin-left: 500px" class="moudle">
+    <script id="tc-model-viewer-7c26802e-269d-4029-93a5-ac9dd5af60e6.glb" type="module">
+        import { WebGLRenderer, ACESFilmicToneMapping, sRGBEncoding, Scene, PerspectiveCamera, HemisphereLight, PointLight } from 'https://unpkg.com/three@0.125.0/build/three.module.js';
+        import { GLTFLoader } from 'https://unpkg.com/three@0.125.0/examples/jsm/loaders/GLTFLoader.js';
+        import { OrbitControls } from 'https://unpkg.com/three@0.125.0/examples/jsm/controls/OrbitControls.js';
+
+        (function () {
+            const { scene, camera } = initScene(document.getElementById('tc-model-viewer-7c26802e-269d-4029-93a5-ac9dd5af60e6.glb'));
+
+            new GLTFLoader().load('https://cdn.wtlstudio.com/sample.wtlstudio.com/7c26802e-269d-4029-93a5-ac9dd5af60e6.glb', ({ scene: model }, animations) => {
+                scene.add(model);
+
+                const scale = 0.3126888103081394;
+                model.scale.multiplyScalar(scale);
+                model.position.y -= scale / 2.0;
+
+                camera.position.set(0.0, 0.0, 4.0);
+            });
+
+            function initScene (n) {
+                const r = n.parentElement;
+                const { width: w, height: h } = r.getBoundingClientRect();
+                const rn = new WebGLRenderer({ alpha: true, antialias: true });
+                rn.setSize(w, h);
+                rn.setPixelRatio(window.devicePixelRatio || 1.0);
+                rn.toneMapping = ACESFilmicToneMapping;
+                rn.outputEncoding = sRGBEncoding;
+                const s = new Scene();
+                const c = new PerspectiveCamera(50, w / h);
+                s.add(new HemisphereLight(0xffffcc, 0x3366aa, 2.0));
+                const dl = new PointLight(0xffffcc, 1.0);
+                dl.position.set(2.0, 2.0, 2.0); s.add(dl);
+                new OrbitControls(c, rn.domElement);
+
+                (function animate() {
+                    requestAnimationFrame(animate);
+                    rn.render(s, c);
+                })();
+
+                r.appendChild(rn.domElement);
+                r.removeChild(n);
+
+                return { root: r, renderer: rn, scene: s, camera: c };
+            };
+        })();
+    </script>
+</div>
 <footer th:replace="common/bottom"></footer>
+
 </body>
 </html>
