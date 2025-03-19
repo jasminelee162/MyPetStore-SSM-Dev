@@ -3,6 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>商品详情</title>
+    <style>
+        .status-label {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .status-online { background-color: #4CAF50; } /* 绿色 - 已上架 */
+        .status-offline { background-color: #BDC3C7; } /* 灰色 - 已下架 */
+
+        .status-button {
+            padding: 4px 8px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .green-button { background-color: #4CAF50; color: white; } /* 绿色 */
+        .red-button { background-color: #E74C3C; color: white; }  /* 红色 */
+    </style>
     <script>
         function showEditItemForm(productId, itemId, listPrice, unitCost, quantity) {
             // 移除已有的编辑行
@@ -65,25 +89,39 @@
         <td th:text="${item.listPrice}">价格</td>
         <td th:text="${item.unitCost}">单位成本</td>
         <td th:text="${itemQuantities[item.itemId] ?: '0'}">库存</td>
-        <td th:text="${item.status == 'P' ? '已上架' : '已下架'}"></td>
+
+        <!-- 状态列（状态标签 + 上架/下架按钮） -->
+        <td>
+            <!-- 状态标签 -->
+            <span th:classappend="${item.status == 'P'} ? 'status-online' : 'status-offline'"
+                  class="status-label"
+                  th:text="${item.status == 'P' ? '已上架' : '已下架'}">
+            </span>
+
+            <!-- 上架按钮（商品状态为 N 时可见） -->
+            <form th:if="${item.status == 'N'}" action="/adminShop/updateItemStatus" method="post" style="display:inline;">
+                <input type="hidden" name="productId" th:value="${product.productId}">
+                <input type="hidden" name="itemId" th:value="${item.itemId}">
+                <input type="hidden" name="status" value="P">
+                <button type="submit" class="status-button green-button">上架</button>
+            </form>
+
+            <!-- 下架按钮（商品状态为 P 时可见） -->
+            <form th:if="${item.status == 'P'}" action="/adminShop/updateItemStatus" method="post" style="display:inline;">
+                <input type="hidden" name="productId" th:value="${product.productId}">
+                <input type="hidden" name="itemId" th:value="${item.itemId}">
+                <input type="hidden" name="status" value="N">
+                <button type="submit" class="status-button red-button">下架</button>
+            </form>
+        </td>
+
+        <!-- 其他操作 -->
         <td>
             <a th:href="@{/adminShop/item(itemId=${item.itemId})}">查看详情</a>
-
-            <!-- 修改商品项 -->
             <button type="button"
                     th:attr="onclick=|showEditItemForm('${product.productId}','${item.itemId}', '${item.listPrice}', '${item.unitCost}', '${itemQuantities[item.itemId] ?: '0'}')|">
                 修改
             </button>
-
-            <!-- 上架/下架 -->
-            <form action="/adminShop/updateItemStatus" method="post" style="display:inline;">
-                <input type="hidden" name="productId" th:value="${product.productId}">
-                <input type="hidden" name="itemId" th:value="${item.itemId}">
-                <input type="hidden" name="status" th:value="${item.status == 'P' ? 'N' : 'P'}">
-                <button type="submit" th:text="${item.status == 'P' ? '下架' : '上架'}"></button>
-            </form>
-
-            <!-- 删除商品项 -->
             <form action="/adminShop/deleteItem" method="post" style="display:inline;">
                 <input type="hidden" name="productId" th:value="${product.productId}">
                 <input type="hidden" name="itemId" th:value="${item.itemId}">
