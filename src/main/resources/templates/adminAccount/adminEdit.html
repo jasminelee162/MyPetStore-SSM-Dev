@@ -12,14 +12,20 @@
 <!--<header th:replace="~{common/top}"></header>-->
 <h2>编辑账户信息</h2>
 <div class="registration-form" id="registration-form">
-  <form th:action="@{/account/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
+  <form th:action="@{/adminAccount/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
 
-    <input type="hidden" th:field="*{loginAccount.username}" />
-    <input type="hidden" th:field="*{loginAccount.password}" />
 
     <fieldset>
       <legend>账户信息</legend>
       <table>
+        <tr>
+          <td><label for="password">新密码:</label></td>
+          <td><input type="password" id="password" name="password" required placeholder="请输入新密码" /></td>
+        </tr>
+        <tr>
+          <td><label for="confirmPassword">确认新密码:</label></td>
+          <td><input type="password" id="confirmPassword" name="confirmPassword" required placeholder="请确认新密码" /></td>
+        </tr>
         <tr>
           <td><label for="email">邮箱:</label></td>
           <td><input type="email" id="email" th:field="*{loginAccount.email}" required placeholder="请输入邮箱"  /></td>
