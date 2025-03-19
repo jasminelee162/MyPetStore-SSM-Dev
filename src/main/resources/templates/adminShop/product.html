@@ -3,7 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <title>商品详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="StyleSheet" href="/css/admincatalog.css" type="text/css" media="screen"/>
     <style>
+
+
+        table{
+            margin-left:48px;
+            width:95%;
+            margin-top:30px;
+        }
+        h1,h2{
+            margin-left:200px;
+            width:70%;
+        }
+        .add-category-container {
+            margin-top: 50px;
+            margin-left: 65px;
+            width: 90%;
+            position: relative;
+            border-radius: 20px;
+            padding: 15px;
+            overflow: hidden; /* 防止溢出 */
+        }
+
+        #add::before {
+            content: "";
+            position: absolute;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            background: linear-gradient(45deg, #38ef7d, #18A4A6, #1E4D6D, #38ef7d);
+            background-size: 300% 300%;
+            border-radius: 20px;
+            z-index: -1;
+            animation: gradient-border 8s infinite ease-in-out;
+
+        }
+
+        @keyframes gradient-border {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .add-category-container h2{
+            margin-left:30px;
+        }
+        #add{
+            margin-right:30px;
+        }
+        @keyframes borderAnimation {
+            0% {
+                border-color: #38ef7d;
+            }
+            50% {
+                border-color: #18A4A6;
+            }
+            100% {
+                border-color: #38ef7d;
+            }
+        }
+
+        .add-category-container {
+            margin-top: 50px;
+            margin-left: 65px;
+            width: 90%;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            animation: borderAnimation 3s infinite ease-in-out;
+        }
+
         .status-label {
             display: inline-block;
             padding: 5px 10px;
@@ -12,8 +80,8 @@
             color: white;
         }
 
-        .status-online { background-color: #4CAF50; } /* 绿色 - 已上架 */
-        .status-offline { background-color: #BDC3C7; } /* 灰色 - 已下架 */
+        .status-online {background: linear-gradient(135deg, #11998e, #38ef7d);} /* 绿色 - 已上架 */
+        .status-offline {background: linear-gradient(135deg, #D3D3D3, #A0A0A0); /* 亮灰到深灰 */} /* 灰色 - 已下架 */
 
         .status-button {
             padding: 4px 8px;
@@ -24,8 +92,8 @@
             margin-left: 10px;
         }
 
-        .green-button { background-color: #4CAF50; color: white; } /* 绿色 */
-        .red-button { background-color: #E74C3C; color: white; }  /* 红色 */
+        /*.green-button { background-color: #4CAF50; color: white; } !* 绿色 *!*/
+        /*.red-button { background-color: #E74C3C; color: white; }  !* 红色 *!*/
     </style>
     <script>
         function showEditItemForm(productId, itemId, listPrice, unitCost, quantity) {
@@ -69,10 +137,13 @@
     </script>
 </head>
 <body>
-<header th:replace="common/top"></header>
+<!--<header th:replace="common/top"></header>-->
+<div th:replace="~{common/admintop}"></div>
+<div id="mainContent">
 
 <h1 th:text="'商品名称：' + ${product.productName}">商品名称</h1>
-<p>分类编号: <span th:text="${product.categoryId}"></span></p>
+<!--<p>分类编号: <span th:text="${product.categoryId}"></span></p>-->
+    <p class="category-container">分类编号: <span class="category-info" th:text="${product.categoryId}"></span></p>
 
 <!-- 商品项列表 -->
 <table border="1" th:unless="${#lists.isEmpty(product.itemList)}">
@@ -117,26 +188,31 @@
 
         <!-- 其他操作 -->
         <td>
-            <a th:href="@{/adminShop/item(itemId=${item.itemId})}">查看详情</a>
+            <div class="action-container">
+
+<!--            <a th:href="@{/adminShop/item(itemId=${item.itemId})}">查看详情</a>-->
             <button type="button"
                     th:attr="onclick=|showEditItemForm('${product.productId}','${item.itemId}', '${item.listPrice}', '${item.unitCost}', '${itemQuantities[item.itemId] ?: '0'}')|">
                 修改
             </button>
+            <a th:href="@{/adminShop/item(itemId=${item.itemId})}">查看详情</a>
+
             <form action="/adminShop/deleteItem" method="post" style="display:inline;">
                 <input type="hidden" name="productId" th:value="${product.productId}">
                 <input type="hidden" name="itemId" th:value="${item.itemId}">
                 <button type="submit" onclick="return confirm('确定删除该商品项？')">删除</button>
             </form>
+            </div>
         </td>
     </tr>
 </table>
 
 <!-- 如果没有商品，则显示空提示 -->
 <p th:if="${product.itemList == null or product.itemList.size() == 0}">该产品下暂无商品。</p>
-
+<div class="add-category-container">
 <!-- 添加商品项 -->
 <h2>添加新商品项</h2>
-<form action="/adminShop/addItem" method="post">
+<form id="add" action="/adminShop/addItem" method="post">
     <input type="hidden" name="productId" th:value="${product.productId}"/>
 
     <label for="itemId">商品项编号：</label>
@@ -153,11 +229,13 @@
 
     <button type="submit">添加商品项</button>
 </form>
-
+</div>
+<div class="back">
 <a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
 <a th:href="@{/adminShop/category(categoryId=${product.categoryId})}">返回分类</a>
-
-<footer th:replace="common/bottom"></footer>
+</div>
+</div>
+<!--<footer th:replace="common/bottom"></footer>-->
 
 </body>
 </html>
