@@ -128,7 +128,7 @@ tr:nth-child(even) td {
 /* 按钮样式 */
 button {
     width:150px;
-    background: linear-gradient(135deg, #11998e, #38ef7d);
+    background: linear-gradient(135deg, #18A4A6, #0F2F38);
     color: white;
     border: none;
     padding: 8px 25px;
@@ -140,7 +140,7 @@ button {
 }
 
 button:hover {
-    background: linear-gradient(135deg, #38ef7d, #11998e);
+    background: linear-gradient(135deg, #0F2F38, #18A4A6);
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
     transform: scale(1.05);
 }
@@ -188,8 +188,9 @@ a:hover {
 .action-container a {
     margin-top:5px;
     margin-bottom:5px;
+    width:100px;
     display: inline-block;
-    background: linear-gradient(135deg, #11998e, #38ef7d);
+    background: linear-gradient(135deg, #18A4A6, #0F2F38);
     color: white;
     font-weight: bold;
     text-decoration: none;
@@ -200,7 +201,7 @@ a:hover {
 }
 
 .action-container a:hover {
-    background: linear-gradient(135deg, #38ef7d, #11998e);
+    background: linear-gradient(135deg, #0F2F38, #18A4A6);
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
     transform: scale(1.05);
 }
@@ -211,4 +212,76 @@ a:hover {
     align-items: center;
     gap: 10px; /* 按钮间距 */
     width: 100%;
+}
+.add-category-container {
+    display: flex; /* 启用 Flexbox */
+    align-items: center; /* 垂直居中对齐 */
+    justify-content: center; /* 居中排列（可根据需求调整） */
+    gap: 20px; /* 让 h2 和 form 之间留点间距 */
+}
+#add {
+    background: rgba(255, 255, 255, 0.15); /* 轻微提升透明度，让其更显眼 */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25); /* 增强阴影效果 */
+    max-width: 1500px;
+    width:1500px;
+    margin: 30px auto;
+    text-align: center;
+    backdrop-filter: blur(10px); /* 模糊背景，增强质感 */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* 添加微妙的边框 */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* 悬停时添加轻微放大和阴影增强 */
+#add:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 输入框美化 */
+#add input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 16px;
+    transition: background 0.3s ease-in-out;
+}
+
+#add input:focus {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 提交按钮美化 */
+#add button {
+    background: linear-gradient(135deg, #18A4A6, #0F2F38);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+#add button:hover {
+    background: linear-gradient(135deg, #0F2F38, #18A4A6);
+    transform: scale(1.05);
+}
+#add label {
+    display: block; /* 让标签独占一行 */
+    font-size: 16px;
+    color: #E0F7FA;
+    margin-bottom: 5px; /* 增加与输入框的间距 */
+}
+.add-category-container h2 {
+    white-space: nowrap; /* 防止 h2 自动换行 */
+    width:700px;
 }

@@ -96,7 +96,9 @@
 
 
 <!-- 添加新类别表单 -->
-<h2>添加新类别</h2>
+    <div class="add-category-container">
+
+    <h2>添加新类别</h2>
 <form id="add" action="/adminShop/addCategory" method="post">
     <label for="categoryId">分类编号：</label>
     <input type="text" id="categoryId" name="categoryId" required>
@@ -109,7 +111,7 @@
 
     <button type="submit">添加类别</button>
 </form>
-
+    </div>
 <a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
 </div>
 <!--<footer th:replace="common/bottom"></footer>-->
