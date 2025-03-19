@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>商品管理</title>
-    <style>
-        #mainContent {
-            margin-left: 250px; /* 确保内容不被侧边栏覆盖 */
-            padding: 20px;
-        }
-    </style>
+    <link rel="StyleSheet" href="/css/admincatalog.css" type="text/css" media="screen"/>
+
     <script>
         function showEditForm(categoryId, categoryName, description) {
             let existingRow = document.getElementById('editRow');
@@ -64,18 +60,34 @@
         <td th:text="${category.categoryId}">分类ID</td>
         <td th:text="${category.categoryName}">分类名称</td>
         <td th:text="${category.description}">分类名称</td>
+<!--        <td>-->
+<!--            <a th:href="@{/adminShop/category(categoryId=${category.categoryId})}">查看商品</a>-->
+
+<!--            &lt;!&ndash; 点击修改时，在当前行下方插入修改框 &ndash;&gt;-->
+<!--            <button th:attr="onclick=|showEditForm('${category.categoryId}', '${category.categoryName}', '${category.description}')|">修改</button>-->
+
+<!--            &lt;!&ndash; 删除分类 &ndash;&gt;-->
+<!--            <form action="/adminShop/deleteCategory" method="post" style="display:inline;">-->
+<!--                <input type="hidden" name="categoryId" th:value="${category.categoryId}">-->
+<!--                <button type="submit" onclick="return confirm('确定删除该分类？')">删除</button>-->
+<!--            </form>-->
+<!--        </td>-->
         <td>
-            <a th:href="@{/adminShop/category(categoryId=${category.categoryId})}">查看商品</a>
+            <div class="action-container">
+                <!-- 修改按钮（左侧） -->
+                <button th:attr="onclick=|showEditForm('${category.categoryId}', '${category.categoryName}', '${category.description}')|">修改</button>
 
-            <!-- 点击修改时，在当前行下方插入修改框 -->
-            <button th:attr="onclick=|showEditForm('${category.categoryId}', '${category.categoryName}', '${category.description}')|">修改</button>
+                <!-- 查看商品（居中） -->
+                <a th:href="@{/adminShop/category(categoryId=${category.categoryId})}">查看商品</a>
 
-            <!-- 删除分类 -->
-            <form action="/adminShop/deleteCategory" method="post" style="display:inline;">
-                <input type="hidden" name="categoryId" th:value="${category.categoryId}">
-                <button type="submit" onclick="return confirm('确定删除该分类？')">删除</button>
-            </form>
+                <!-- 删除按钮（右侧） -->
+                <form action="/adminShop/deleteCategory" method="post">
+                    <input type="hidden" name="categoryId" th:value="${category.categoryId}">
+                    <button type="submit" onclick="return confirm('确定删除该分类？')">删除</button>
+                </form>
+            </div>
         </td>
+
     </tr>
 </table>
 
@@ -85,7 +97,7 @@
 
 <!-- 添加新类别表单 -->
 <h2>添加新类别</h2>
-<form action="/adminShop/addCategory" method="post">
+<form id="add" action="/adminShop/addCategory" method="post">
     <label for="categoryId">分类编号：</label>
     <input type="text" id="categoryId" name="categoryId" required>
 

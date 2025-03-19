@@ -1,0 +1,214 @@
+#mainContent {
+    margin-left: 250px;
+    margin-top:-10px;
+    margin-bottom:-10px;
+    padding: 30px;
+    background: linear-gradient(135deg, #0F2F38 10%, #000000 40%, #18A4A6 90%);
+    min-height: 100vh;
+    font-family: "Arial", sans-serif;
+    color: #E0F7FA;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    /* border-radius: 10px; */
+    position: relative;
+}
+
+
+
+/* 保证内容在最上层 */
+#mainContent * {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* 标题样式 */
+@keyframes glowingText {
+    0% { text-shadow: 0 0 10px rgba(0, 255, 255, 0.4); }
+    50% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.8); }
+    100% { text-shadow: 0 0 10px rgba(0, 255, 255, 0.4); }
+}
+
+h1, h2 {
+    /* 文字渐变 */
+    background: linear-gradient(45deg, #00E5FF, #00C853);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* 呼吸光效 */
+    animation: glowingText 2s infinite alternate;
+
+    /* 玻璃拟态风格 */
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    /* 其他基本样式 */
+    text-align: center;
+    margin-bottom: 20px;
+    /* margin-left:100px; */
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    /* display: inline-block; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 97%;
+}
+
+/* 表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.1); /* 半透明背景，柔和过渡 */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    /* border: 1px solid rgba(255, 255, 255, 0.3); */
+    padding: 12px;
+    text-align: center;
+    color: #E0F7FA; /* 让文字更清晰 */
+}
+
+th {
+    background: linear-gradient(to right, #1E4D6D 10%, #000000 50%, #000000 60%, #1E4D6D 100%);
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase; /* 全大写，增强专业感 */
+    letter-spacing: 1px; /* 增加字间距 */
+    padding: 15px;
+    border-bottom: 3px solid #0E6655; /* 下边框加深颜色，增强立体感 */
+    box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.3); /* 内部阴影 */
+}
+
+
+td {
+    background: rgba(255, 255, 255, 0.07); /* 轻微透明背景 */
+    padding: 12px;
+    text-align: center;
+    color: #E0F7FA; /* 浅蓝绿色，提升可读性 */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* 细边框，增强层次 */
+    font-size: 16px;
+    transition: all 0.3s ease-in-out; /* 平滑过渡效果 */
+}
+
+/* 🌟 鼠标悬停时，行高亮 */
+tr:hover td {
+    background: rgba(24, 164, 166, 0.2); /* 变亮蓝绿色 */
+    color: #ffffff;
+    transform: scale(1.02); /* 轻微放大 */
+    box-shadow: inset 0 0 10px rgba(24, 164, 166, 0.3); /* 内阴影 */
+}
+
+/* 🌟 首列特殊样式（如编号、分类ID等） */
+td:first-child {
+    font-weight: bold;
+    color: #18A4A6;
+}
+
+/* 🌟 最后一列（操作栏）按钮美化 */
+td:last-child {
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* ✅ 让交替行更明显 */
+tr:nth-child(even) td {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+/* 按钮样式 */
+button {
+    width:150px;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: white;
+    border: none;
+    padding: 8px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-left:40px;
+    margin-right:40px;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #38ef7d, #11998e);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+/* 表单样式 */
+#add {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    margin: auto;
+}
+
+label {
+    font-weight: bold;
+    color: #E0F7FA;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    margin-top:-100px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* 让返回按钮美观 */
+a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #18AFAF;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: #1B3C59;
+    text-decoration: underline;
+}
+.action-container a {
+    margin-top:5px;
+    margin-bottom:5px;
+    display: inline-block;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* 按钮阴影，增加立体感 */
+}
+
+.action-container a:hover {
+    background: linear-gradient(135deg, #38ef7d, #11998e);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+.action-container {
+    display: flex;
+    justify-content: space-between; /* 左中右对齐 */
+    align-items: center;
+    gap: 10px; /* 按钮间距 */
+    width: 100%;
+}
