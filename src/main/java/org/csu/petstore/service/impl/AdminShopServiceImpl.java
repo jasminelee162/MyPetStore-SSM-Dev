@@ -34,9 +34,6 @@ public class AdminShopServiceImpl implements AdminShopService {
     private ItemMapper itemMapper;
 
     @Autowired
-    private CatalogService catalogService;
-
-    @Autowired
     private ItemQuantityMapper itemQuantityMapper;
 
     @Override
