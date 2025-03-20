@@ -2,23 +2,17 @@ package org.csu.petstore.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
 import org.csu.petstore.entity.*;
 import org.csu.petstore.persistence.*;
 import org.csu.petstore.entity.Product;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.LogService;
-import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.AccountVO;
 import org.csu.petstore.vo.CategoryVO;
 import org.csu.petstore.vo.ItemVO;
 import org.csu.petstore.vo.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.Collections;
 import java.util.List;
@@ -128,4 +122,21 @@ public class CatalogServiceImpl implements CatalogService {
         String message = "User " + username + " viewed " + type + ": " + typeId;
         logService.setLog(message);
     }
+
+    @Override
+    public List<Product> searchProductList(String keyword) {
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+
+        // 判断关键字是否为空，避免全表查
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            // 模糊查询，假设搜索字段是产品名(name)
+            queryWrapper.like("name", keyword);
+        }
+
+        // 查询符合条件的产品列表
+        List<Product> productList = productMapper.selectList(queryWrapper);
+
+        return productList;
+    }
+
 }

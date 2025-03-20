@@ -1,6 +1,7 @@
 package org.csu.petstore.service;
 
 import jakarta.servlet.http.HttpSession;
+import org.csu.petstore.entity.Product;
 import org.csu.petstore.vo.CategoryVO;
 import org.csu.petstore.vo.ItemVO;
 import org.csu.petstore.vo.ProductVO;
@@ -22,4 +23,7 @@ public interface CatalogService {
     public ItemVO getItem(String itemId);
 
     public void setLog(String type, HttpSession session, String typeId);
+
+    //自动补全
+    List<Product> searchProductList(String keyword);
 }

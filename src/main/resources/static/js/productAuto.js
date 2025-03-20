@@ -1,15 +1,24 @@
 $(function () {
     $('#keyword').on('keyup', function () {
-        var keyword = $(this).val();
-        if (keyword !== '' && keyword !== null && keyword.length !== 0) {
+        var keyword = $(this).val().trim();
+        console.log(keyword)
+        if (keyword.length > 0) {
             $.ajax({
                 type: 'GET',
-                url: 'productAuto?keyword=' + keyword,
+                url: '/productAuto/search?keyword=' + encodeURIComponent(keyword),
                 success: function (data) {
-                    console.log(data);
+                    console.log("返回数据：", data);
                     var productListHTML = '';
+
+                    if (data.length === 0) {
+                        $('#productAutoList').html('<li>暂无搜索结果</li>');
+                        $('#productAutoComplete').show();
+                        return;
+                    }
+
+
                     for (var i = 0; i < data.length; i++) {
-                        productListHTML += '<li class="productAutoItem" data-productId="';
+                        productListHTML += '<li class="productAutoItem" data-productid="';
                         productListHTML += data[i].productId;
                         productListHTML += '">';
                         productListHTML += data[i].categoryId;
@@ -17,34 +26,37 @@ $(function () {
                         productListHTML += data[i].name;
                         productListHTML += '</li>';
                     }
+
+                    console.log("生成 HTML：", productListHTML);
+
                     $('#productAutoList').html(productListHTML);
-                    $('#productAutoComplete').show();
+
+                    // 重新定位显示下拉框
+                    var inputOffset = $('#keyword').offset();
+                    $('#productAutoComplete').css({
+                        top: inputOffset.top + $('#keyword').outerHeight(),
+                        left: inputOffset.left,
+                        position: 'absolute'
+                    }).show();
                 },
                 error: function (errorMsg) {
-                    console.log(errorMsg);
+                    console.log("请求失败：", errorMsg);
                 }
-            })
+            });
         } else {
-            $('#productAutoComplete').hide();
+            // $('#productAutoComplete').hide();
         }
-    })
-
-    //该种事件绑定不可用，因为绑定时还未进行productAutoItem的渲染
-    // $('.productAutoItem').on('click', function () {
-    //
-    // })
+    });
 
     $(document).on('click', '.productAutoItem', function () {
         var productId = $(this).data('productid');
-        $('#productAutoComplete').hide();
+        // $('#productAutoComplete').hide();
         $('#keyword').val('');
-        window.location.href = 'http://localhost:8080/WebProject_Web_exploded/productForm?productId=' + productId;
-    })
+        window.location.href = '/catalog/viewProduct?productId=' + productId;
+    });
 
-    $('#SearchContent').on('mouseleave', function () {
-        $('#productAutoComplete').hide();
-        $('#keyword').val('');
-    })
-
-
-})
+    // $('#SearchContent').on('mouseleave', function () {
+    //     $('#productAutoComplete').hide();
+    //     $('#keyword').val('');
+    // });
+});

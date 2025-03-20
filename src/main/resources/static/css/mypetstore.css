@@ -414,21 +414,39 @@ body>#Banner {
     color: #0056a5; /* 鼠标悬停时更深的蓝色 */
 }
 
-
 #productAutoComplete {
-    background:red;
-    position:relative;
-    top:-29px;
-    left:160px;
-    width:188px;
-    display: none;
+    position:absolute;
+    width: 0px;
+
+
+
 }
 
 #productAutoList {
-    margin: 0;
-    padding: 0;
-    background: #ccc;
-    border:1px solid #aaa
+    list-style:none;
+    height: 20px;
+    line-height:20px;
+    font-size:15px;
+    text-align:left;
+    padding-left:54px;
+    margin-top:3px;
+    width:195px;
+    color:#FFFFFF;
+    margin-left:-683px;
+
+
+}
+
+#productAutoList li {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom:3px solid #666;
+    background-color:grey;
+    color:#ffffff;
+}
+
+#productAutoList li:hover {
+    background-color: #2b1d0d;
 }
 
 ul {

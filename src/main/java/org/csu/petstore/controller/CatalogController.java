@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.csu.petstore.entity.Product;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.LogService;
 import org.csu.petstore.vo.CategoryVO;
@@ -13,8 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/catalog")
@@ -89,5 +96,37 @@ public class CatalogController {
         logger.info(logMessage);
         logService.logInfo(logMessage);
     }
+
+    @PostMapping("/searchProducts")
+    public String searchProduct(@RequestParam("keyword") String keyword, HttpSession session, HttpServletRequest request) {
+        // 日志
+        logRequest(request, "User searched product: " + keyword);
+
+        // 搜索产品列表
+        List<Product> productList = catalogService.searchProductList(keyword);
+
+        if (!productList.isEmpty()) {
+            Product product = productList.get(0); // 取第一个结果
+            String productId = product.getProductId();
+            String categoryId = product.getCategoryId();
+
+            // 获取分类并存入 session
+            CategoryVO categoryVO = catalogService.getCategory(categoryId);
+            session.setAttribute("category", categoryVO);
+
+            // 记录日志
+            catalogService.setLog("product", session, productId);
+
+            // 重定向到产品页面
+            return "redirect:/catalog/viewProduct?productId=" + productId;
+//            return "/catalog/searchProduct";
+        } else {
+            // 没搜索到，跳主页面（或者跳搜索失败页）
+            return "redirect:/catalog/index";
+        }
+    }
+
+
+
 
 }
