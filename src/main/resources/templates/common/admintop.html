@@ -27,8 +27,11 @@
 
     <!-- 搜索栏 -->
     <form action="/catalog/searchProducts" method="post">
-        <input type="text" name="keyword" placeholder="Search..."/>
+        <input type="text" id="keyword" name="keyword" placeholder="Search..."/>
         <input type="submit" name="searchProducts" value="Search"/>
+        <div id="productAutoComplete">
+            <ul id="productAutoList"></ul>
+        </div>
     </form>
 
     <div class="separator"></div>
@@ -40,5 +43,7 @@
 <!--    <a href="/catalog/viewCategory?categoryId=CATS"><img src="../images/sm_cats.gif"/> Cats</a>-->
 <!--    <a href="/catalog/viewCategory?categoryId=BIRDS"><img src="../images/sm_birds.gif"/> Birds</a>-->
 </div>
+<script src="/js/productAuto.js"></script>
+
 </body>
 </html>
