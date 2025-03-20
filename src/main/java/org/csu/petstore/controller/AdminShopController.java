@@ -4,6 +4,7 @@ import org.csu.petstore.entity.Item;
 import org.csu.petstore.entity.ItemQuantity;
 import org.csu.petstore.service.AdminShopService;
 import org.csu.petstore.service.CatalogService;
+import org.csu.petstore.service.FileStorageService;
 import org.csu.petstore.vo.CategoryVO;
 import org.csu.petstore.vo.ItemVO;
 import org.csu.petstore.vo.ProductVO;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +30,9 @@ public class AdminShopController {
 
     @Autowired
     private AdminShopService adminShopService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
 
     @GetMapping("/catalog")
@@ -62,9 +68,10 @@ public class AdminShopController {
     @PostMapping("/addCategory")
     public String addCategory(@RequestParam String categoryId,
                               @RequestParam String categoryName,
-                              @RequestParam String description) {
-        // 调用服务层保存类别信息
-        adminShopService.addCategory(categoryId, categoryName, description);
+                              @RequestParam("description") MultipartFile file) throws IOException {
+        String imageUrl = file.isEmpty() ? null : fileStorageService.saveFile(file, categoryId);
+        System.out.println("imageUrl" + imageUrl);
+        adminShopService.addCategory(categoryId, categoryName, imageUrl);
         return "redirect:/adminShop/catalog";
     }
 
@@ -72,11 +79,21 @@ public class AdminShopController {
     public String addProduct(@RequestParam String categoryId,
                              @RequestParam String productId,
                              @RequestParam String productName,
-                             @RequestParam String description) {
-        // 调用服务层保存商品信息
-        adminShopService.addProduct(categoryId, productId, productName, description);
-        return "redirect:/adminShop/category?categoryId=" + categoryId;  // 返回商品类别页面
+                             @RequestParam("description") MultipartFile file) throws IOException {
+        // 拼接 categoryId 和 productId 作为文件名
+        String fileId = categoryId + "-" + productId;
+
+        // 保存文件（不再传 type）
+        String imageUrl = file.isEmpty() ? null : fileStorageService.saveFile(file, fileId);
+        System.out.println("imageUrl: " + imageUrl);
+
+        // 调用服务保存产品信息
+        adminShopService.addProduct(categoryId, productId, productName, imageUrl);
+
+        // 重定向回分类页面
+        return "redirect:/adminShop/category?categoryId=" + categoryId;
     }
+
 
     @PostMapping("/addItem")
     public String addItem(@RequestParam String productId,
@@ -92,21 +109,47 @@ public class AdminShopController {
     @PostMapping("/updateCategory")
     public String updateCategory(@RequestParam String categoryId,
                                  @RequestParam String categoryName,
-                                 @RequestParam String description) {
-        // 调用服务层更新类别信息
-        adminShopService.updateCategory(categoryId, categoryName, description);
-        return "redirect:/adminShop/catalog";
+                                 @RequestParam("description") MultipartFile categoryImage,
+                                 @RequestParam("originalDescription") String originalDescription) {
+        String imagePath = originalDescription;  // 默认使用原图片路径
+
+        // 处理分类图片更新
+        if (categoryImage != null && !categoryImage.isEmpty()) {
+            try {
+                imagePath = fileStorageService.updateImage(categoryImage, categoryId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        adminShopService.updateCategory(categoryId, categoryName, imagePath);
+
+        return "redirect:/adminShop/catalog";  // 返回分类管理页面
     }
+
 
     @PostMapping("/updateProduct")
     public String updateProduct(@RequestParam String categoryId,
                                 @RequestParam String productId,
                                 @RequestParam String productName,
-                                @RequestParam String description) {
-        // 调用服务层更新商品信息
-        adminShopService.updateProduct(productId, productName, description);
+                                @RequestParam("description")MultipartFile productImage,
+                                @RequestParam("originalDescription") String originalDescription) {
+        String imagePath = originalDescription;  // 默认使用原图片路径
+
+        // 处理商品图片更新
+        if (productImage != null && !productImage.isEmpty()) {
+            try {
+                imagePath = fileStorageService.updateImage(productImage, productId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        adminShopService.updateProduct(productId, productName, imagePath);
+
         return "redirect:/adminShop/category?categoryId=" + categoryId;  // 返回该类别的商品页面
     }
+
 
     @PostMapping("/updateItem")
     public String updateItem(@RequestParam String productId,
@@ -120,13 +163,17 @@ public class AdminShopController {
     }
 
     @PostMapping("/deleteCategory")
-    public String deleteCategory(@RequestParam String categoryId) {
+    public String deleteCategory(@RequestParam String categoryId) throws IOException {
+        fileStorageService.deleteImage(categoryId);
         adminShopService.deleteCategory(categoryId);
         return "redirect:/adminShop/catalog";  // 返回商品分类管理页面
     }
 
     @PostMapping("/deleteProduct")
-    public String deleteProduct(@RequestParam String categoryId, @RequestParam String productId) {
+    public String deleteProduct(@RequestParam String categoryId,
+                                @RequestParam String productId) throws IOException {
+        String id=categoryId+"-"+productId;
+        fileStorageService.deleteImage(id);
         adminShopService.deleteProduct(productId);
         return "redirect:/adminShop/category?categoryId=" + categoryId;  // 返回商品类别页面
     }

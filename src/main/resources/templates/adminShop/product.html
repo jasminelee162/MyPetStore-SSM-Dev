@@ -195,7 +195,6 @@
                     th:attr="onclick=|showEditItemForm('${product.productId}','${item.itemId}', '${item.listPrice}', '${item.unitCost}', '${itemQuantities[item.itemId] ?: '0'}')|">
                 修改
             </button>
-            <a th:href="@{/adminShop/item(itemId=${item.itemId})}">查看详情</a>
 
             <form action="/adminShop/deleteItem" method="post" style="display:inline;">
                 <input type="hidden" name="productId" th:value="${product.productId}">

@@ -2,14 +2,17 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>商品管理</title>
     <link rel="StyleSheet" href="/css/admincatalog.css" type="text/css" media="screen"/>
     <style>
         #add::before {
             content: "";
             position: absolute;
-            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
             background: linear-gradient(45deg, #38ef7d, #18A4A6, #1E4D6D, #38ef7d);
             background-size: 300% 300%;
             border-radius: 20px;
@@ -19,9 +22,15 @@
         }
 
         @keyframes gradient-border {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
     </style>
     <script>
@@ -38,14 +47,15 @@
             newRow.id = 'editRow';
             newRow.innerHTML = `
             <td colspan="4">
-                <form action="/adminShop/updateCategory" method="post">
+                <form action="/adminShop/updateCategory" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="categoryId" value="${categoryId}">
+                    <input type="hidden" name="originalDescription" value="${description}">
 
                     <label>分类名称：</label>
                     <input type="text" name="categoryName" value="${categoryName}" required>
 
-                    <label>分类描述：</label>
-                    <input type="text" name="description" id="editDescription">
+                    <label>修改分类图片：</label>
+                    <input type="file" name="description" accept="image/*">
 
                     <button type="submit">保存</button>
                     <button type="button" onclick="document.getElementById('editRow').remove()">取消</button>
@@ -54,9 +64,6 @@
         `;
 
             currentRow.parentNode.insertBefore(newRow, currentRow.nextSibling);
-
-            //确保 description 以纯文本形式赋值
-            document.getElementById('editDescription').setAttribute("value", description);
         }
     </script>
 </head>
@@ -65,72 +72,75 @@
 <div th:replace="~{common/admintop}"></div>
 
 <div id="mainContent">
-<h1>商品分类管理</h1>
+    <h1>商品分类管理</h1>
 
-<table border="1" th:if="${categories != null}">
-    <tr>
-        <th>分类编号</th>
-        <th>分类名称</th>
-        <th>分类描述</th>
-        <th>操作</th>
-    </tr>
-    <tr th:each="category : ${categories}" th:id="'categoryRow-' + ${category.categoryId}">
-        <td th:text="${category.categoryId}">分类ID</td>
-        <td th:text="${category.categoryName}">分类名称</td>
-        <td th:text="${category.description}">分类名称</td>
-<!--        <td>-->
-<!--            <a th:href="@{/adminShop/category(categoryId=${category.categoryId})}">查看商品</a>-->
+    <table border="1" th:if="${categories != null}">
+        <tr>
+            <th>分类编号</th>
+            <th>分类名称</th>
+            <th>分类图片</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="category : ${categories}" th:id="'categoryRow-' + ${category.categoryId}">
+            <td th:text="${category.categoryId}">分类ID</td>
+            <td th:text="${category.categoryName}">分类名称</td>
+            <td>
+                <img th:src="${category.description}" alt="分类图片" width="100" height="100">
+            </td>
+            <!--        <td>-->
+            <!--            <a th:href="@{/adminShop/category(categoryId=${category.categoryId})}">查看商品</a>-->
 
-<!--            &lt;!&ndash; 点击修改时，在当前行下方插入修改框 &ndash;&gt;-->
-<!--            <button th:attr="onclick=|showEditForm('${category.categoryId}', '${category.categoryName}', '${category.description}')|">修改</button>-->
+            <!--            &lt;!&ndash; 点击修改时，在当前行下方插入修改框 &ndash;&gt;-->
+            <!--            <button th:attr="onclick=|showEditForm('${category.categoryId}', '${category.categoryName}', '${category.description}')|">修改</button>-->
 
-<!--            &lt;!&ndash; 删除分类 &ndash;&gt;-->
-<!--            <form action="/adminShop/deleteCategory" method="post" style="display:inline;">-->
-<!--                <input type="hidden" name="categoryId" th:value="${category.categoryId}">-->
-<!--                <button type="submit" onclick="return confirm('确定删除该分类？')">删除</button>-->
-<!--            </form>-->
-<!--        </td>-->
-        <td>
-            <div class="action-container">
-                <!-- 修改按钮（左侧） -->
-                <button th:attr="onclick=|showEditForm('${category.categoryId}', '${category.categoryName}', '${category.description}')|">修改</button>
+            <!--            &lt;!&ndash; 删除分类 &ndash;&gt;-->
+            <!--            <form action="/adminShop/deleteCategory" method="post" style="display:inline;">-->
+            <!--                <input type="hidden" name="categoryId" th:value="${category.categoryId}">-->
+            <!--                <button type="submit" onclick="return confirm('确定删除该分类？')">删除</button>-->
+            <!--            </form>-->
+            <!--        </td>-->
+            <td>
+                <div class="action-container">
+                    <!-- 修改按钮（左侧） -->
+                    <button th:attr="onclick=|showEditForm('${category.categoryId}', '${category.categoryName}', '${category.description}')|">
+                        修改
+                    </button>
 
-                <!-- 查看商品（居中） -->
-                <a th:href="@{/adminShop/category(categoryId=${category.categoryId})}">查看商品</a>
+                    <!-- 查看商品（居中） -->
+                    <a th:href="@{/adminShop/category(categoryId=${category.categoryId})}">查看商品</a>
 
-                <!-- 删除按钮（右侧） -->
-                <form action="/adminShop/deleteCategory" method="post">
-                    <input type="hidden" name="categoryId" th:value="${category.categoryId}">
-                    <button type="submit" onclick="return confirm('确定删除该分类？')">删除</button>
-                </form>
-            </div>
-        </td>
+                    <!-- 删除按钮（右侧） -->
+                    <form action="/adminShop/deleteCategory" method="post">
+                        <input type="hidden" name="categoryId" th:value="${category.categoryId}">
+                        <button type="submit" onclick="return confirm('确定删除该分类？')">删除</button>
+                    </form>
+                </div>
+            </td>
 
-    </tr>
-</table>
+        </tr>
+    </table>
 
-<!-- 如果没有分类，则显示空提示 -->
-<p th:if="${categories.size() == 0}">无类别。</p>
+    <!-- 如果没有分类，则显示空提示 -->
+    <p th:if="${categories.size() == 0}">无类别。</p>
 
 
-<!-- 添加新类别表单 -->
+    <!-- 添加新类别表单 -->
     <div class="add-category-container">
+        <h2>添加新类别</h2>
+        <form id="add" action="/adminShop/addCategory" method="post" enctype="multipart/form-data">
+            <label for="categoryId">分类编号：</label>
+            <input type="text" id="categoryId" name="categoryId" required>
 
-    <h2>添加新类别</h2>
-<form id="add" action="/adminShop/addCategory" method="post">
-    <label for="categoryId">分类编号：</label>
-    <input type="text" id="categoryId" name="categoryId" required>
+            <label for="categoryName">分类名称：</label>
+            <input type="text" id="categoryName" name="categoryName" required>
 
-    <label for="categoryName">分类名称：</label>
-    <input type="text" id="categoryName" name="categoryName" required>
+            <label for="description">上传分类图片：</label>
+            <input type="file" id="description" name="description" accept="image/*">
 
-    <label for="description">分类描述：</label>
-    <input type="text" id="description" name="description">
-
-    <button type="submit">添加类别</button>
-</form>
+            <button type="submit">添加类别</button>
+        </form>
     </div>
-<a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
+    <a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
 </div>
 <!--<footer th:replace="common/bottom"></footer>-->
 
