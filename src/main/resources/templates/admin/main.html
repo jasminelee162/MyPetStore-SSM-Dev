@@ -10,6 +10,7 @@
 <div th:replace="~{common/admintop}"></div>
 
 <h1>后台管理系统</h1>
+<div class="container">
 <nav>
     <a th:href="@{/adminShop/catalog}"><i>商品管理</i></a>
     <a th:href="@{/adminAccount/editAccountFrom}"><i>用户管理</i></a>
@@ -18,7 +19,7 @@
 
 
 </nav>
-<div style="width: 800px; height: 800px; filter: drop-shadow(10px 30px 20px #cccccc);margin-left: 500px" class="moudle">
+<div  class="moudle">
     <script id="tc-model-viewer-7c26802e-269d-4029-93a5-ac9dd5af60e6.glb" type="module">
         import { WebGLRenderer, ACESFilmicToneMapping, sRGBEncoding, Scene, PerspectiveCamera, HemisphereLight, PointLight } from 'https://unpkg.com/three@0.125.0/build/three.module.js';
         import { GLTFLoader } from 'https://unpkg.com/three@0.125.0/examples/jsm/loaders/GLTFLoader.js';
@@ -64,6 +65,7 @@
             };
         })();
     </script>
+</div>
 </div>
 <footer th:replace="common/bottom"></footer>
 
