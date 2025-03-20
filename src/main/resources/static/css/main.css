@@ -262,6 +262,7 @@ kbd {
 }
 .scene {
     flex: 1; /* 让它自动填充剩余空间 */
+
 }
 
 #Logo {
@@ -422,4 +423,38 @@ body>#Search {
 
 input[type="text"] {
     margin-left:800px;
+}
+
+#productAutoComplete {
+    position:absolute;
+    width: 0px;
+    z-index: 9999; /* 提高层级，让它浮上去 */
+
+
+}
+
+#productAutoList {
+    list-style:none;
+    height: 20px;
+    line-height:20px;
+    font-size:15px;
+    text-align:left;
+    padding-left:54px;
+    margin-top:3px;
+    width:195px;
+    color:#FFFFFF;
+    margin-left:-683px;
+
+
+}
+
+#productAutoList li {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom:3px solid #666;
+    background-color:grey;
+}
+
+#productAutoList li:hover {
+    background-color: #2b1d0d;
 }

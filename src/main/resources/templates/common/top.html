@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="StyleSheet" href="../css/mypetstore.css" type="text/css" media="screen"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
@@ -32,13 +31,22 @@
         </div>
 
         <div id="Search">
-            <div id="SearchContent">
-                <form action="/catalog/searchProducts" method="post">
-                    <input type="text" name="keyword" size="14"/>
-                    <input type="submit" name="searchProducts" value="Search"/>
+            <div id="SearchContent" style="position: relative;">
+
+
+                <form th:action="@{/catalog/searchProducts}" method="post">
+                    <!-- 重点是这里加上 id -->
+                    <input type="text" id="keyword" name="keyword" size="14"/>
+                    <input type="submit" name="searchProduct" value="Search"/>
                 </form>
+
+                <!-- 重点是这里加上样式 -->
+                <div id="productAutoComplete">
+                    <ul id="productAutoList"></ul>
+                </div>
             </div>
         </div>
+
 
         <div id="QuickLinks">
             <a href="/catalog/viewCategory?categoryId=FISH"><img src="../images/sm_fish.gif"/></a>
@@ -52,6 +60,5 @@
             <a href="/catalog/viewCategory?categoryId=BIRDS"><img src="../images/sm_birds.gif"/></a>
         </div>
     </div>
+    <script src="/js/productAuto.js"></script>
 </header>
-</body>
-</html>

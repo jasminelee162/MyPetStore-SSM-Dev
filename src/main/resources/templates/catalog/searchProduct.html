@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="StyleSheet" href="/static/css/mypetstore.css" type="text/css" media="screen"/>
+</head>
+
+<body>
+
+<header th:replace="common/top :: header"></header>
+
+<div id="Content">
+    <div id="BackLink" style="margin-bottom: 20px;">
+        <a href="/main">Return to Main Menu</a>
+    </div>
+
+    <div id="Catalog">
+        <table class="search-res">
+            <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Product ID</th>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${productList}">
+                <td>
+                    <a th:href="@{/catalog/productForm(productId=${product.productId})}"
+                       th:text="${product.description}">Product Description</a>
+                </td>
+                <td>
+                    <b>
+                        <a th:href="@{/catalog/productForm(productId=${product.productId})}">
+                            <span th:text="${product.productId}">ProductID</span>
+                        </a>
+                    </b>
+                </td>
+                <td th:text="${product.name}">Product Name</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Tooltip area (可根据需要添加JS功能) -->
+        <div id="tooltip" class="tooltip"></div>
+    </div>
+</div>
+
+<footer th:replace="common/bottom :: footer"></footer>
+
+</body>
+
+</html>
