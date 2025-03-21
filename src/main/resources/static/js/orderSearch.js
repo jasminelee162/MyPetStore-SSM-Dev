@@ -201,10 +201,6 @@ $(document).ready(function () {
                 <tr class="order-details-row" style="display: none;" data-order-id="${order.orderId}">
                     <td colspan="5">
                         <div class="order-details">
-                            <p><strong>订单编号：</strong>${order.orderId}</p>
-                            <p><strong>用户账号：</strong>${order.userId || order.userid || "未知用户"}</p>
-                            <p><strong>订单金额：</strong>￥${order.totalPrice}</p>
-                            <p><strong>订单状态：</strong>${order.status || '未知状态'}</p>
                             <table class="line-items-table">
                                 <thead>
                                     <tr>
