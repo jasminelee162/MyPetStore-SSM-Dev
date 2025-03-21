@@ -39,6 +39,9 @@ public interface OrderService {
     int getNextId(String name);
     Order findOrderById(Integer orderId);
 
-    List<Order> searchOrdersByOrderId(String orderId);
+    //List<Order> searchOrdersByOrderId(String orderId);
+    public List<Order> searchOrdersByPrefix(String orderIdPrefix);
+
+
     Map<String, Object> convertOrderToMap(Order order);
 }
