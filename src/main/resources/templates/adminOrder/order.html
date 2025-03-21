@@ -42,8 +42,8 @@
                 <td>
                     <button class="order-detail-btn">详情</button>
                     <button class="order-edit-btn">修改</button>
-                    <button class="order-delete-btn">删除</button>
-                    <button class="order-ship-btn">发货</button>
+                    <button class="order-delete-btn" data-id="${order.orderId}">删除</button>
+                    <button class="order-ship-btn" th:data-id="${order.orderId}">发货</button>
                 </td>
             </tr>
             </tbody>

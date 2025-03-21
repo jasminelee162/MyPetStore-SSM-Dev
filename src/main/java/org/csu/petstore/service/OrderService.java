@@ -26,8 +26,12 @@ public interface OrderService {
 
     boolean insertOrderStatus(OrderStatusVO orderStatus);
 
+    boolean updateStatusToShipped(String orderId);
+
     //获得所有订单
     List<Order> getAllOrders();
+
+    List<OrderVO> getAllOrdersWithStatus();
 
 
 
@@ -44,4 +48,6 @@ public interface OrderService {
 
 
     Map<String, Object> convertOrderToMap(Order order);
+
+    boolean deleteOrder(String orderId);
 }

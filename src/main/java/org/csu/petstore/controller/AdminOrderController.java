@@ -4,12 +4,10 @@ import org.csu.petstore.entity.Order;
 import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +23,7 @@ public class AdminOrderController {
     @GetMapping("/order")
     public String viewOrderList(Model model) {
         // 获取所有订单
-        List<Order> orders = orderService.getAllOrders();
+        List<OrderVO> orders = orderService.getAllOrdersWithStatus();
         // 将订单数据传递到视图
         model.addAttribute("orders", orders);
         return "adminOrder/order";
@@ -46,8 +44,6 @@ public class AdminOrderController {
         // 模糊查询订单（支持部分匹配！）
         // 前缀查询订单（只匹配以 orderId 开头的订单）
         List<Order> orderList = orderService.searchOrdersByPrefix(orderId.trim());
-
-//        List<Order> orderList = orderService.searchOrdersByOrderId(orderId.trim());
 
         if (orderList == null || orderList.isEmpty()) {
             response.put("status", "not_found");
@@ -72,7 +68,7 @@ public class AdminOrderController {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            List<Order> orders = orderService.getAllOrders(); // 查询所有订单
+            List<OrderVO> orders = orderService.getAllOrdersWithStatus(); // 查询所有订单
             result.put("status", "success");
             result.put("orders", orders);
         } catch (Exception e) {
@@ -83,7 +79,63 @@ public class AdminOrderController {
         return result;
     }
 
+    @PostMapping("/ship")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> shipOrder(@RequestBody ShipOrderRequest request) {
+        String orderId = request.getOrderId();
+        boolean success = orderService.updateStatusToShipped(orderId);
+
+        Map<String, String> response = new HashMap<>();
+        if (success) {
+            response.put("status", "success");
+            response.put("message", "发货成功");
+        } else {
+            response.put("status", "error");
+            response.put("message", "发货失败");
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/delete")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> deleteOrder(@RequestBody DeleteOrderRequest request) {
+        String orderId = request.getOrderId();
+        boolean success = orderService.deleteOrder(orderId);
+
+        Map<String, String> response = new HashMap<>();
+        if (success) {
+            response.put("status", "success");
+            response.put("message", "删除成功");
+        } else {
+            response.put("status", "error");
+            response.put("message", "删除失败");
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    public static class ShipOrderRequest {
+        private String orderId;
+
+        public String getOrderId() {
+            return orderId;
+        }
+
+        public void setOrderId(String orderId) {
+            this.orderId = orderId;
+        }
+    }
+
+    public static class DeleteOrderRequest {
+        private String orderId;
+
+        public String getOrderId() {
+            return orderId;
+        }
+
+        public void setOrderId(String orderId) {
+            this.orderId = orderId;
+        }
+    }
 }
-
-
-

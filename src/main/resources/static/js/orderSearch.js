@@ -1,10 +1,10 @@
 $(document).ready(function () {
-
     let debounceTimer = null;
 
     // 页面初始化，先加载全部订单
     loadAllOrders();
 
+    // 输入框搜索订单
     $("#order-id").on("keyup", function () {
         clearTimeout(debounceTimer);
 
@@ -42,8 +42,68 @@ $(document).ready(function () {
                     console.error("服务器连接失败！", error);
                 }
             });
-
         }, 300);
+    });
+
+    // 删除按钮点击事件
+    $(document).on("click", ".order-delete-btn", function () {
+        const orderId = $(this).data("id");
+        console.log("删除订单编号：", orderId);
+
+        // 确认删除操作
+        if (confirm("确定要删除此订单吗？")) {
+            // 发送 DELETE 请求到后端
+            $.ajax({
+                url: `/adminOrder/delete`,
+                type: "DELETE",
+                data: JSON.stringify({ orderId: orderId }),
+                contentType: "application/json",
+                success: function (response) {
+                    console.log("后端返回的数据：", response);
+
+                    if (response.status === "success") {
+                        alert("删除成功！");
+                        // 刷新订单列表
+                        loadAllOrders();
+                    } else {
+                        alert("删除失败：" + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("服务器连接失败！", error);
+                    alert("服务器连接失败！");
+                }
+            });
+        }
+    });
+
+    // 发货按钮点击事件
+    $(document).on("click", ".order-ship-btn", function () {
+        const orderId = $(this).data("id");
+        console.log("发货订单编号：", orderId);
+
+        // 发送 POST 请求到后端
+        $.ajax({
+            url: `/adminOrder/ship`,
+            type: "POST",
+            data: JSON.stringify({ orderId: orderId }),
+            contentType: "application/json",
+            success: function (response) {
+                console.log("后端返回的数据：", response);
+
+                if (response.status === "success") {
+                    alert("发货成功！");
+                    // 刷新订单列表
+                    loadAllOrders();
+                } else {
+                    alert("发货失败：" + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("服务器连接失败！", error);
+                alert("服务器连接失败！");
+            }
+        });
     });
 
     // 加载全部订单的方法
@@ -114,5 +174,4 @@ $(document).ready(function () {
 
         tableBody.append(row);
     }
-
 });
