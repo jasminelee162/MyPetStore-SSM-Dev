@@ -44,19 +44,19 @@ $(function () {
                 }
             });
         } else {
-            // $('#productAutoComplete').hide();
+            $('#productAutoComplete').hide();
         }
     });
 
     $(document).on('click', '.productAutoItem', function () {
         var productId = $(this).data('productid');
-        // $('#productAutoComplete').hide();
+        $('#productAutoComplete').hide();
         $('#keyword').val('');
         window.location.href = '/catalog/viewProduct?productId=' + productId;
     });
 
-    // $('#SearchContent').on('mouseleave', function () {
-    //     $('#productAutoComplete').hide();
-    //     $('#keyword').val('');
-    // });
+    $('#SearchContent').on('mouseleave', function () {
+        $('#productAutoComplete').hide();
+        $('#keyword').val('');
+    });
 });
