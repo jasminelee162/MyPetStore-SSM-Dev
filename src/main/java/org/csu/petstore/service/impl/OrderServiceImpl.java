@@ -343,7 +343,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> searchOrdersByOrderId(String partialOrderId) {
+    public List<Order> searchOrdersByPrefix(String partialOrderId) {
         if (partialOrderId == null || partialOrderId.trim().isEmpty()) {
             throw new IllegalArgumentException("订单ID不能为空！");
         }

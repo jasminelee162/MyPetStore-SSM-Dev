@@ -44,7 +44,10 @@ public class AdminOrderController {
         }
 
         // 模糊查询订单（支持部分匹配！）
-        List<Order> orderList = orderService.searchOrdersByOrderId(orderId.trim());
+        // 前缀查询订单（只匹配以 orderId 开头的订单）
+        List<Order> orderList = orderService.searchOrdersByPrefix(orderId.trim());
+
+//        List<Order> orderList = orderService.searchOrdersByOrderId(orderId.trim());
 
         if (orderList == null || orderList.isEmpty()) {
             response.put("status", "not_found");
