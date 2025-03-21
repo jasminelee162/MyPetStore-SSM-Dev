@@ -68,5 +68,10 @@ public interface AccountMapper extends BaseMapper<Account> {
             "WHERE USERID = #{username}")
     void updateAccount(Account accountVO);
 
+    @Update("UPDATE PROFILE SET " +
+            "LANGPREF = #{langpref}" +
+            "WHERE USERID = #{userid}")
+    void updateProfile(Profile profile);
+
 
 }

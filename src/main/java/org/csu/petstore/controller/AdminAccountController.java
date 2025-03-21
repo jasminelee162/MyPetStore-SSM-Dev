@@ -1,6 +1,6 @@
 package org.csu.petstore.controller;
 
-import org.csu.petstore.entity.Account;
+
 import org.csu.petstore.service.AccountService;
 import org.csu.petstore.vo.AccountVO;
 import org.slf4j.Logger;
@@ -35,9 +35,6 @@ public class AdminAccountController {
                               Model model) {
 
         if (!password.equals(confirmPassword)) {
-            System.out.println(4444);
-            System.out.println(password);
-            System.out.println(confirmPassword);
             model.addAttribute("error", "密码和确认密码不一致，请重新输入！");
             return "adminAccount/adminEdit";  // 跳回修改密码页面
         }
@@ -58,7 +55,7 @@ public class AdminAccountController {
             loginAccount.setCity(account.getCity());
             loginAccount.setState(account.getState());
             loginAccount.setZip(account.getZip());
-            loginAccount.setFavcategory(account.getFavcategory());
+            loginAccount.setLangpref(account.getLangpref());
             loginAccount.setCountry(account.getCountry());
             // 更新数据库
             accountService.updateAccount(account);

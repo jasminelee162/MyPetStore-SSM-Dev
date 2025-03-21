@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>编辑账户信息</title>
+  <title>编辑商家账户信息</title>
   <link rel="StyleSheet" href="/css/account.css" type="text/css" media="screen"/>
 
 </head>
 <body>
 
 <!--<header th:replace="~{common/top}"></header>-->
-<h2>编辑账户信息</h2>
+<h2>编辑商家账户信息</h2>
 <div class="registration-form" id="registration-form">
   <form th:action="@{/adminAccount/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
 
@@ -35,11 +35,11 @@
           <td><input type="tel" id="phone" th:field="*{loginAccount.phone}" required placeholder="请输入电话" /></td>
         </tr>
         <tr>
-          <td><label for="address1">地址 1:</label></td>
+          <td><label for="address1">商家地址 1:</label></td>
           <td><input type="text" id="address1" th:field="*{loginAccount.addr1}" placeholder="请输入地址 1" /></td>
         </tr>
         <tr>
-          <td><label for="address2">地址 2:</label></td>
+          <td><label for="address2">备用地址 2:</label></td>
           <td><input type="text" id="address2" th:field="*{loginAccount.addr2}" placeholder="请输入地址 2" /></td>
         </tr>
         <tr>
@@ -89,3 +89,15 @@
 </body>
 
 </html>
+<script>
+  // 使用JavaScript做前端验证
+  document.querySelector("form").onsubmit = function() {
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirmPassword").value;
+    if (password !== confirmPassword) {
+      alert("密码和确认密码不一致，请重新输入！");
+      return false;  // 阻止表单提交
+    }
+    return true;
+  };
+</script>

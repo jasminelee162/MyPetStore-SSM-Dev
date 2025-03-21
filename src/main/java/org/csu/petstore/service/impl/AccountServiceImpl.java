@@ -97,12 +97,16 @@ public class AccountServiceImpl implements AccountService {
         account.setZip(accountVO.getZip());
         account.setCountry(accountVO.getCountry());
         account.setPhone(accountVO.getPhone());
-        System.out.println(account.toString());
-        System.out.println(accountVO.toString());
+
+        // 更新语言偏好
+        Profile profile = new Profile();
+        profile.setUserid(accountVO.getUsername());
+        profile.setLangpref(accountVO.getLangpref());
 
         // 调用Mapper进行更新操作
         accountMapper.updateAccount(account);
-         accountMapper.updatePassword(account.getUsername(), account.getPassword());
+        accountMapper.updatePassword(account.getUsername(), account.getPassword());
+        accountMapper.updateProfile(profile);
     }
     @Override
     public boolean validatePassword(String username, String password) {
