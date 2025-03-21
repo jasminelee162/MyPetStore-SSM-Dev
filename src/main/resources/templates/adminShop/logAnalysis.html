@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户日志分析</title>
+    <link rel="stylesheet" href="../css/logAnalysis.css">
+</head>
+<body>
+<div class="container">
+    <h1>📊 用户日志分析</h1>
+
+    <!-- 浏览数据统计 -->
+    <section class="stats">
+        <h2>📌 用户浏览统计</h2>
+        <div class="stats-grid">
+            <div class="stat-item" id="category">
+                <h3>最多Category浏览次数</h3>
+                <p class="count" th:text="${topCategoryCount}"></p>
+                <p class="details">Category ID: <span id="topCategoryId" th:text="${topCategoryId}"></span></p>
+            </div>
+            <div class="stat-item" id="product">
+                <h3>最多product浏览次数</h3>
+                <p class="count" th:text="${topProductCount}"></p>
+                <p class="details">Product ID: <span id="topProductId" th:text="${topProductId}"></span></p>
+            </div>
+            <div class="stat-item" id="item">
+                <h3>最多item浏览次数</h3>
+                <p class="count" th:text="${topItemCount}"></p>
+                <p class="details">Item ID: <span id="topItemId" th:text="${topItemId}"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 订单统计 -->
+    <section class="orders">
+        <h2>🛒 订单提交统计</h2>
+        <p>用户总共已提交 <span id="orderCount" th:text="${totalOrderSubmissions}"></span> 份订单</p>
+    </section>
+</div>
+</body>
+</html>

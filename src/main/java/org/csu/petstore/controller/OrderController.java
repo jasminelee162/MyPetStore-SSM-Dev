@@ -281,6 +281,13 @@ public class OrderController {
             System.out.println("Updated cart subTotal: " + cartVO.getSubTotal());
         }
 
+
+        //日志记录
+        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
+        String username = account.getUsername();
+        String message = "User " + username + "submit order " + orderVO.getOrderId();
+        logService.setLog(message);
+
         // 跳转到查看订单页面
         return "order/viewOrder";
     }
