@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.csu.petstore.entity.OrderStatus;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
 
@@ -36,4 +37,8 @@ public interface OrderService {
     OrderVO initOrder(AccountVO accountVO, CartVO cartvo);
 
     int getNextId(String name);
+    Order findOrderById(Integer orderId);
+
+    List<Order> searchOrdersByOrderId(String orderId);
+    Map<String, Object> convertOrderToMap(Order order);
 }

@@ -17,7 +17,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service("OrderService")
@@ -93,9 +95,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderVO getOrder(int orderId) {
-        OrderVO orderVO = new OrderVO();
         Order order = orderMapper.selectById(orderId);
-
+        if (order == null) {
+            return null;  // 查不到，直接返回 null，Controller 已经处理 null 返回了
+        }
+        OrderVO orderVO = new OrderVO();
         orderVO.setOrderId(order.getOrderId());
         orderVO.setUserId(order.getUserId());
         orderVO.setOrderDate(order.getOrderDate());
@@ -327,5 +331,68 @@ public class OrderServiceImpl implements OrderService {
         lineItem.setUnitprice(lineItemVO.getUnitPrice());
         return lineItem;
     }
+
+    @Override
+    public Order findOrderById(Integer orderId) {
+        if (orderId == null) {
+            throw new IllegalArgumentException("订单ID不能为空！");
+        }
+
+        // 调用 Mapper 查询
+        return orderMapper.selectById(orderId);
+    }
+
+    @Override
+    public List<Order> searchOrdersByOrderId(String partialOrderId) {
+        if (partialOrderId == null || partialOrderId.trim().isEmpty()) {
+            throw new IllegalArgumentException("订单ID不能为空！");
+        }
+
+        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+        // 使用 like 进行模糊匹配
+        queryWrapper.like("orderid", partialOrderId);
+
+        List<Order> orders = orderMapper.selectList(queryWrapper);
+
+        return orders;
+    }
+
+    @Override
+    public Map<String, Object> convertOrderToMap(Order order) {
+        if (order == null) {
+            throw new IllegalArgumentException("订单对象不能为空！");
+        }
+
+        Map<String, Object> orderMap = new HashMap<>();
+
+        orderMap.put("orderId", order.getOrderId());
+        orderMap.put("userId", order.getUserId());
+        orderMap.put("orderDate", order.getOrderDate());
+        orderMap.put("shipAddr1", order.getShipAddr1());
+        orderMap.put("shipAddr2", order.getShipAddr2());
+        orderMap.put("shipCity", order.getShipCity());
+        orderMap.put("shipState", order.getShipState());
+        orderMap.put("shipZip", order.getShipZip());
+        orderMap.put("shipCountry", order.getShipCountry());
+        orderMap.put("billAddr1", order.getBillAddr1());
+        orderMap.put("billAddr2", order.getBillAddr2());
+        orderMap.put("billCity", order.getBillCity());
+        orderMap.put("billState", order.getBillState());
+        orderMap.put("billZip", order.getBillZip());
+        orderMap.put("billCountry", order.getBillCountry());
+        orderMap.put("courier", order.getCourier());
+        orderMap.put("totalPrice", order.getTotalPrice());
+        orderMap.put("billToFirstName", order.getBillToFirstName());
+        orderMap.put("billToLastName", order.getBillToLastName());
+        orderMap.put("shipToFirstName", order.getShipToFirstName());
+        orderMap.put("shipToLastName", order.getShipToLastName());
+        orderMap.put("creditCard", order.getCreditCard());
+        orderMap.put("exprDate", order.getExprDate());
+        orderMap.put("cardType", order.getCardType());
+        orderMap.put("locale", order.getLocale());
+
+        return orderMap;
+    }
+
 
 }

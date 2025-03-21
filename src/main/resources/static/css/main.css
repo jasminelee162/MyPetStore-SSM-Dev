@@ -333,6 +333,7 @@ body>#Logo {
     gap: 10px; /* 设置图片和文字之间的间距 */
     margin-top:60px;
     margin-right:600px;
+    z-index: 999;
 }
 
 #Menu img {
