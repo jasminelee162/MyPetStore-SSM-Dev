@@ -6,6 +6,7 @@ import org.csu.petstore.service.AccountService;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.LogService;
 import org.csu.petstore.vo.AccountVO;
+import org.csu.petstore.vo.CategoryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
@@ -35,6 +36,9 @@ public class AccountController {
 
     @Autowired
     private LogService logService;
+
+    @Autowired
+    private CatalogService catalogService;
 
 
     @PostMapping("/signOn")
@@ -73,6 +77,10 @@ public class AccountController {
                 String message = "User " + username + " login success!";
                 logService.setLog(message);
                 if(admin) return "admin/main";
+
+
+                List<CategoryVO> categories = catalogService.getAllCategories();
+                model.addAttribute("categories", categories);
 
                 return "catalog/main"; //返回主页
 

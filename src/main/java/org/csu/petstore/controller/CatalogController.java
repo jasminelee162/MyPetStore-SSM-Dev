@@ -37,7 +37,9 @@ public class CatalogController {
 
 
     @GetMapping("index")
-    public String index() {
+    public String index(Model model) {
+        List<CategoryVO> categories = catalogService.getAllCategories();
+        model.addAttribute("categories", categories);
         return "catalog/main";
     }
 
