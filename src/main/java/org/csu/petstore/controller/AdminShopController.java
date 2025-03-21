@@ -1,10 +1,12 @@
 package org.csu.petstore.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.csu.petstore.entity.Item;
 import org.csu.petstore.entity.ItemQuantity;
 import org.csu.petstore.service.AdminShopService;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.FileStorageService;
+import org.csu.petstore.service.LogService;
 import org.csu.petstore.vo.CategoryVO;
 import org.csu.petstore.vo.ItemVO;
 import org.csu.petstore.vo.ProductVO;
@@ -33,6 +35,9 @@ public class AdminShopController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private LogService logService;
 
 
     @GetMapping("/catalog")
@@ -63,6 +68,22 @@ public class AdminShopController {
         model.addAttribute("itemQuantities", itemQuantities);
 
         return "adminShop/product";
+    }
+
+    @GetMapping("/logAnalysis")
+    public String viewUserLog(Model model) {
+        Map<String, Object> logData = logService.analyzeLogs();
+        model.addAttribute("topCategoryId", logData.get("topCategoryId"));
+        model.addAttribute("topCategoryCount", logData.get("topCategoryCount"));
+
+        model.addAttribute("topProductId", logData.get("topProductId"));
+        model.addAttribute("topProductCount", logData.get("topProductCount"));
+
+        model.addAttribute("topItemId", logData.get("topItemId"));
+        model.addAttribute("topItemCount", logData.get("topItemCount"));
+
+        model.addAttribute("totalOrderSubmissions", logData.get("totalOrderSubmissions"));
+        return "adminShop/logAnalysis";
     }
 
     @PostMapping("/addCategory")
