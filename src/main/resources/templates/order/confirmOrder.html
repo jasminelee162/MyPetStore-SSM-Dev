@@ -5,19 +5,21 @@
     <title>Order Confirmation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/newOrder.css" type="text/css" media="screen"/>
+    <link rel="StyleSheet" href="../css/mypetstore.css" type="text/css" media="screen"/>
+
 </head>
 <body>
 
 <header th:replace="~{common/top}"></header>
 
 <!--<div id="Catalog" style="max-width: 900px; margin: 0 auto; padding: 2em; background-color: #ffffff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); border-radius: 8px;">-->
-    <h2>Order Confirmation</h2>
+<h2>Order Confirmation</h2>
 
-    <p>Please confirm the information below and then press continue...</p>
+<p>Please confirm the information below and then press continue...</p>
 
-    <form th:action="@{/order/viewOrder}" th:object="${order}" method="post">
-        <!-- Billing Address Table -->
-        <div class="table-container left-table">
+<form th:action="@{/order/viewOrder}" th:object="${order}" method="post">
+    <!-- Billing Address Table -->
+    <div class="table-container left-table">
         <table>
             <tr>
                 <th colspan="2" style="background-color: #1d4886; color: white; padding: 1em; text-align: left;">
@@ -33,8 +35,8 @@
             <tr><td>Zip:</td><td th:text="${order.billZip}">10001</td></tr>
             <tr><td>Country:</td><td th:text="${order.billCountry}">USA</td></tr>
         </table>
-        </div>
-        <div class="table-container right-table">
+    </div>
+    <div class="table-container right-table">
 
         <!-- Shipping Address Table -->
         <table>
@@ -52,7 +54,7 @@
             <tr><td>Zip:</td><td th:text="${order.shipZip}">10001</td></tr>
             <tr><td>Country:</td><td th:text="${order.shipCountry}">USA</td></tr>
         </table>
-        </div>
+    </div>
 
     <!-- Confirm Button -->
     <div style="text-align: center; margin-top: 20px;">
@@ -61,7 +63,7 @@
             <button type="submit">Confirmed</button>
         </form>
     </div>
-    </form>
+</form>
 <!--</div>-->
 <script type="module">
     import * as THREE from 'https://cdn.skypack.dev/three@0.136.0/build/three.module.js';

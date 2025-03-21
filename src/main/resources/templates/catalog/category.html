@@ -6,6 +6,7 @@
     <title>Title</title>
     <link rel="StyleSheet" href="../css/mypetstore.css" type="text/css" media="screen"/>
     <style>
+
         footer {
             position: fixed;
             bottom: 0;
@@ -17,9 +18,9 @@
         }
         body {
             background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            overflow: hidden;
+            overflow: auto;
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .star {
@@ -52,6 +53,7 @@
                 opacity: 0.6;
             }
         }
+
     </style>
 </head>
 <body>
@@ -62,7 +64,6 @@
     </div>
 
     <div id="Catalog">
-
         <h2 th:text="${category.categoryName}">Category Name</h2>
 
         <table>

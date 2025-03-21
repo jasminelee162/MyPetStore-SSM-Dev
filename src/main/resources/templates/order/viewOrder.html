@@ -20,7 +20,9 @@
             margin: 0;
             min-height: 100vh;
         }
-
+        h2{
+            margin-left:200px;
+        }
         .star {
             position: absolute;
             background: white;
@@ -63,13 +65,10 @@
     </div>
 
     <ul class="message" style="text-align: center; font-size: 1.2em; margin: 1.5em 0;">
-        <li>Thank you, your order has been submitted.</li>
+        <h2>Thank you, your order has been submitted.</h2>
     </ul>
 
-    <div id="Catalog" style="max-width: 1000px; margin: 0 auto; padding: 2em; background-color: #ffffff; border-radius: 8px;    box-shadow:
-            0 0 15px rgba(255, 255, 255, 0.8),
-            0 0 30px #039,
-            0 0 50px #69f;">
+    <div id="Catalog" style="max-width: 1000px; margin: 0 auto; padding: 2em;border-radius: 8px; ">
         <table style="width: 100%; border-collapse: collapse;">
 
             <tr>
@@ -121,11 +120,15 @@
             <tr><td class="label">Country:</td><td th:text="${order.shipCountry}">USA</td></tr>
             <tr><td class="label">Courier:</td><td th:text="${order.courier}">UPS</td></tr>
 
-            <tr>
-                <td colspan="2" style="text-align: center; font-weight: bold; padding: 1.5em 0;">
-                    Status: <span th:text="${order.status}">Shipped</span>
-                </td>
-            </tr>
+<!--            <tr>-->
+<!--                <td colspan="2" style="text-align: center; font-weight: bold; padding: 1.5em 0;">-->
+<!--                    Status: <span th:text="${order.status}">Shipped</span>-->
+<!--                </td>-->
+<!--            </tr>-->
+            <td colspan="2" style="text-align: center; font-weight: bold; padding: 1.5em 0;">
+                Status: <span style="display: inline;" th:text="${order.status}">Shipped</span>
+            </td>
+
 
             <tr>
                 <td colspan="2">
@@ -171,7 +174,7 @@
     </div>
 </div>
 
-<footer th:replace="common/bottom"></footer>
+<!--<footer th:replace="common/bottom"></footer>-->
 <script>
     function createStars(count, sizeRange, speedRange) {
         for (let i = 0; i < count; i++) {
