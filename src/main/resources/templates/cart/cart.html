@@ -4,56 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
-    <link rel="stylesheet" href="/css/cart.css" type="text/css" media="screen"/>
+<!--    <link rel="stylesheet" href="/css/cart.css" type="text/css" media="screen"/>-->
+    <link rel="StyleSheet" href="../css/mypetstore.css" type="text/css" media="screen"/>
+
     <style>
-        /* Header */
-        .large-header {
-            position: relative;
-            width: 100%;
-            background: #333;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center center;
-            z-index: 1;
-        }
-
-        #large-header {
-            background-image: url('https://www.marcoguglie.it/Codepen/AnimatedHeaderBg/demo-1/img/demo-1-bg.jpg');
-        }
-
-        .main-title {
-            position: absolute;
+        body {
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            overflow: auto;
             margin: 0;
-            padding: 0;
-            color: #f9f1e9;
-            text-align: center;
-            top: 50%;
-            left: 50%;
-            transform: translate3d(-50%, -50%, 0);
+            min-height: 100vh;
         }
-        #demo-canvas {
+        #Catalog{margin-top:-120px;}
+        #Content{margin-top:30px;}
+        .star {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* 让鼠标事件透过 canvas */
-        }
-        .demo-1 .main-title {
-            text-transform: uppercase;
-            font-size: 4.2em;
-            letter-spacing: 0.1em;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle linear infinite;
         }
 
-        .main-title .thin {
-            font-weight: 200;
-        }
-
-        @media only screen and (max-width: 768px) {
-            .demo-1 .main-title {
-                font-size: 3em;
+        @keyframes twinkle {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0.6;
+            }
+            25% {
+                transform: translate(-5px, 5px);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(5px, -5px);
+                opacity: 0.8;
+            }
+            75% {
+                transform: translate(-1px, -1px);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, 0);
+                opacity: 0.6;
             }
         }
+        /*!* Header *!*/
+        /*.large-header {*/
+        /*    position: relative;*/
+        /*    width: 100%;*/
+        /*    background: #333;*/
+        /*    overflow: hidden;*/
+        /*    background-size: cover;*/
+        /*    background-position: center center;*/
+        /*    z-index: 1;*/
+        /*}*/
+
+        /*#large-header {*/
+        /*    background-image: url('https://www.marcoguglie.it/Codepen/AnimatedHeaderBg/demo-1/img/demo-1-bg.jpg');*/
+        /*}*/
+
+        /*.main-title {*/
+        /*    position: absolute;*/
+        /*    margin: 0;*/
+        /*    padding: 0;*/
+        /*    color: #f9f1e9;*/
+        /*    text-align: center;*/
+        /*    top: 50%;*/
+        /*    left: 50%;*/
+        /*    transform: translate3d(-50%, -50%, 0);*/
+        /*}*/
+        /*#demo-canvas {*/
+        /*    position: absolute;*/
+        /*    top: 0;*/
+        /*    left: 0;*/
+        /*    width: 100%;*/
+        /*    height: 100%;*/
+        /*    pointer-events: none; !* 让鼠标事件透过 canvas *!*/
+        /*}*/
+        /*.demo-1 .main-title {*/
+        /*    text-transform: uppercase;*/
+        /*    font-size: 4.2em;*/
+        /*    letter-spacing: 0.1em;*/
+        /*}*/
+
+        /*.main-title .thin {*/
+        /*    font-weight: 200;*/
+        /*}*/
+
+        /*@media only screen and (max-width: 768px) {*/
+        /*    .demo-1 .main-title {*/
+        /*        font-size: 3em;*/
+        /*    }*/
+        /*}*/
     </style>
 </head>
 <body>
@@ -61,15 +101,15 @@
 <header th:replace="common/top"></header>
 
 
-<div id="large-header" class="large-header">
+<div id="Content" class="large-header">
     <canvas id="demo-canvas"></canvas>
-<!--        <h1 class="main-title">Connect <span class="thin">Three</span></h1>-->
+    <!--        <h1 class="main-title">Connect <span class="thin">Three</span></h1>-->
     <div id="BackLink">
         <a th:href="@{/catalog/index}">Return to Main Menu</a>
     </div>
     <div id="Catalog">
 
-        <div id="Cart">
+<!--        <div >-->
             <h2>Shopping Cart</h2>
             <form id="cart-form" th:action="@{/order/newOrder}"  method="post">
                 <input type="hidden" id="selected-items" name="selectedItems" value="">
@@ -128,11 +168,13 @@
             </form>
 
             <div id="cart-summary">
+                <div class="cart-info">
                 <span>Total items: <span id="selected-count" th:text="${session.cart.numberOfItems}"></span></span>
                 <span>Subtotal: <span id="subTotal" th:text="${#numbers.formatCurrency(session.cart.subTotal)}"></span></span>
+                    </div>
                 <button type="submit" id="proceed-checkout" class="Button">Proceed to Checkout</button>
             </div>
-        </div>
+<!--        </div>-->
 
         <!--    <div id="MyList" th:if="${session.loginAccount != null}">-->
         <!--        <div th:if="${session.loginAccount.listOption}">-->
@@ -154,148 +196,172 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenLite.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/easing/EasePack.min.js"></script>
 
-<script>
-    (function() {
-        var width, height, largeHeader, canvas, ctx, points, target, animateHeader = true;
+<!--<script>-->
+<!--    (function() {-->
+<!--        var width, height, largeHeader, canvas, ctx, points, target, animateHeader = true;-->
 
-        // Main
-        initHeader();
-        initAnimation();
-        addListeners();
+<!--        // Main-->
+<!--        initHeader();-->
+<!--        initAnimation();-->
+<!--        addListeners();-->
 
-        function initHeader() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            target = { x: width , y: height / 2 };
+<!--        function initHeader() {-->
+<!--            width = window.innerWidth;-->
+<!--            height = window.innerHeight;-->
+<!--            target = { x: width , y: height / 2 };-->
 
-            largeHeader = document.getElementById('large-header');
-            largeHeader.style.height = height + 'px';
+<!--            largeHeader = document.getElementById('large-header');-->
+<!--            largeHeader.style.height = height + 'px';-->
 
-            canvas = document.getElementById('demo-canvas');
-            canvas.width = width;  // ✅ 确保 canvas 宽度等于窗口宽度
-            canvas.height = height;
-            ctx = canvas.getContext('2d');
+<!--            canvas = document.getElementById('demo-canvas');-->
+<!--            canvas.width = width;  // ✅ 确保 canvas 宽度等于窗口宽度-->
+<!--            canvas.height = height;-->
+<!--            ctx = canvas.getContext('2d');-->
 
-            points = [];
-            for (var x = 0; x <= width; x += width / 20) {  // ✅ 遍历到 width，不留空白
-                for (var y = 0; y <= height; y += height / 20) {
-                    var px = x + Math.random() * width / 20;
-                    var py = y + Math.random() * height / 20;
-                    var p = { x: px, originX: px, y: py, originY: py };
-                    points.push(p);
-                }
-            }
-        }
+<!--            points = [];-->
+<!--            for (var x = 0; x <= width; x += width / 20) {  // ✅ 遍历到 width，不留空白-->
+<!--                for (var y = 0; y <= height; y += height / 20) {-->
+<!--                    var px = x + Math.random() * width / 20;-->
+<!--                    var py = y + Math.random() * height / 20;-->
+<!--                    var p = { x: px, originX: px, y: py, originY: py };-->
+<!--                    points.push(p);-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
 
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            largeHeader.style.height = height + 'px';
+<!--        function resize() {-->
+<!--            width = window.innerWidth;-->
+<!--            height = window.innerHeight;-->
+<!--            largeHeader.style.height = height + 'px';-->
 
-            canvas.width = width;  // ✅ 重新调整 canvas 宽度
-            canvas.height = height;
-        }
-
-
-        function addListeners() {
-            if (!('ontouchstart' in window)) {
-                window.addEventListener('mousemove', mouseMove);
-            }
-            window.addEventListener('scroll', scrollCheck);
-            window.addEventListener('resize', resize);
-        }
-
-        // function mouseMove(e) {
-        //     var posx = e.pageX || e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        //     var posy = e.pageY || e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-        //     target.x = posx;
-        //     target.y = posy;
-        // }
-
-        function scrollCheck() {
-            animateHeader = document.body.scrollTop <= height;
-        }
-
-        // function resize() {
-        //     width = window.innerWidth;
-        //     height = window.innerHeight;
-        //     largeHeader.style.height = height + 'px';
-        //     canvas.width = width;
-        //     canvas.height = height;
-        // }
-
-        function initAnimation() {
-            for (var i in points) {
-                shiftPoint(points[i]);
-            }
-            animate();
-        }
-        function mouseMove(e) {
-            var posx = e.pageX || e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-            var posy = e.pageY || e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-            target.x = posx;
-            target.y = posy;
-
-            // 让鼠标附近的点移动
-            for (var i in points) {
-                var p = points[i];
-                if (Math.abs(getDistance(target, p)) < 6000) {
-                    shiftPoint(p);
-                }
-            }
-        }
-
-        function shiftPoint(p) {
-            TweenLite.to(p, 0.8 + Math.random() * 0.5, {
-                x: p.originX - 20 + Math.random() * 40,
-                y: p.originY - 20 + Math.random() * 40,
-                ease: Power1.easeInOut
-            });
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-
-            for (var i in points) {
-                var p = points[i];
-
-                // 只绘制靠近鼠标的点
-                if (Math.abs(getDistance(target, p)) < 10000) {
-                    // 画点
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, 3, 0, 2 * Math.PI, false);
-                    ctx.fillStyle = "rgba(0, 153, 255, 0.2)";
-                    ctx.fill();
-
-                    // 连接距离小于 8000 的点
-                    for (var j in points) {
-                        var p2 = points[j];
-                        if (getDistance(p, p2) < 8000) {
-                            var gradientLine = ctx.createLinearGradient(p.x, p.y, p2.x, p2.y);
-                            gradientLine.addColorStop(0, "rgba(0, 51, 102, 0.6)"); // 开始颜色
-                            gradientLine.addColorStop(1, "rgba(0, 153, 255, 0.2)"); // 结束颜色
-
-                            ctx.strokeStyle = gradientLine;
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.stroke();
-                        }
-                    }
-                }
-            }
-
-            requestAnimationFrame(animate);
-        }
+<!--            canvas.width = width;  // ✅ 重新调整 canvas 宽度-->
+<!--            canvas.height = height;-->
+<!--        }-->
 
 
+<!--        function addListeners() {-->
+<!--            if (!('ontouchstart' in window)) {-->
+<!--                window.addEventListener('mousemove', mouseMove);-->
+<!--            }-->
+<!--            window.addEventListener('scroll', scrollCheck);-->
+<!--            window.addEventListener('resize', resize);-->
+<!--        }-->
 
-        function getDistance(p1, p2) {
-            return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
-        }
-    })();
-</script>
+<!--        // function mouseMove(e) {-->
+<!--        //     var posx = e.pageX || e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;-->
+<!--        //     var posy = e.pageY || e.clientY + document.body.scrollTop + document.documentElement.scrollTop;-->
+<!--        //     target.x = posx;-->
+<!--        //     target.y = posy;-->
+<!--        // }-->
+
+<!--        function scrollCheck() {-->
+<!--            animateHeader = document.body.scrollTop <= height;-->
+<!--        }-->
+
+<!--        // function resize() {-->
+<!--        //     width = window.innerWidth;-->
+<!--        //     height = window.innerHeight;-->
+<!--        //     largeHeader.style.height = height + 'px';-->
+<!--        //     canvas.width = width;-->
+<!--        //     canvas.height = height;-->
+<!--        // }-->
+
+<!--        function initAnimation() {-->
+<!--            for (var i in points) {-->
+<!--                shiftPoint(points[i]);-->
+<!--            }-->
+<!--            animate();-->
+<!--        }-->
+<!--        function mouseMove(e) {-->
+<!--            var posx = e.pageX || e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;-->
+<!--            var posy = e.pageY || e.clientY + document.body.scrollTop + document.documentElement.scrollTop;-->
+<!--            target.x = posx;-->
+<!--            target.y = posy;-->
+
+<!--            // 让鼠标附近的点移动-->
+<!--            for (var i in points) {-->
+<!--                var p = points[i];-->
+<!--                if (Math.abs(getDistance(target, p)) < 6000) {-->
+<!--                    shiftPoint(p);-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+
+<!--        function shiftPoint(p) {-->
+<!--            TweenLite.to(p, 0.8 + Math.random() * 0.5, {-->
+<!--                x: p.originX - 20 + Math.random() * 40,-->
+<!--                y: p.originY - 20 + Math.random() * 40,-->
+<!--                ease: Power1.easeInOut-->
+<!--            });-->
+<!--        }-->
+
+<!--        function animate() {-->
+<!--            ctx.clearRect(0, 0, width, height);-->
+
+<!--            for (var i in points) {-->
+<!--                var p = points[i];-->
+
+<!--                // 只绘制靠近鼠标的点-->
+<!--                if (Math.abs(getDistance(target, p)) < 10000) {-->
+<!--                    // 画点-->
+<!--                    ctx.beginPath();-->
+<!--                    ctx.arc(p.x, p.y, 3, 0, 2 * Math.PI, false);-->
+<!--                    ctx.fillStyle = "rgba(0, 153, 255, 0.2)";-->
+<!--                    ctx.fill();-->
+
+<!--                    // 连接距离小于 8000 的点-->
+<!--                    for (var j in points) {-->
+<!--                        var p2 = points[j];-->
+<!--                        if (getDistance(p, p2) < 8000) {-->
+<!--                            var gradientLine = ctx.createLinearGradient(p.x, p.y, p2.x, p2.y);-->
+<!--                            gradientLine.addColorStop(0, "rgba(0, 51, 102, 0.6)"); // 开始颜色-->
+<!--                            gradientLine.addColorStop(1, "rgba(0, 153, 255, 0.2)"); // 结束颜色-->
+
+<!--                            ctx.strokeStyle = gradientLine;-->
+<!--                            ctx.beginPath();-->
+<!--                            ctx.moveTo(p.x, p.y);-->
+<!--                            ctx.lineTo(p2.x, p2.y);-->
+<!--                            ctx.stroke();-->
+<!--                        }-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+
+<!--            requestAnimationFrame(animate);-->
+<!--        }-->
+
+
+
+<!--        function getDistance(p1, p2) {-->
+<!--            return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);-->
+<!--        }-->
+<!--    })();-->
+<!--</script>-->
 <footer th:replace="common/bottom"></footer>
+<script>
+    function createStars(count, sizeRange, speedRange) {
+        for (let i = 0; i < count; i++) {
+            let star = document.createElement("div");
+            star.classList.add("star");
 
+            // 随机大小
+            let size = Math.random() * (sizeRange[1] - sizeRange[0]) + sizeRange[0];
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+
+            // 随机位置
+            star.style.left = `${Math.random() * window.innerWidth}px`;
+            star.style.top = `${Math.random() * window.innerHeight}px`;
+
+            // 随机动画时间
+            let speed = Math.random() * (speedRange[1] - speedRange[0]) + speedRange[0];
+            star.style.animationDuration = `${speed}s`;
+
+            document.body.appendChild(star);
+        }
+    }
+
+    createStars(300, [1, 5], [3, 12]); // 100 颗星星，大小 1px~3px，动画时间 3s~6s
+</script>
 </body>
 </html>

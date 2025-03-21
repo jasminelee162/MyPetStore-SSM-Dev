@@ -321,7 +321,7 @@ body>#Banner {
 
 #Content {
     /*margin: 0;*/
-    margin-top:200px;
+    margin-top:100px;
     margin-bottom:275px;
     margin-left:80px;
     padding: 0ex 0ex 0ex 0ex;
@@ -586,4 +586,77 @@ i {
     100% {
         border-color: #38ef7d;
     }
+}
+/* 购物车总结区域 */
+#cart-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px; /* 控制间距 */
+
+    width: 90%;
+    max-width: 400px; /* 控制最大宽度 */
+    margin: 20px auto; /* 居中 */
+
+    background: rgba(255, 255, 255, 0.1); /* 半透明背景 */
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 轻微阴影 */
+    text-align: center;
+}
+
+/* 购物车信息 */
+.cart-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* 货币金额 */
+#subTotal {
+    font-weight: bold;
+    color: #ffeb3b; /* 金黄色高亮 */
+}
+
+/* 结账按钮 */
+.checkout-button {
+    background: linear-gradient(135deg, #18A4A6, #0F2F38); /* 渐变背景 */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 立体感 */
+}
+
+.checkout-button:hover {
+    background: linear-gradient(135deg, #0F2F38, #18A4A6);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+#proceed-checkout {
+    background: linear-gradient(135deg, #18A4A6, #0F2F38); /* 渐变背景 */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 立体感 */
+}
+
+#proceed-checkout:hover {
+    background: linear-gradient(135deg, #0F2F38, #18A4A6);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
