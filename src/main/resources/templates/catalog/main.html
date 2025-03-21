@@ -58,11 +58,21 @@
 
 <!DOCTYPE html>
 <html style="--n: 6">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="StyleSheet" href="/css/main.css" type="text/css" media="screen"/>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".category-item").forEach(item => {
+                item.addEventListener("click", function () {
+                    let categoryId = this.getAttribute("data-category-id");
+                    window.location.href = "/catalog/viewCategory?categoryId=" + categoryId;
+                });
+            });
+        });
+    </script>
 
 </head>
 <body>
@@ -97,68 +107,87 @@
 
     <main class="scene">
         <section class="assembly">
-
-            <article style="--i: 0; --url: url(https://images.unsplash.com/photo-1555169062-013468b47731?h=900); --pos: 47% 35%"
-                     onclick="window.location.href='/catalog/viewCategory?categoryId=BIRDS';"
-            >
+            <!-- 遍历 categoryList -->
+            <article th:each="category, iterStat : ${categories}"
+                     th:style="'--i: ' + ${iterStat.index} + '; --url: url(' + ${category.description} + '); --pos: 50% 50%'"
+                     th:data-category-id="${category.categoryId}"
+                     class="category-item">
                 <header>
-                    <h2>BIRDS</h2>
-                    <em>Small birds have melodious songs and charm.</em>
+                    <h2 th:text="${category.categoryName}">Category Name</h2>
                 </header>
                 <figure>
-                    <img src="https://images.unsplash.com/photo-1555169062-013468b47731?h=900" alt="birds">
-                </figure>
-            </article>
-            <article style="--i: 1; --url: url(https://images.unsplash.com/photo-1544943910-4c1dc44aab44?h=900); --pos: 75% 65%"
-                     onclick="window.location.href='/catalog/viewCategory?categoryId=FISH';"
-            >
-                <header>
-                    <h2>FISH</h2>
-                    <em>Ornamental Fish Are Colorful and Calming
-                    </em>
-                </header>
-                <figure>
-                    <img src="https://images.unsplash.com/photo-1544943910-4c1dc44aab44?h=900" alt="fish">
-                </figure>
-            </article>
-            <article style="--i: 2; --url: url(https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?h=900); --pos: 53% 43%"
-                     onclick="window.location.href='/catalog/viewCategory?categoryId=DOGS';"
-            >
-                <header>
-                    <h2>DOGS</h2>
-                    <em>loyal Companions, Ideal For Families
-                    </em>
-                </header>
-                <figure>
-                    <img src="https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?h=900" alt="dog">
-                </figure>
-            </article>
-            <article style="--i: 3; --url: url(https://images.unsplash.com/photo-1536590158209-e9d615d525e4?h=900); --pos: 65% 65%"
-                     onclick="window.location.href='/catalog/viewCategory?categoryId=CATS';"
-            >
-                <header>
-                    <h2>CATS</h2>
-                    <em>Elegant, Independent, and Interactive Cat,HA JI Ml~~
-                    </em>
-                </header>
-                <figure>
-                    <img src="https://images.unsplash.com/photo-1536590158209-e9d615d525e4?h=900" alt="cat">
-                </figure>
-            </article>
-            <article style="--i: 4; --url: url(https://images.unsplash.com/photo-1610629651605-0b181ad69aab?h=900); --pos: 50% 25%"
-                     onclick="window.location.href='/catalog/viewCategory?categoryId=REPTILES';"
-            >
-                <header>
-                    <h2>REPTILES</h2>
-                    <em>Smart and lively, Mimicking speech.
-                    </em>
-                </header>
-                <figure>
-                    <img src="https://images.unsplash.com/photo-1610629651605-0b181ad69aab?h=900" alt="reptile">
+                    <img th:src="${category.description}" th:alt="${category.categoryName}">
                 </figure>
             </article>
         </section>
     </main>
+
+
+
+    <!--    <main class="scene">-->
+<!--        <section class="assembly">-->
+
+            <!--            <article style="&#45;&#45;i: 0; &#45;&#45;url: url(https://images.unsplash.com/photo-1555169062-013468b47731?h=900); &#45;&#45;pos: 47% 35%" -->
+<!--                     onclick="window.location.href='/catalog/viewCategory?categoryId=BIRDS';"-->
+<!--            >-->
+<!--                <header>-->
+<!--                    <h2>BIRDS</h2>-->
+<!--                    <em>Small birds have melodious songs and charm.</em>-->
+<!--                </header>-->
+<!--                <figure>-->
+<!--                    <img src="https://images.unsplash.com/photo-1555169062-013468b47731?h=900" alt="birds">-->
+<!--                </figure>-->
+<!--            </article>-->
+<!--            <article style="&#45;&#45;i: 1; &#45;&#45;url: url(https://images.unsplash.com/photo-1544943910-4c1dc44aab44?h=900); &#45;&#45;pos: 75% 65%"-->
+<!--                     onclick="window.location.href='/catalog/viewCategory?categoryId=FISH';"-->
+<!--            >-->
+<!--                <header>-->
+<!--                    <h2>FISH</h2>-->
+<!--                    <em>Ornamental Fish Are Colorful and Calming-->
+<!--                    </em>-->
+<!--                </header>-->
+<!--                <figure>-->
+<!--                    <img src="https://images.unsplash.com/photo-1544943910-4c1dc44aab44?h=900" alt="fish">-->
+<!--                </figure>-->
+<!--            </article>-->
+<!--            <article style="&#45;&#45;i: 2; &#45;&#45;url: url(https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?h=900); &#45;&#45;pos: 53% 43%"-->
+<!--                     onclick="window.location.href='/catalog/viewCategory?categoryId=DOGS';"-->
+<!--            >-->
+<!--                <header>-->
+<!--                    <h2>DOGS</h2>-->
+<!--                    <em>loyal Companions, Ideal For Families-->
+<!--                    </em>-->
+<!--                </header>-->
+<!--                <figure>-->
+<!--                    <img src="https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?h=900" alt="dog">-->
+<!--                </figure>-->
+<!--            </article>-->
+<!--            <article style="&#45;&#45;i: 3; &#45;&#45;url: url(https://images.unsplash.com/photo-1536590158209-e9d615d525e4?h=900); &#45;&#45;pos: 65% 65%"-->
+<!--                     onclick="window.location.href='/catalog/viewCategory?categoryId=CATS';"-->
+<!--            >-->
+<!--                <header>-->
+<!--                    <h2>CATS</h2>-->
+<!--                    <em>Elegant, Independent, and Interactive Cat,HA JI Ml~~-->
+<!--                    </em>-->
+<!--                </header>-->
+<!--                <figure>-->
+<!--                    <img src="https://images.unsplash.com/photo-1536590158209-e9d615d525e4?h=900" alt="cat">-->
+<!--                </figure>-->
+<!--            </article>-->
+<!--            <article style="&#45;&#45;i: 4; &#45;&#45;url: url(https://images.unsplash.com/photo-1610629651605-0b181ad69aab?h=900); &#45;&#45;pos: 50% 25%"-->
+<!--                     onclick="window.location.href='/catalog/viewCategory?categoryId=REPTILES';"-->
+<!--            >-->
+<!--                <header>-->
+<!--                    <h2>REPTILES</h2>-->
+<!--                    <em>Smart and lively, Mimicking speech.-->
+<!--                    </em>-->
+<!--                </header>-->
+<!--                <figure>-->
+<!--                    <img src="https://images.unsplash.com/photo-1610629651605-0b181ad69aab?h=900" alt="reptile">-->
+<!--                </figure>-->
+<!--            </article>-->
+<!--        </section>-->
+<!--    </main>-->
 </div>
 <!--<footer></footer>-->
 <footer th:replace="common/bottom"></footer>
