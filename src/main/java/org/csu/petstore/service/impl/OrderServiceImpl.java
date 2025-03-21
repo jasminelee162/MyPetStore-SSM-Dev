@@ -6,6 +6,7 @@ import org.csu.petstore.persistence.*;
 
 import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +17,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("OrderService")
@@ -200,9 +198,89 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public boolean updateStatusToShipped(String orderId) {
+        try {
+            // 调用 Mapper 更新状态
+            int rowsAffected = orderStatusMapper.updateStatusToShipped(orderId);
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
     public List<Order> getAllOrders() {
         // 调用 Mapper 的 selectList 方法查询所有订单
         return orderMapper.selectList(null); // 不传入任何查询条件，表示查询所有数据
+
+
+    }
+
+    public List<OrderVO> getAllOrdersWithStatus() {
+        // 查询所有订单
+        List<Order> orders = orderMapper.selectList(null);
+
+        // 创建一个列表来存储 OrderVO 对象
+        List<OrderVO> orderVOList = new ArrayList<>();
+
+        // 遍历每个订单，查询其最新状态并设置到 OrderVO 中
+        for (Order order : orders) {
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(order, orderVO);
+
+            // 查询该订单的最新状态
+            OrderStatus latestStatus = orderStatusMapper.getLatestStatusByOrderId(order.getOrderId());
+            if (latestStatus != null) {
+                orderVO.setStatus(latestStatus.getStatus());
+
+                // 获取 java.util.Date 类型的 timestamp
+                java.util.Date date = latestStatus.getTimestamp();
+
+                // 如果 date 不为 null，将其转换为 java.sql.Timestamp
+                if (date != null) {
+                    java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+                    orderVO.setTimestamp(timestamp);
+                } else {
+                    orderVO.setTimestamp(null);
+                }
+            } else {
+                orderVO.setStatus("未知状态");
+                orderVO.setTimestamp(null);
+            }
+
+            // 查询该订单的所有订单项
+            List<LineItem> lineItems = lineItemMapper.selectListByOrderId(Integer.valueOf(order.getOrderId()));
+            List<LineItemVO> lineItemVOList = new ArrayList<>();
+
+            // 将 LineItem 转换为 LineItemVO
+            for (LineItem lineItem : lineItems) {
+                LineItemVO lineItemVO = new LineItemVO();
+                lineItemVO.setOrderId(lineItem.getOrderid());
+                lineItemVO.setLineNumber(lineItem.getLinenum());
+                lineItemVO.setQuantity(lineItem.getQuantity());
+                lineItemVO.setItemId(lineItem.getItemid());
+                lineItemVO.setUnitPrice(lineItem.getUnitprice());
+
+                // 假设你已经实现了 ItemVO 的获取逻辑
+                // ItemVO itemVO = itemService.getItemById(lineItem.getItemid());
+                // lineItemVO.setItem(itemVO);
+
+                // 计算总价
+                lineItemVO.setTotal(lineItem.getUnitprice().multiply(BigDecimal.valueOf(lineItem.getQuantity())));
+
+                lineItemVOList.add(lineItemVO);
+            }
+
+            orderVO.setLineItems(lineItemVOList);
+
+            // 直接从 Order 对象中获取总价值
+            orderVO.setTotalPrice(order.getTotalPrice());
+
+            orderVOList.add(orderVO);
+        }
+
+        return orderVOList;
     }
 
 
@@ -358,6 +436,37 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderVO getOrderDetails(String orderId) {
+        try {
+            // 查询订单基本信息
+            Order order = orderMapper.selectById(orderId);
+            if (order == null) {
+                return null;
+            }
+
+            // 查询订单的最新状态
+            OrderStatus latestStatus = orderStatusMapper.getLatestStatusByOrderId(orderId);
+            String status = latestStatus != null ? latestStatus.getStatus() : "未知状态";
+
+            // 查询订单项
+            List<LineItemVO> lineItems = lineItemMapper.selectByOrderId(orderId);
+
+            // 封装 OrderVO
+            OrderVO orderVO = new OrderVO();
+            orderVO.setOrderId(order.getOrderId());
+            orderVO.setUserId(order.getUserId());
+            orderVO.setTotalPrice(order.getTotalPrice());
+            orderVO.setStatus(status); // 设置订单状态
+            orderVO.setLineItems(lineItems);
+
+            return orderVO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public Map<String, Object> convertOrderToMap(Order order) {
         if (order == null) {
             throw new IllegalArgumentException("订单对象不能为空！");
@@ -394,5 +503,18 @@ public class OrderServiceImpl implements OrderService {
         return orderMap;
     }
 
+    public boolean deleteOrder(String orderId) {
+        try {
+            // 删除 orderstatus 表中的记录
+            int rowsAffectedStatus = orderStatusMapper.deleteByOrderId(orderId);
+            // 删除 orders 表中的记录
+            int rowsAffectedOrder = orderMapper.deleteOrder(orderId);
+
+            return rowsAffectedStatus > 0 && rowsAffectedOrder > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }

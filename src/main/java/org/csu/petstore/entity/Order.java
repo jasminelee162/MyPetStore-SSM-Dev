@@ -61,5 +61,4 @@ public class Order {
     private String locale;
 
 
-
 }
