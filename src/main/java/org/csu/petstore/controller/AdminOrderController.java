@@ -1,5 +1,6 @@
 package org.csu.petstore.controller;
 
+import org.csu.petstore.entity.LineItem;
 import org.csu.petstore.entity.Order;
 import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.OrderVO;
@@ -156,6 +157,108 @@ public class AdminOrderController {
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", "获取订单详情失败！");
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateOrder(@RequestBody UpdateOrderRequest request) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            String orderId = request.getOrderId();
+            String userId = request.getUserId();
+            String totalPrice = request.getTotalPrice();
+            String status = request.getStatus();
+            List<LineItem> lineItems = request.getLineItems();
+
+            Integer orderIntId = Integer.valueOf(orderId);
+
+            boolean success = orderService.updateOrder(String.valueOf(orderIntId), userId, totalPrice, status, lineItems);
+
+            if (success) {
+                response.put("status", "success");
+                response.put("message", "订单更新成功");
+            } else {
+                response.put("status", "error");
+                response.put("message", "订单更新失败");
+            }
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "服务器异常：" + e.getMessage());
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    public static class UpdateOrderRequest {
+        private String orderId;
+        private String userId;
+        private String totalPrice;
+        private String status;
+        private List<LineItem> lineItems;
+
+        // Getters and Setters
+        public String getOrderId() {
+            return orderId;
+        }
+
+        public void setOrderId(String orderId) {
+            this.orderId = orderId;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getTotalPrice() {
+            return totalPrice;
+        }
+
+        public void setTotalPrice(String totalPrice) {
+            this.totalPrice = totalPrice;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public List<LineItem> getLineItems() {
+            return lineItems;
+        }
+
+        public void setLineItems(List<LineItem> lineItems) {
+            this.lineItems = lineItems;
+        }
+    }
+
+    @GetMapping("/getOrderById")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getOrderById(@RequestParam String orderId) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Order order = orderService.getOrderById(orderId);
+            if (order != null) {
+                response.put("status", "success");
+                response.put("order", order);
+            } else {
+                response.put("status", "not_found");
+                response.put("message", "订单未找到");
+            }
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "服务器异常：" + e.getMessage());
         }
 
         return ResponseEntity.ok(response);

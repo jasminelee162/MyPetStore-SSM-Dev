@@ -283,6 +283,55 @@ public class OrderServiceImpl implements OrderService {
         return orderVOList;
     }
 
+    public boolean updateOrder(String orderId, String userId, String totalPrice, String status, List<LineItem> lineItems) {
+        try {
+            // 校验 orderId 是否为空
+            if (orderId == null || orderId.trim().isEmpty()) {
+                throw new RuntimeException("订单编号不能为空！");
+            }
+
+            // 将 orderId 转换为 Integer 类型
+            Integer orderIntId = Integer.valueOf(orderId);
+
+            // 更新订单基本信息
+            Order order = orderMapper.selectById(orderIntId);
+            if (order == null) {
+                throw new RuntimeException("订单不存在！");
+            }
+
+            order.setUserId(userId);
+            order.setTotalPrice(totalPrice);
+            orderMapper.updateById(order);
+
+            // 更新订单状态
+            orderStatusMapper.updateStatus(orderId, status);
+
+            // 更新订单明细数量
+            for (LineItem lineItem : lineItems) {
+                int updateCount = lineItemMapper.updateQuantity(orderIntId, lineItem.getItemid(), lineItem.getQuantity());
+                if (updateCount == 0) {
+                    // 如果更新失败，可能是该订单明细不存在，可以选择插入新的订单明细
+                    lineItem.setOrderid(orderIntId);
+                    lineItemMapper.insert(lineItem);
+                }
+            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public Order getOrderById(String orderId) {
+        try {
+            Integer orderIntId = Integer.valueOf(orderId);
+            return orderMapper.selectById(orderIntId);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("订单编号格式不正确！");
+        }
+    }
 
     //非数据库方法实现
 

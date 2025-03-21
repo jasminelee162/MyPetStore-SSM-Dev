@@ -1,6 +1,7 @@
 package org.csu.petstore.service;
 
 import org.csu.petstore.entity.Account;
+import org.csu.petstore.entity.LineItem;
 import org.csu.petstore.entity.Order;
 import org.csu.petstore.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,9 @@ public interface OrderService {
 
     List<OrderVO> getAllOrdersWithStatus();
 
+    boolean updateOrder(String orderId, String userId, String totalPrice, String status, List<LineItem> lineItems);
 
+    Order getOrderById(String orderId);
 
     //非数据库方法定义
 

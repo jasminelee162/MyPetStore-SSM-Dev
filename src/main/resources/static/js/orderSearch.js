@@ -193,7 +193,7 @@ $(document).ready(function () {
                     <td>${order.status || '未知状态'}</td>
                     <td>
                         <button class="order-detail-btn" data-id="${order.orderId}">详情</button>
-                        <button class="order-edit-btn" data-id="${order.orderId}">修改</button>
+                        <button class="order-edit-btn" data-id="${order.orderId}" data-toggle="modal" data-target="#editOrderModal">修改</button>
                         <button class="order-delete-btn" data-id="${order.orderId}">删除</button>
                         <button class="order-ship-btn" data-id="${order.orderId}">发货</button>
                     </td>
@@ -203,15 +203,15 @@ $(document).ready(function () {
                         <div class="order-details">
                             <table class="line-items-table">
                                 <thead>
-                                    <tr>
-                                        <th>商品ID</th>
-                                        <th>数量</th>
-                                        <th>单价</th>
-                                        <th>总价</th>
-                                    </tr>
+                                <tr>
+                                    <th>商品ID</th>
+                                    <th>数量</th>
+                                    <th>单价</th>
+                                    <th>总价</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    ${order.lineItems && order.lineItems.length > 0
+                                ${order.lineItems && order.lineItems.length > 0
                 ? order.lineItems.map(item => `
                                             <tr>
                                                 <td>${item.itemId}</td>
@@ -220,8 +220,7 @@ $(document).ready(function () {
                                                 <td>￥${item.total}</td>
                                             </tr>
                                         `).join("")
-                : `<tr><td colspan="4" style="text-align: center;">暂无商品信息</td></tr>`
-            }
+                : `<tr><td colspan="4" style="text-align: center;">暂无商品信息</td></tr>`}
                                 </tbody>
                             </table>
                         </div>
@@ -249,4 +248,119 @@ $(document).ready(function () {
         tableBody.append(row);
     }
 
+    /**
+     * 点击修改按钮
+     */
+    $(document).on("click", ".order-edit-btn", function () {
+        const orderId = $(this).data("id");
+        console.log("修改订单编号：", orderId);
+
+        // 获取当前订单信息
+        $.ajax({
+            url: `/adminOrder/getOrderById`,
+            type: "GET",
+            data: { orderId: orderId },
+            success: function (response) {
+                console.log("获取订单信息：", response);
+
+                if (response.status === "success" && response.order) {
+                    const order = response.order;
+
+                    // 填充表单数据
+                    $("#edit-order-id").val(order.orderId);
+                    $("#edit-user-id").val(order.userId);
+                    $("#edit-total-price").val(order.totalPrice);
+                    $("#edit-status").val(order.status);
+
+                    // 清空订单明细表格
+                    $("#edit-line-items tbody").empty();
+
+                    // 填充订单明细数据
+                    if (order.lineItems && order.lineItems.length > 0) {
+                        order.lineItems.forEach(item => {
+                            const row = `
+                                <tr>
+                                    <td>${item.itemId}</td>
+                                    <td><input type="number" class="line-item-quantity" data-item-id="${item.itemId}" value="${item.quantity}" min="1" /></td>
+                                    <td>${item.unitPrice}</td>
+                                </tr>
+                            `;
+                            $("#edit-line-items tbody").append(row);
+                        });
+                    } else {
+                        console.warn("订单明细数据为空");
+                    }
+
+                    // 显示模态框
+                    $('#editOrderModal').modal('show');
+                } else {
+                    alert("获取订单信息失败：" + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("获取订单信息失败！", error);
+                alert("服务器连接失败！");
+            }
+        });
+    });
+
+    /**
+     * 保存修改
+     */
+    $("#save-edit").click(function () {
+        const orderId = $("#edit-order-id").val();
+        const userId = $("#edit-user-id").val();
+        const totalPrice = $("#edit-total-price").val();
+        const status = $("#edit-status").val();
+
+        // 收集订单明细数据
+        const lineItems = [];
+        $("#edit-line-items tbody tr").each(function () {
+            const itemId = $(this).find("td:nth-child(1)").text();
+            const quantity = $(this).find(".line-item-quantity").val();
+            lineItems.push({
+                itemId: itemId,
+                quantity: parseInt(quantity, 10)
+            });
+        });
+
+        const orderData = {
+            orderId: orderId,
+            userId: userId,
+            totalPrice: totalPrice,
+            status: status,
+            lineItems: lineItems
+        };
+
+        console.log("提交修改订单数据：", orderData);
+
+        $.ajax({
+            url: `/adminOrder/update`,
+            type: "PUT",
+            data: JSON.stringify(orderData),
+            contentType: "application/json",
+            success: function (response) {
+                console.log("修改订单返回结果：", response);
+
+                if (response.status === "success") {
+                    alert("修改成功！");
+                    $('#editOrderModal').modal('hide');
+                    loadAllOrders();
+                } else {
+                    alert("修改失败：" + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("修改订单请求失败！", error);
+                alert("服务器连接失败！");
+            }
+        });
+    });
+
+    /**
+     * 取消修改
+     */
+    $("#cancel-edit").click(function () {
+        $('#editOrderModal').modal('hide');
+    });
 });

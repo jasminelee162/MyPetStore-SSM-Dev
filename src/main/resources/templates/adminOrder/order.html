@@ -6,7 +6,6 @@
     <title>订单管理模块</title>
     <link rel="stylesheet" th:href="@{/css/adminOrder.css}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- 确保引入 Bootstrap CSS 和 JS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
@@ -44,7 +43,7 @@
                 <td th:text="${order.status}"></td>
                 <td>
                     <button class="order-detail-btn" th:data-id="${order.orderId}">详情</button>
-                    <button class="order-edit-btn" th:data-id="${order.orderId}">修改</button>
+                    <button class="order-edit-btn" th:data-id="${order.orderId}" data-toggle="modal" data-target="#editOrderModal">修改</button>
                     <button class="order-delete-btn" th:data-id="${order.orderId}">删除</button>
                     <button class="order-ship-btn" th:data-id="${order.orderId}">发货</button>
                 </td>
@@ -53,10 +52,6 @@
             <tr class="order-details-row" style="display: none;" th:each="order : ${orders}" th:attr="data-order-id=${order.orderId}">
                 <td colspan="5">
                     <div class="order-details">
-                        <p><strong>订单编号：</strong><span th:text="${order.orderId}"></span></p>
-                        <p><strong>用户账号：</strong><span th:text="${order.userId}"></span></p>
-                        <p><strong>订单金额：</strong><span th:text="'￥' + ${order.totalPrice}"></span></p>
-                        <p><strong>订单状态：</strong><span th:text="${order.status}"></span></p>
                         <table class="line-items-table">
                             <thead>
                             <tr>
@@ -85,6 +80,60 @@
 <footer>
     <p>&copy; 2025 JPetStore. All rights reserved.</p>
 </footer>
+
+<!-- 修改订单模态框 -->
+<div class="modal fade" id="editOrderModal" tabindex="-1" role="dialog" aria-labelledby="editOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editOrderModalLabel">修改订单</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="order-edit-form">
+                    <input type="hidden" id="edit-order-id" name="orderId" />
+                    <div class="form-group">
+                        <label for="edit-user-id">用户账号：</label>
+                        <input type="text" id="edit-user-id" name="userId" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-total-price">订单金额：</label>
+                        <input type="number" id="edit-total-price" name="totalPrice" class="form-control" step="0.01" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-status">订单状态：</label>
+                        <select id="edit-status" name="status" class="form-control">
+                            <option value="P">P</option>
+                            <option value="S">S</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-line-items">订单明细：</label>
+                        <table id="edit-line-items" class="table">
+                            <thead>
+                            <tr>
+                                <th>商品ID</th>
+                                <th>数量</th>
+                                <th>单价</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 动态生成订单明细 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="save-edit">保存修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="/js/orderSearch.js"></script>
 </body>
 </html>
