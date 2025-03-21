@@ -46,6 +46,7 @@ public interface OrderService {
     //List<Order> searchOrdersByOrderId(String orderId);
     public List<Order> searchOrdersByPrefix(String orderIdPrefix);
 
+    OrderVO getOrderDetails(String orderId);
 
     Map<String, Object> convertOrderToMap(Order order);
 

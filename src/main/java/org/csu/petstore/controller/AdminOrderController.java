@@ -138,4 +138,26 @@ public class AdminOrderController {
             this.orderId = orderId;
         }
     }
+
+    @GetMapping("/detail")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getOrderDetails(@RequestParam String orderId) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            OrderVO order = orderService.getOrderDetails(orderId);
+            if (order != null) {
+                response.put("status", "success");
+                response.put("order", order);
+            } else {
+                response.put("status", "not_found");
+                response.put("message", "未找到订单详情！");
+            }
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "获取订单详情失败！");
+        }
+
+        return ResponseEntity.ok(response);
+    }
 }

@@ -6,6 +6,9 @@
     <title>订单管理模块</title>
     <link rel="stylesheet" th:href="@{/css/adminOrder.css}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 确保引入 Bootstrap CSS 和 JS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
 <header>
@@ -22,7 +25,7 @@
     </section>
     <section class="order-list">
         <h2>订单列表</h2>
-        <table>
+        <table class="table">
             <thead>
             <tr>
                 <th>订单编号</th>
@@ -38,12 +41,41 @@
                 <td th:text="${order.orderId}"></td>
                 <td th:text="${order.userId}"></td>
                 <td th:text="'￥' + ${order.totalPrice}"></td>
-                <td th:text="P"></td>
+                <td th:text="${order.status}"></td>
                 <td>
-                    <button class="order-detail-btn">详情</button>
-                    <button class="order-edit-btn">修改</button>
-                    <button class="order-delete-btn" data-id="${order.orderId}">删除</button>
+                    <button class="order-detail-btn" th:data-id="${order.orderId}">详情</button>
+                    <button class="order-edit-btn" th:data-id="${order.orderId}">修改</button>
+                    <button class="order-delete-btn" th:data-id="${order.orderId}">删除</button>
                     <button class="order-ship-btn" th:data-id="${order.orderId}">发货</button>
+                </td>
+            </tr>
+            <!-- 动态生成订单详情部分 -->
+            <tr class="order-details-row" style="display: none;" th:each="order : ${orders}" th:attr="data-order-id=${order.orderId}">
+                <td colspan="5">
+                    <div class="order-details">
+                        <p><strong>订单编号：</strong><span th:text="${order.orderId}"></span></p>
+                        <p><strong>用户账号：</strong><span th:text="${order.userId}"></span></p>
+                        <p><strong>订单金额：</strong><span th:text="'￥' + ${order.totalPrice}"></span></p>
+                        <p><strong>订单状态：</strong><span th:text="${order.status}"></span></p>
+                        <table class="line-items-table">
+                            <thead>
+                            <tr>
+                                <th>商品ID</th>
+                                <th>数量</th>
+                                <th>单价</th>
+                                <th>总价</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${order.lineItems}">
+                                <td th:text="${item.itemId}"></td>
+                                <td th:text="${item.quantity}"></td>
+                                <td th:text="'￥' + ${item.unitPrice}"></td>
+                                <td th:text="'￥' + ${item.total}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </td>
             </tr>
             </tbody>

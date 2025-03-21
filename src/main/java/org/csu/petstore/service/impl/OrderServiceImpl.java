@@ -436,6 +436,37 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderVO getOrderDetails(String orderId) {
+        try {
+            // 查询订单基本信息
+            Order order = orderMapper.selectById(orderId);
+            if (order == null) {
+                return null;
+            }
+
+            // 查询订单的最新状态
+            OrderStatus latestStatus = orderStatusMapper.getLatestStatusByOrderId(orderId);
+            String status = latestStatus != null ? latestStatus.getStatus() : "未知状态";
+
+            // 查询订单项
+            List<LineItemVO> lineItems = lineItemMapper.selectByOrderId(orderId);
+
+            // 封装 OrderVO
+            OrderVO orderVO = new OrderVO();
+            orderVO.setOrderId(order.getOrderId());
+            orderVO.setUserId(order.getUserId());
+            orderVO.setTotalPrice(order.getTotalPrice());
+            orderVO.setStatus(status); // 设置订单状态
+            orderVO.setLineItems(lineItems);
+
+            return orderVO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public Map<String, Object> convertOrderToMap(Order order) {
         if (order == null) {
             throw new IllegalArgumentException("订单对象不能为空！");

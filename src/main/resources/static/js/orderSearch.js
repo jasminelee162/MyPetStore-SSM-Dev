@@ -4,45 +4,60 @@ $(document).ready(function () {
     // 页面初始化，先加载全部订单
     loadAllOrders();
 
-    // 输入框搜索订单
-    $("#order-id").on("keyup", function () {
-        clearTimeout(debounceTimer);
+    // 搜索订单
+    $("#order-search-form").on("submit", function (event) {
+        event.preventDefault();
+        const orderId = $("#order-id").val().trim();
+        if (orderId === "") {
+            loadAllOrders();
+        } else {
+            searchOrders(orderId);
+        }
+    });
 
-        debounceTimer = setTimeout(function () {
-            const orderId = $("#order-id").val().trim();
-            console.log("当前输入：", orderId);
+    // 详情按钮点击事件
+    $(document).on("click", ".order-detail-btn", function () {
+        const orderId = $(this).data("id");
+        console.log("查看订单详情，订单编号：", orderId);
 
-            // 如果输入为空，查询所有订单
-            if (orderId === "") {
-                loadAllOrders();
-                return;
-            }
+        // 找到对应的订单详情行
+        const detailsRow = $(`tr.order-details-row[data-order-id="${orderId}"]`);
+        if (detailsRow.is(":visible")) {
+            // 如果已经显示，隐藏它
+            detailsRow.hide();
+        } else {
+            // 如果未显示，显示它
+            detailsRow.show();
+        }
+    });
 
-            // 正常按输入内容查询
-            $.ajax({
-                url: `/adminOrder/search`,
-                type: "GET",
-                data: { orderId: orderId },
-                success: function (response) {
-                    console.log("后端返回的数据：", response);
+    // 发货按钮点击事件
+    $(document).on("click", ".order-ship-btn", function () {
+        const orderId = $(this).data("id");
+        console.log("发货订单编号：", orderId);
 
-                    if (response.status === "success") {
-                        if (response.orders && response.orders.length > 0) {
-                            renderOrders(response.orders);
-                        } else {
-                            renderNoOrder("订单数据异常！");
-                        }
-                    } else if (response.status === "not_found") {
-                        renderNoOrder(response.message);
-                    } else {
-                        alert("查询出错：" + response.message);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("服务器连接失败！", error);
+        // 发送 POST 请求到后端
+        $.ajax({
+            url: `/adminOrder/ship`,
+            type: "POST",
+            data: JSON.stringify({ orderId: orderId }),
+            contentType: "application/json",
+            success: function (response) {
+                console.log("后端返回的数据：", response);
+
+                if (response.status === "success") {
+                    alert("发货成功！");
+                    // 刷新订单列表
+                    loadAllOrders();
+                } else {
+                    alert("发货失败：" + response.message);
                 }
-            });
-        }, 300);
+            },
+            error: function (xhr, status, error) {
+                console.error("服务器连接失败！", error);
+                alert("服务器连接失败！");
+            }
+        });
     });
 
     // 删除按钮点击事件
@@ -77,35 +92,6 @@ $(document).ready(function () {
         }
     });
 
-    // 发货按钮点击事件
-    $(document).on("click", ".order-ship-btn", function () {
-        const orderId = $(this).data("id");
-        console.log("发货订单编号：", orderId);
-
-        // 发送 POST 请求到后端
-        $.ajax({
-            url: `/adminOrder/ship`,
-            type: "POST",
-            data: JSON.stringify({ orderId: orderId }),
-            contentType: "application/json",
-            success: function (response) {
-                console.log("后端返回的数据：", response);
-
-                if (response.status === "success") {
-                    alert("发货成功！");
-                    // 刷新订单列表
-                    loadAllOrders();
-                } else {
-                    alert("发货失败：" + response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("服务器连接失败！", error);
-                alert("服务器连接失败！");
-            }
-        });
-    });
-
     // 加载全部订单的方法
     function loadAllOrders() {
         console.log("加载全部订单...");
@@ -124,6 +110,33 @@ $(document).ready(function () {
                     }
                 } else {
                     alert("获取全部订单失败：" + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("服务器连接失败！", error);
+            }
+        });
+    }
+
+    // 搜索订单
+    function searchOrders(orderId) {
+        console.log("搜索订单编号：", orderId);
+
+        $.ajax({
+            url: `/adminOrder/search`,
+            type: "GET",
+            data: { orderId: orderId },
+            success: function (response) {
+                console.log("后端返回的搜索结果：", response);
+
+                if (response.status === "success") {
+                    if (response.orders && response.orders.length > 0) {
+                        renderOrders(response.orders);
+                    } else {
+                        renderNoOrder("未找到相关订单！");
+                    }
+                } else {
+                    alert("搜索失败：" + response.message);
                 }
             },
             error: function (xhr, status, error) {
@@ -154,6 +167,36 @@ $(document).ready(function () {
                         <button class="order-edit-btn" data-id="${order.orderId}">修改</button>
                         <button class="order-delete-btn" data-id="${order.orderId}">删除</button>
                         <button class="order-ship-btn" data-id="${order.orderId}">发货</button>
+                    </td>
+                </tr>
+                <tr class="order-details-row" style="display: none;" data-order-id="${order.orderId}">
+                    <td colspan="5">
+                        <div class="order-details">
+                            <p><strong>订单编号：</strong>${order.orderId}</p>
+                            <p><strong>用户账号：</strong>${order.userId}</p>
+                            <p><strong>订单金额：</strong>￥${order.totalPrice}</p>
+                            <p><strong>订单状态：</strong>${order.status}</p>
+                            <table class="line-items-table">
+                                <thead>
+                                <tr>
+                                    <th>商品ID</th>
+                                    <th>数量</th>
+                                    <th>单价</th>
+                                    <th>总价</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                ${order.lineItems.map(item => `
+                                    <tr>
+                                        <td>${item.itemId}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>￥${item.unitPrice}</td>
+                                        <td>￥${item.total}</td>
+                                    </tr>
+                                `).join("")}
+                                </tbody>
+                            </table>
+                        </div>
                     </td>
                 </tr>
             `;
