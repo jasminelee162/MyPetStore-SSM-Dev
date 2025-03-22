@@ -6,7 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/newOrder.css" type="text/css" media="screen"/>
     <link rel="StyleSheet" href="../css/mypetstore.css" type="text/css" media="screen"/>
+    <style>
 
+        .table-container {
+            width:25%;
+            width:200px;margin-top:50px;height:450px;
+        }
+        .left-table{
+            width:200px;
+            margin-left:300px;
+        }
+        .right-table{
+            width:200px;
+            margin-right:300px;
+
+        }
+        table{
+            width:300px;
+            margin-left:-120px;
+            margin-top:15px;margin-bottom:15px;
+        }
+
+
+    </style>
 </head>
 <body>
 
@@ -23,7 +45,7 @@
         <table>
             <tr>
                 <th colspan="2" style="background-color: #1d4886; color: white; padding: 1em; text-align: left;">
-                    Billing Address
+                Billing Address
                 </th>
             </tr>
             <tr><td>First Name:</td><td th:text="${order.billToFirstName}">John</td></tr>
@@ -57,7 +79,7 @@
     </div>
 
     <!-- Confirm Button -->
-    <div style="text-align: center; margin-top: 20px;">
+    <div style="margin-left:668px; margin-top: 560px;">
         <form th:action="@{/order/viewOrder}" method="post">
             <input type="hidden" name="confirmed" value="true"/>
             <button type="submit">Confirmed</button>
@@ -215,7 +237,7 @@
     }
 
 </script>
-<footer th:replace="~{common/bottom}"></footer>
+<!--<footer th:replace="~{common/bottom}"></footer>-->
 
 </body>
 </html>

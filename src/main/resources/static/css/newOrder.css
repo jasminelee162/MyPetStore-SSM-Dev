@@ -15,9 +15,9 @@ canvas {
 }
 .table-container {
     position: absolute;
-    width:400px;
+    width:300px;
     top: 52%;
-    width:30%;
+    width:25%;
     transform: translateY(-50%);
     /*background: rgba(255, 255, 255, 0.8);*/
     padding: 10px 50px 10px 200px;
@@ -47,8 +47,8 @@ footer {
     z-index: 1000;
 }
 .button-container {
-    text-align: center;
-    margin-top: 2em;
+    margin-left:668px;
+    margin-top: 660px;
 }
 h2{
     color:white;
@@ -60,22 +60,49 @@ p{
     text-align:center;
 }
 button {
-    background: linear-gradient(135deg, #18A4A6, #0F2F38);
+    background: linear-gradient(135deg, #2EE6E9, #167C83);
     color: white;
-    padding: 12px 20px;
-    width:100px;
+    padding: 14px 24px;
+    width: 200px;
+    height: 40px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 9px;
+    font-size: 13px;
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    letter-spacing: 1.2px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s;
+    box-shadow: 0px 4px 8px rgba(0, 255, 255, 0.4);
+
+    /* 添加闪烁动画 */
+    animation: flash 1.5s infinite alternate;
 }
 
+/* 悬停时的效果 */
 button:hover {
-    background: linear-gradient(135deg, #0F2F38, #18A4A6);
-    transform: scale(1.05);
+    background: linear-gradient(135deg, #5FFFFF, #1B9DA5);
+    transform: scale(1.07);
+    box-shadow: 0px 8px 14px rgba(0, 255, 255, 0.6);
+    animation: none; /* 悬停时取消闪烁 */
+}
+
+/* 按下时的效果 */
+button:active {
+    transform: scale(0.98);
+    box-shadow: 0px 2px 6px rgba(0, 255, 255, 0.3);
+}
+
+/* 定义闪烁动画 */
+@keyframes flash {
+    0% {
+        opacity: 1;
+        box-shadow: 0px 4px 8px rgba(0, 255, 255, 0.4);
+    }
+    100% {
+        opacity: 0.7;
+        box-shadow: 0px 6px 12px rgba(0, 255, 255, 0.7);
+    }
 }
 h1, h2 {
     /* 文字渐变 */
