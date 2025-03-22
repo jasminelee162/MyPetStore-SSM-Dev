@@ -1,80 +1,118 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
+    background: linear-gradient(135deg, #0F2F38 10%, #000000 40%, #18A4A6 90%);
     text-align: center;
     margin: 0;
     padding: 0;
 }
 
+/* 容器 */
 .container {
     width: 90%;
-    max-width: 800px;
-    background: white;
-    padding: 20px;
-    margin: 50px auto;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 850px;
+    height:800px;
+    /* background: white; */
+    padding: 25px;
+    margin: 60px auto;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s;
 }
 
+.container:hover {
+    transform: scale(1.02);
+}
+
+/* 标题样式 */
 h1 {
-    color: #333;
+    color: #dfe5e9;
     margin-bottom: 20px;
+    font-size: 36px;
+    margin-top: 150px;
+
 }
 
 h2 {
-    color: #444;
+    color: #0277BD;
     margin-top: 20px;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 3px solid #4FC3F7;
     padding-bottom: 5px;
     display: inline-block;
 }
 
+
+/* 统计区域 */
+
 .stats-grid {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    gap: 15px;
     margin-top: 20px;
 }
 
+/* 统计卡片 */
 .stat-item {
-    background: #eaeaea;
-    padding: 15px;
-    border-radius: 10px;
+    background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+    padding: 20px;
+    border-radius: 12px;
     width: 30%;
-    transition: 0.3s;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.stat-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 统计标题 */
 .stat-item h3 {
     font-size: 16px;
     margin-bottom: 10px;
+    color: #01579B;
+}
+
+/* 统计数字 */
+.stat-item .count {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0D47A1;
+    transition: 0.3s ease-in-out;
+}
+
+/* 统计详情 */
+.stat-item .details {
+    font-size: 13px;
     color: #555;
 }
 
-.stat-item .count {
-    font-size: 22px;
-    font-weight: bold;
-    color: #222;
-}
-
-.stat-item .details {
-    font-size: 12px;
-    color: #666;
-}
-
-.orders, .popular {
+/* 订单统计 */
+.orders {
     margin-top: 30px;
+    font-size: 18px;
+    color: #0277BD;
+    font-weight: bold;
 }
 
+/* 订单数字高亮 */
+.orders span {
+    color: #D84315;
+    font-size: 22px;
+}
+
+/* 高亮背景 */
 .highlight {
-    background: #ffcc00;
-    padding: 10px;
-    border-radius: 8px;
+    background: #FFC107;
+    padding: 12px;
+    border-radius: 10px;
     font-weight: bold;
     display: inline-block;
-    margin-top: 10px;
+    margin-top: 15px;
     font-size: 18px;
     color: #222;
 }
 
+/* 响应式布局 */
 @media (max-width: 600px) {
     .stats-grid {
         flex-direction: column;
@@ -82,7 +120,41 @@ h2 {
     }
 
     .stat-item {
-        width: 80%;
+        width: 85%;
         margin: 0 auto;
+    }
+}
+p {
+    color: #ffffff; /* 基础白色 */
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+
+    /* 霓虹发光效果 */
+    text-shadow:
+            0 0 5px #00bfff,
+            0 0 10px #00bfff,
+            0 0 15px #00bfff,
+            0 0 20px #00bfff;
+
+    /* 添加动画，让光线有呼吸效果 */
+    animation: glowEffect 1.5s infinite alternate;
+}
+
+/* 霓虹灯呼吸动画 */
+@keyframes glowEffect {
+    0% {
+        text-shadow:
+                0 0 5px #00bfff,
+                0 0 10px #00bfff,
+                0 0 15px #00bfff,
+                0 0 20px #00bfff;
+    }
+    100% {
+        text-shadow:
+                0 0 10px #00bfff,
+                0 0 20px #00bfff,
+                0 0 30px #00bfff,
+                0 0 40px #00bfff;
     }
 }

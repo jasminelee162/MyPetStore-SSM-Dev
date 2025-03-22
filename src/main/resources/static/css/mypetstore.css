@@ -163,7 +163,7 @@ tr:nth-child(even) td {
 }
 
 a, a:visited, a:link {
-    color: #039;
+    color: #E0F7FA;
 
     text-decoration: none;
     font-family: helvetica, tahoma, arial, verdana, sans-serif;
