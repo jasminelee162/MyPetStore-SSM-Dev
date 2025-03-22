@@ -322,7 +322,6 @@ public class OrderServiceImpl implements OrderService {
             return false;
         }
     }
-
     @Override
     public Order getOrderById(String orderId) {
         try {
@@ -564,6 +563,11 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<LineItem> getLineItemsByOrderId(int orderId) {
+        return lineItemMapper.selectListByOrderId(orderId);
     }
 
 }

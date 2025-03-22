@@ -25,4 +25,11 @@ public interface LineItemMapper extends BaseMapper<LineItem> {
     // 插入新的订单明细
     @Insert("INSERT INTO lineitem (orderid, linenum, itemid, quantity, unitprice) VALUES (#{orderId}, #{linenum}, #{itemId}, #{quantity}, #{unitprice})")
     int insertLineItem(@Param("orderId") Integer orderId, @Param("linenum") Integer linenum, @Param("itemId") String itemId, @Param("quantity") Integer quantity, @Param("unitprice") BigDecimal unitprice);
+
+    @Update("UPDATE lineitem SET quantity = #{quantity}, unitprice = #{unitprice} WHERE orderid = #{orderId} AND itemid = #{itemId}")
+    int updateQuantityAndPrice(@Param("orderId") Integer orderId,
+                               @Param("itemId") String itemId,
+                               @Param("quantity") Integer quantity,
+                               @Param("unitprice") BigDecimal unitprice);
+
 }

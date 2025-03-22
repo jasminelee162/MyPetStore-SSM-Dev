@@ -249,9 +249,14 @@ public class AdminOrderController {
 
         try {
             Order order = orderService.getOrderById(orderId);
+
             if (order != null) {
+                // 查询订单明细
+                List<LineItem> lineItems = orderService.getLineItemsByOrderId(Integer.parseInt(orderId));
+
                 response.put("status", "success");
                 response.put("order", order);
+                response.put("lineItems", lineItems);  // <<< 加了这个
             } else {
                 response.put("status", "not_found");
                 response.put("message", "订单未找到");
@@ -263,4 +268,5 @@ public class AdminOrderController {
 
         return ResponseEntity.ok(response);
     }
+
 }

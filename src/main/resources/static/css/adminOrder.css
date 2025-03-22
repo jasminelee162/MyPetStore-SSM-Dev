@@ -224,3 +224,46 @@ footer {
     color: #aaaaaa;
     border-top: 2px solid #00aaff;
 }
+
+#edit-line-items input[type="number"] {
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    appearance: none;
+
+    display: inline-block;
+    vertical-align: middle;  /* 垂直对齐文字 */
+
+    width: 60px;             /* 可以调宽 */
+    height: 30px;            /* 重点！调高度 */
+
+    padding: 2px 8px;        /* 适配行高 */
+    margin: 0;               /* 去掉默认 margin */
+
+    font-size: 14px;
+    line-height: 1.5;        /* 让字体更居中 */
+
+    border: 1px solid #ccc;
+    border-radius: 6px;      /* 圆角更柔和 */
+    background-color: #fff;
+
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#edit-line-items input[type="number"]:focus {
+    border-color: #66afe9;
+    box-shadow: 0 0 6px rgba(102, 175, 233, 0.6);
+
+}
+
+#edit-line-items input[type="number"]::-webkit-inner-spin-button,
+#edit-line-items input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+#edit-line-items td:nth-child(2) {
+    text-align: center;  /* 水平居中 */
+    vertical-align: middle;
+    padding:8px;        /* 可微调 */
+}

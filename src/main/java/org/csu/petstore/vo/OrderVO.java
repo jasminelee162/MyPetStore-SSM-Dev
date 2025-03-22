@@ -27,7 +27,7 @@ public class OrderVO {
     private String billZip;
     private String billCountry;
     private String courier;
-    private String totalPrice;
+        private String totalPrice;
     private String billToFirstName;
     private String billToLastName;
     private String shipToFirstName;

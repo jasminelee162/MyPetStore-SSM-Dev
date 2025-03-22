@@ -24,7 +24,7 @@ $(document).ready(function () {
     });
 
     /**
-     * 表单提交方式搜索（如果保留需要的表单）
+     * 表单提交方式搜索
      */
     $("#order-search-form").on("submit", function (event) {
         event.preventDefault();
@@ -35,22 +35,6 @@ $(document).ready(function () {
         } else {
             searchOrders(orderId);
         }
-    });
-
-    /**
-     * 点击详情按钮，展开 / 折叠订单详情行
-     */
-    $(document).on("click", ".order-detail-btn", function () {
-        const orderId = $(this).data("id");
-        console.log("查看订单详情，订单编号：", orderId);
-
-        const detailsRow = $(`tr.order-details-row[data-order-id="${orderId}"]`);
-        if (detailsRow.length === 0) {
-            alert("未找到详情行！");
-            return;
-        }
-
-        detailsRow.toggle();
     });
 
     /**
@@ -193,7 +177,7 @@ $(document).ready(function () {
                     <td>${order.status || '未知状态'}</td>
                     <td>
                         <button class="order-detail-btn" data-id="${order.orderId}">详情</button>
-                        <button class="order-edit-btn" data-id="${order.orderId}" data-toggle="modal" data-target="#editOrderModal">修改</button>
+                        <button class="order-edit-btn" data-id="${order.orderId}">修改</button>
                         <button class="order-delete-btn" data-id="${order.orderId}">删除</button>
                         <button class="order-ship-btn" data-id="${order.orderId}">发货</button>
                     </td>
@@ -249,63 +233,7 @@ $(document).ready(function () {
     }
 
     /**
-     * 点击修改按钮
-     */
-    $(document).on("click", ".order-edit-btn", function () {
-        const orderId = $(this).data("id");
-        console.log("修改订单编号：", orderId);
-
-        // 获取当前订单信息
-        $.ajax({
-            url: `/adminOrder/getOrderById`,
-            type: "GET",
-            data: { orderId: orderId },
-            success: function (response) {
-                console.log("获取订单信息：", response);
-
-                if (response.status === "success" && response.order) {
-                    const order = response.order;
-
-                    // 填充表单数据
-                    $("#edit-order-id").val(order.orderId);
-                    $("#edit-user-id").val(order.userId);
-                    $("#edit-total-price").val(order.totalPrice);
-                    $("#edit-status").val(order.status);
-
-                    // 清空订单明细表格
-                    $("#edit-line-items tbody").empty();
-
-                    // 填充订单明细数据
-                    if (order.lineItems && order.lineItems.length > 0) {
-                        order.lineItems.forEach(item => {
-                            const row = `
-                                <tr>
-                                    <td>${item.itemId}</td>
-                                    <td><input type="number" class="line-item-quantity" data-item-id="${item.itemId}" value="${item.quantity}" min="1" /></td>
-                                    <td>${item.unitPrice}</td>
-                                </tr>
-                            `;
-                            $("#edit-line-items tbody").append(row);
-                        });
-                    } else {
-                        console.warn("订单明细数据为空");
-                    }
-
-                    // 显示模态框
-                    $('#editOrderModal').modal('show');
-                } else {
-                    alert("获取订单信息失败：" + response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("获取订单信息失败！", error);
-                alert("服务器连接失败！");
-            }
-        });
-    });
-
-    /**
-     * 保存修改
+     * 保存修改（只提交基本信息，不提交明细）
      */
     $("#save-edit").click(function () {
         const orderId = $("#edit-order-id").val();
@@ -313,14 +241,24 @@ $(document).ready(function () {
         const totalPrice = $("#edit-total-price").val();
         const status = $("#edit-status").val();
 
-        // 收集订单明细数据
+        // 采集明细
         const lineItems = [];
         $("#edit-line-items tbody tr").each(function () {
-            const itemId = $(this).find("td:nth-child(1)").text();
-            const quantity = $(this).find(".line-item-quantity").val();
+            const tds = $(this).find("td");
+
+            // 防止“暂无商品信息”的空行
+            if (tds.length < 3) {
+                return true; // 等于 continue
+            }
+
+            const itemId = tds.eq(0).text().trim();
+            const quantity = parseInt(tds.eq(1).text().trim(), 10);
+            const unitPrice = parseFloat(tds.eq(2).text().replace("￥", "").trim());
+
             lineItems.push({
                 itemId: itemId,
-                quantity: parseInt(quantity, 10)
+                quantity: quantity,
+                unitPrice: unitPrice
             });
         });
 
@@ -363,4 +301,87 @@ $(document).ready(function () {
     $("#cancel-edit").click(function () {
         $('#editOrderModal').modal('hide');
     });
+
+    /**
+     * 点击详情按钮，展开 / 折叠订单详情行
+     */
+    $(document).on("click", ".order-detail-btn", function () {
+        const orderId = $(this).data("id");
+        console.log("查看订单详情，订单编号：", orderId);
+
+        const detailsRow = $(`tr.order-details-row[data-order-id="${orderId}"]`);
+        if (detailsRow.length === 0) {
+            alert("未找到详情行！");
+            return;
+        }
+
+        detailsRow.toggle();
+    });
+
+    /**
+     * 点击修改按钮，打开模态框，加载订单信息（静态展示明细）
+     */
+    $(document).on("click", ".order-edit-btn", function () {
+        const orderId = $(this).data("id");
+        console.log("点击修改，订单ID：", orderId);
+
+        // 发起获取订单详细信息的请求
+        $.ajax({
+            url: `/adminOrder/getOrderById`,
+            type: "GET",
+            data: { orderId: orderId },
+            success: function (response) {
+                console.log("返回的订单数据：", response);
+
+                // 判断接口返回是否成功，并且包含订单数据
+                if (response.status === "success" && response.order) {
+
+                    const order = response.order;
+                    const lineItems = response.lineItems || [];
+
+                    // 设置基础信息到表单
+                    $("#edit-order-id").val(order.orderId);
+                    $("#edit-user-id").val(order.userId);
+                    $("#edit-total-price").val(order.totalPrice);
+                    $("#edit-status").val(order.status);
+
+                    // 渲染静态订单明细
+                    const tbody = $("#edit-line-items tbody");
+                    tbody.empty(); // 清空之前的数据
+
+                    if (lineItems.length > 0) {
+                        lineItems.forEach(item => {
+                            const row = `
+                            <tr>
+                                <td>${item.itemid ?? '未知商品ID'}</td>
+                                <td>${item.quantity ?? 0}</td>
+                                <td>￥${item.unitprice ?? 0}</td>
+                            </tr>
+                        `;
+                            tbody.append(row);
+                        });
+                    } else {
+                        const emptyRow = `
+                        <tr>
+                            <td colspan="3" style="text-align: center;">暂无商品信息</td>
+                        </tr>
+                    `;
+                        tbody.append(emptyRow);
+                    }
+
+                    // 打开编辑模态框
+                    $('#editOrderModal').modal('show');
+
+                } else {
+                    alert("获取订单信息失败：" + (response.message || "未知错误"));
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("获取订单信息失败！", error);
+                alert("服务器连接失败！");
+            }
+        });
+    });
+
+
 });

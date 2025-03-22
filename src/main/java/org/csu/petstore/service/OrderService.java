@@ -54,4 +54,8 @@ public interface OrderService {
     Map<String, Object> convertOrderToMap(Order order);
 
     boolean deleteOrder(String orderId);
+
+
+    List<LineItem> getLineItemsByOrderId(int orderId);
+
 }
