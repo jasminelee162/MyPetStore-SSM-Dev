@@ -1,22 +1,23 @@
 /* 页面背景 */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(180deg, #1E4D6D 0%, #000000 40%, #000000 60%, #18A4A6 100%);
-    color: white;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    background-size: 400% 400%; /* 增加背景的流动效果 */
-    animation: gradientAnimation 15s ease infinite; /* 渐变背景动画 */
-    cursor: none; /* 隐藏默认光标 */
+    background: linear-gradient(45deg, #1B3C59, #18A4A6 100%, #2a5298, #000000);
+    background-size: 400% 400%;
+    animation: gradientFlow 12s ease infinite;
+    min-height: 100vh;
+    position: relative;
+    color: #fff;
 }
 
 /* 渐变背景动画 */
-@keyframes gradientAnimation {
+@keyframes gradientFlow {
     0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    25% { background-position: 100% 50%; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0% 100%; }
     100% { background-position: 0% 50%; }
 }
+
 
 h1 {
     text-align: center;
