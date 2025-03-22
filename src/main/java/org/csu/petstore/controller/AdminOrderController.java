@@ -2,6 +2,7 @@ package org.csu.petstore.controller;
 
 import org.csu.petstore.entity.LineItem;
 import org.csu.petstore.entity.Order;
+import org.csu.petstore.entity.OrderStatus;
 import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -257,22 +258,25 @@ public class AdminOrderController {
         try {
             // 1. 获取订单主信息
             Order order = orderService.getOrderById(orderId);
+            //OrderStatus orderStatus = orderService.
 
             if (order != null) {
                 // 2. 获取订单明细（子项）
                 List<LineItem> lineItems = orderService.getLineItemsByOrderId(orderId);
+
 
                 // 3. 构建返回数据
                 Map<String, Object> orderData = new HashMap<>();
                 orderData.put("orderId", order.getOrderId());
                 orderData.put("userId", order.getUserId());
                 orderData.put("totalPrice", order.getTotalPrice());
-//                orderData.put("status", order.getStatus());
+                orderData.put("status", "");
                 orderData.put("lineItems", lineItems);  // 加入子订单明细
 
                 // 4. 封装统一响应结构
                 response.put("status", "success");
                 response.put("order", orderData);
+
 
             } else {
                 response.put("status", "not_found");

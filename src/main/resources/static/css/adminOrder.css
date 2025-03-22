@@ -1,32 +1,43 @@
 body {
-    background: linear-gradient(45deg, #1B3C59, #18A4A6 100%, #2a5298, #1e3c72);
+    background: linear-gradient(45deg, #1B3C59, #137A7F, #2a5298, #1e3c72);
     background-size: 400% 400%;
     animation: gradientFlow 12s ease infinite;
     min-height: 100vh;
+
     position: relative;
     color: #fff;
 }
-
 h1 {
+    /* 文字渐变 */
     background: linear-gradient(45deg, #00E5FF, #00C853);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
+    /* 呼吸光效 */
     animation: glowingText 2s infinite alternate;
 
-    padding: 12px 24px;
-    border-radius: 15px;
-    backdrop-filter: blur(15px);
+    /* 玻璃拟态风格 */
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+
+    /* 其他基本样式 */
     text-align: center;
-    margin-bottom: 30px;
-    font-size: 3rem;
+    margin-bottom: 20px;
+    /* margin-left:100px; */
+    font-size: 2.5rem;
     font-weight: bold;
+    text-transform: uppercase;
     letter-spacing: 2px;
+    /* display: inline-block; */
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 97%;
 }
-
+/* 背景动态渐变效果 */
 @keyframes gradientFlow {
     0% { background-position: 0% 50%; }
     25% { background-position: 100% 50%; }
@@ -35,6 +46,7 @@ h1 {
     100% { background-position: 0% 50%; }
 }
 
+/* 添加光影层 */
 body::after {
     content: '';
     position: absolute;
@@ -45,45 +57,46 @@ body::after {
     z-index: -1;
 }
 
+
+/* 顶部标题 */
 header {
+
     padding: 20px;
     text-align: center;
     font-size: 28px;
     font-weight: bold;
     letter-spacing: 2px;
     text-transform: uppercase;
+
     border-bottom: 2px solid #00aaff;
     background: linear-gradient(to right, #1E4D6D 10%, #000000 50%, #000000 60%, #1E4D6D 100%);
     color: white;
+
+
+
+
+    border-bottom: 3px solid #0E6655;
     box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.3);
 }
 
+/* 主体布局 */
 main {
     width: 80%;
     margin: 30px auto;
-    padding: 30px;
-
-
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-
-    background: linear-gradient(135deg, #0F2F38 10%, #000000 40%, #18A4A6 90%);
-    min-height: 100vh;
-    font-family: "Arial", sans-serif;
-    color: #E0F7FA;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-    /* border-radius: 10px; */
-    position: relative;
+    padding: 20px;
+    background: rgba(30, 30, 30, 0.6);
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px rgba(0, 170, 255, 0.3);
+    backdrop-filter: blur(10px);
 }
 
+/* 订单查询 */
 .order-search {
     padding: 20px;
-    background: rgba(40, 50, 40, 0.7);
-    background: linear-gradient(135deg, rgba(40, 50, 40, 0.8), #18A4A6 100%);
+    background: rgba(50, 50, 50, 0.7);
     border-radius: 10px;
-    box-shadow: inset 0px 0px 25px rgba(0, 170, 255, 0.5);
+    box-shadow: inset 0px 0px 12px rgba(0, 170, 255, 0.3);
     margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .order-search h2 {
@@ -93,20 +106,20 @@ main {
 
 .order-search input {
     width: 250px;
-    padding: 12px;
+    padding: 10px;
     border: none;
     border-radius: 8px;
     outline: none;
-    background:#18A4A6 100%;
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
     font-size: 16px;
 }
 
 .order-search button {
-    background: #18A4A6 100%;
+    background: #00aaff;
     border: none;
     color: white;
-    padding: 12px 25px;
+    padding: 10px 20px;
     font-size: 16px;
     border-radius: 8px;
     cursor: pointer;
@@ -115,11 +128,12 @@ main {
 
 .order-search button:hover {
     background: #0088cc;
-    box-shadow: 0px 0px 15px #00aaff;
+    box-shadow: 0px 0px 10px #00aaff;
 }
 
+/* 订单列表 */
 .order-list h2 {
-    color: #18A4A6;
+    color: #00aaff;
     text-align: center;
     margin-bottom: 10px;
 }
@@ -128,7 +142,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     background: rgba(60, 64, 67, 0.52);
-    box-shadow: 0px 4px 15px rgba(0, 170, 255, 0.3);
+    box-shadow: 0px 4px 12px rgba(0, 170, 255, 0.2);
     border-radius: 10px;
     overflow: hidden;
 }
@@ -139,7 +153,7 @@ thead {
 }
 
 th, td {
-    padding: 15px;
+    padding: 12px;
     text-align: center;
 }
 
@@ -152,11 +166,12 @@ tbody tr:hover {
     background: rgba(0, 170, 255, 0.2);
 }
 
+/* 按钮组 */
 .order-detail-btn,
 .order-edit-btn,
 .order-delete-btn,
 .order-ship-btn {
-    padding: 12px 18px;
+    padding: 8px 12px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
@@ -185,21 +200,22 @@ tbody tr:hover {
 }
 
 .order-detail-btn:hover {
-    box-shadow: 0px 0px 15px #00ccff;
+    box-shadow: 0px 0px 10px #00ccff;
 }
 
 .order-edit-btn:hover {
-    box-shadow: 0px 0px 15px #4aa3ff;
+    box-shadow: 0px 0px 10px #4aa3ff;
 }
 
 .order-delete-btn:hover {
-    box-shadow: 0px 0px 15px #29f1ff;
+    box-shadow: 0px 0px 10px #29f1ff;
 }
 
 .order-ship-btn:hover {
-    box-shadow: 0px 0px 15px #4689ff;
+    box-shadow: 0px 0px 10px #4689ff;
 }
 
+/* 页脚 */
 footer {
     text-align: center;
     padding: 15px;
@@ -209,21 +225,28 @@ footer {
     border-top: 2px solid #00aaff;
 }
 
+
 #edit-line-items input[type="number"] {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     appearance: none;
-    display: inline-block;
 
-    width: 60px;
-    height: 30px;
-    padding: 2px 8px;
-    margin: 0;
+    display: inline-block;
+    vertical-align: middle;  /* 垂直对齐文字 */
+
+    width: 60px;             /* 可以调宽 */
+    height: 30px;            /* 重点！调高度 */
+
+    padding: 2px 8px;        /* 适配行高 */
+    margin: 0;               /* 去掉默认 margin */
+
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.5;        /* 让字体更居中 */
+
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 6px;      /* 圆角更柔和 */
     background-color: #fff;
+
     text-align: center;
     outline: none;
     transition: border-color 0.3s, box-shadow 0.3s;
@@ -232,192 +255,46 @@ footer {
 #edit-line-items input[type="number"]:focus {
     border-color: #66afe9;
     box-shadow: 0 0 6px rgba(102, 175, 233, 0.6);
+
+}
+
+#edit-line-items input[type="number"]::-webkit-inner-spin-button,
+#edit-line-items input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
 }
 
 #edit-line-items td:nth-child(2) {
-    text-align: center;
+    text-align: center; /* 水平居中 */
     vertical-align: middle;
-    padding: 8px;
+    padding: 8px; /* 可微调 */
+= = = = = = = . line-item-quantity {
+    width: 60px; /* 输入框宽度 */
+    padding: 5px 10px; /* 内边距，增大点击区域 */
+    font-size: 14px; /* 字体大小统一 */
+    border: 1px solid #ccc; /* 边框柔和一点 */
+    border-radius: 6px; /* 圆角更现代 */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 内阴影 */
+    outline: none; /* 聚焦时不显示默认轮廓 */
+    transition: border-color 0.3s, box-shadow 0.3s; /* 动效 */
 }
 
-.line-item-quantity {
-    width: 100px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    color: #4caf50;
-}
+    /* 鼠标悬浮或点击时的效果 */
 
-#order-list .order-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-}
+    .line-item-quantity:hover,
+    .line-item-quantity:focus {
+        border-color: #409eff; /* 蓝色边框 */
+        box-shadow: 0 0 5px rgba(64, 158, 255, 0.3); /* 浅蓝光晕 */
+    }
 
-#order-list .order-actions button {
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-}
+    /* 去除 Chrome、Firefox 等浏览器自带的上下箭头 */
 
-#order-list .order-actions button:hover {
-    background: #00796b;
-    box-shadow: 0 0 15px #00b8a9;
-}
-/* 基本字体设置 */
-body {
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    letter-spacing: 0.5px;
-    color: #fff;
-}
+    .line-item-quantity::-webkit-outer-spin-button,
+    .line-item-quantity::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 
-/* 标题 */
-h1, h2, h3 {
-    font-family: 'Poppins', sans-serif;
-    font-weight: bold;
-    letter-spacing: 1px;
-    color: #fff;
+    .line-item-quantity[type=number] {
+        -moz-appearance: textfield; /* Firefox */
+    }
 }
-
-h1 {
-    font-size: 3rem; /* 大标题 */
-    line-height: 1.2;
-    margin-bottom: 20px;
-}
-
-h2 {
-    font-size: 2rem; /* 中标题 */
-    margin-bottom: 15px;
-}
-
-h3 {
-    font-size: 1.5rem; /* 小标题 */
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-/* 正文 */
-p, span, li {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    line-height: 1.8;
-    letter-spacing: 0.2px;
-    color: #ddd;
-}
-
-a {
-    color:#18A4A6 ;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-a:hover {
-    color: #18A4A6 ;
-}
-
-/* 表格样式 */
-table {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    line-height: 1.6;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #444;
-    color: #fff;
-}
-
-thead {
-    background: linear-gradient(to right, #1E4D6D 10%, #000000 50%, #000000 60%, #4a97d1 100%);
-}
-
-tbody tr:hover {
-    background: rgba(0, 170, 255, 0.1);
-}
-
-/* 按钮样式 */
-button {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    font-size: 1rem;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-button:hover {
-    background-color: #0088cc;
-    box-shadow: 0px 4px 10px rgba(0, 170, 255, 0.4);
-}
-
-/* 输入框样式 */
-input[type="text"],
-input[type="number"],
-select {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    padding: 12px;
-    border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border: 1px solid #444;
-    outline: none;
-    transition: border 0.3s, box-shadow 0.3s;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus,
-select:focus {
-    border: 1px solid #00aaff;
-    box-shadow: 0px 0px 8px rgba(0, 170, 255, 0.5);
-}
-
-/* 额外的样式调整 */
-footer {
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-    text-align: center;
-    padding: 15px;
-    color: #aaa;
-    letter-spacing: 0.5px;
-}
-
-.order-search input {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    padding: 12px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 16px;
-}
-
-.order-search button {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    font-size: 1rem;
-    padding: 12px 25px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.order-list td, .order-list th {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    text-align: center;
-    padding: 12px;
-}
-
-/* 自定义字体样式 */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto:wght@400;500&display=swap');
