@@ -1,0 +1,195 @@
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1); /* 玻璃拟态背景 */
+    backdrop-filter: blur(10px);
+    color: #E0F7FA;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: inset 0 0 8px rgba(24, 164, 166, 0.5);
+}
+
+/* 输入框聚焦时的效果 */
+input:focus, select:focus {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
+    transform: scale(1.05);
+}
+
+/* 占位符颜色 */
+input::placeholder {
+    color: #B2DFDB;
+}
+
+/* 让输入框边缘带渐变动画 */
+@keyframes inputBorderGlow {
+    0% { box-shadow: inset 0 0 5px rgba(0, 229, 255, 0.5); }
+    50% { box-shadow: inset 0 0 10px rgba(24, 164, 166, 0.8); }
+    100% { box-shadow: inset 0 0 5px rgba(0, 229, 255, 0.5); }
+}
+
+input, select {
+    animation: inputBorderGlow 3s infinite alternate;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0F2F38 10%, #000000 40%, #18A4A6 90%);
+    margin: 0;
+    padding: 20px;
+}
+h1, h2 {
+    /* 文字渐变 */
+    background: linear-gradient(45deg, #00E5FF, #00C853);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* 呼吸光效 */
+    animation: glowingText 2s infinite alternate;
+
+    /* 玻璃拟态风格 */
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    /*border: 1px solid rgba(255, 255, 255, 0.2);*/
+
+    /* 其他基本样式 */
+    text-align: center;
+    margin-bottom: 20px;
+    /* margin-left:100px; */
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    /* display: inline-block; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 97%;
+}
+.registration-form {
+    max-width: 600px;
+    /*background: #fff;*/
+    padding: 20px;
+    margin: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+fieldset {
+    border: none;
+    margin-bottom: 15px;
+}
+legend {
+    font-weight: bold;
+    color: #ffffff;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+table {
+    width: 100%;
+}
+td {
+    padding: 10px;
+}
+input, select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.form-actions {
+    text-align: center;
+}
+button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+button:hover {
+    background-color: #218838;
+}
+.error {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #007bff;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+label{
+    color:#E0F7FA;
+}
+@keyframes borderAnimation {
+    0% {
+        border-color: #38ef7d;
+    }
+    50% {
+        border-color: #18A4A6;
+    }
+    100% {
+        border-color: #38ef7d;
+    }
+}
+
+form {
+    /*margin-top: 10px;*/
+    margin-left: 65px;
+    width: 90%;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    animation: borderAnimation 3s infinite ease-in-out;
+}
+button:not(.status-button.red-button):not(.status-button.green-button)  {
+    width:150px;
+    background: linear-gradient(135deg, #18A4A6, #0F2F38);
+    color: white;
+    border: none;
+    padding: 8px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-left:40px;
+    margin-right:40px;
+    margin-bottom:10px;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #0F2F38, #18A4A6);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+.back {
+    display: flex; /* 让子元素并排 */
+    margin-left:773px;
+    gap: 20px; /* 按钮之间的间距 */
+    margin-top: 25px;
+}
+.back a {
+    margin-top:5px;
+    margin-bottom:5px;
+    width:150px;
+    display: inline-block;
+    background: linear-gradient(135deg, #18A4A6, #0F2F38);
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* 按钮阴影，增加立体感 */
+}

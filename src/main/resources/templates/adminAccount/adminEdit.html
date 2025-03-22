@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>编辑商家账户信息</title>
-  <link rel="StyleSheet" href="/css/account.css" type="text/css" media="screen"/>
+  <link rel="StyleSheet" href="/css/edit.css" type="text/css" media="screen"/>
 
 </head>
 <body>
 
 <!--<header th:replace="~{common/top}"></header>-->
-<h2>编辑账户信息</h2>
+<h2>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp编辑账户信息</h2>
 <div class="registration-form" id="registration-form">
   <form th:action="@{/adminAccount/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
 
@@ -88,7 +88,9 @@
   <!-- 错误信息显示 -->
   <div class="error" th:text="${error}"></div>
 </div>
+<div class="back">
 <a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
+</div>
 <footer th:replace="common/bottom"></footer>
 </body>
 
