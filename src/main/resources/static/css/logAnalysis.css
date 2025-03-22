@@ -158,3 +158,23 @@ p {
                 0 0 40px #00bfff;
     }
 }
+.back {
+    display: flex; /* 让子元素并排 */
+    justify-content: center; /* 居中对齐 */
+    gap: 20px; /* 按钮之间的间距 */
+    margin-top: 25px;
+}
+.back a {
+    margin-top:5px;
+    margin-bottom:5px;
+    width:150px;
+    display: inline-block;
+    background: linear-gradient(135deg, #18A4A6, #0F2F38);
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* 按钮阴影，增加立体感 */
+}
