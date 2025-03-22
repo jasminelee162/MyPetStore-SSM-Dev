@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户信息总览</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/adminShowAccount.css}" />
 </head>
 <body>
 <h1>用户信息总览</h1>
@@ -15,6 +16,7 @@
         <th>Password</th>
         <th>Email</th>
         <th>操作</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -96,7 +98,13 @@
             }
         });
     }
-
+    document.addEventListener('mousemove', (e) => {
+                                                   const cursor = document.querySelector('.cursor');
+                                                  const mouseX = e.clientX;
+                                                    const mouseY = e.clientY;
+                                                    cursor.style.left = `${mouseX}px`;
+                                                   cursor.style.top = `${mouseY}px`;
+                                          });
 
 
 </script>

@@ -64,13 +64,10 @@ nav {
     padding: 20px;
     --text: rgb(255, 255, 255);
 
-
-
-
-
     margin-left: 300px;
     position:relative;
     z-index:2;
+
 
 }
 
@@ -127,7 +124,7 @@ nav a {
 .moudle{
     display:flex;
     width: 1500px;
-    height: 800px; filter: drop-shadow(10px 30px 20px #cccccc);margin-left: 500px;
+    height: 800px; filter: drop-shadow(10px 30px 20px #cccccc);margin-left: 100px;
 }
 
 
