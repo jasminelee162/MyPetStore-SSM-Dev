@@ -225,6 +225,7 @@ footer {
     border-top: 2px solid #00aaff;
 }
 
+
 #edit-line-items input[type="number"] {
     -moz-appearance: textfield;
     -webkit-appearance: none;
@@ -263,7 +264,37 @@ footer {
 }
 
 #edit-line-items td:nth-child(2) {
-    text-align: center;  /* 水平居中 */
+    text-align: center; /* 水平居中 */
     vertical-align: middle;
-    padding:8px;        /* 可微调 */
+    padding: 8px; /* 可微调 */
+= = = = = = = . line-item-quantity {
+    width: 60px; /* 输入框宽度 */
+    padding: 5px 10px; /* 内边距，增大点击区域 */
+    font-size: 14px; /* 字体大小统一 */
+    border: 1px solid #ccc; /* 边框柔和一点 */
+    border-radius: 6px; /* 圆角更现代 */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 内阴影 */
+    outline: none; /* 聚焦时不显示默认轮廓 */
+    transition: border-color 0.3s, box-shadow 0.3s; /* 动效 */
+}
+
+    /* 鼠标悬浮或点击时的效果 */
+
+    .line-item-quantity:hover,
+    .line-item-quantity:focus {
+        border-color: #409eff; /* 蓝色边框 */
+        box-shadow: 0 0 5px rgba(64, 158, 255, 0.3); /* 浅蓝光晕 */
+    }
+
+    /* 去除 Chrome、Firefox 等浏览器自带的上下箭头 */
+
+    .line-item-quantity::-webkit-outer-spin-button,
+    .line-item-quantity::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .line-item-quantity[type=number] {
+        -moz-appearance: textfield; /* Firefox */
+    }
 }

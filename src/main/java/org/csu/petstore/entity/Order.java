@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.List;
+
 
 @Data
 @TableName("orders")
@@ -59,6 +61,4 @@ public class Order {
     private String cardType;
     @TableField(value = "locale")
     private String locale;
-
-
 }

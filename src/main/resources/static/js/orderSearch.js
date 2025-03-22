@@ -233,7 +233,111 @@ $(document).ready(function () {
     }
 
     /**
+<<<<<<< Updated upstream
      * 保存修改（只提交基本信息，不提交明细）
+=======
+     * 点击修改按钮
+     */
+    $(document).on("click", ".order-edit-btn", function () {
+        const orderId = $(this).data("id");
+        console.log("修改订单编号：", orderId);
+
+        const editBtn = $(this); // 记录一下按钮，避免回调作用域问题
+
+        $.ajax({
+            url: `/adminOrder/getOrderById`,
+            type: "GET",
+            data: { orderId: orderId },
+            success: function (response) {
+                console.log("获取订单信息：", response);
+
+                if (response.status === "success" && response.order) {
+                    const order = response.order;
+
+                    // 填充表单
+                    $("#edit-order-id").val(order.orderId);
+                    $("#edit-user-id").val(order.userId);
+                    $("#edit-total-price").val(order.totalPrice);
+                    $("#edit-status").val(order.status);
+
+                    // 填充订单明细
+                    $("#edit-line-items tbody").empty();
+
+                    if (order.lineItems && order.lineItems.length > 0) {
+                        order.lineItems.forEach(item => {
+                            const row = `
+                            <tr>
+                                <td>${item.itemid}</td>
+                                <td><input type="number" class="line-item-quantity" data-item-id="${item.itemid}" value="${item.quantity}" min="1" /></td>
+                                <td>${item.unitprice}</td>
+                            </tr>
+                        `;
+                            $("#edit-line-items tbody").append(row);
+                        });
+                    }
+
+                    // 👉 自动渲染详情行（新增部分）
+                    let detailsRow = $(`tr.order-details-row[data-order-id="${orderId}"]`);
+
+                    if (detailsRow.length === 0) {
+                        const newDetailsRow = `
+                        <tr class="order-details-row" data-order-id="${orderId}">
+                            <td colspan="5">
+                                <div class="order-details">
+                                    <table class="line-items-table">
+                                        <thead>
+                                            <tr>
+                                                <th>商品ID</th>
+                                                <th>数量</th>
+                                                <th>单价</th>
+                                                <th>总价</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${order.lineItems && order.lineItems.length > 0
+                            ? order.lineItems.map(item => `
+                                                    <tr>
+                                                        <td>${item.itemid}</td>
+                                                        <td>${item.quantity}</td>
+                                                        <td>￥${item.unitprice}</td>
+                                                        <td>￥${item.total}</td>
+                                                    </tr>
+                                                `).join("")
+                            : `<tr><td colspan="4" style="text-align: center;">暂无商品信息</td></tr>`}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+
+                        const currentRow = editBtn.closest("tr");
+                        currentRow.after(newDetailsRow);
+
+                        detailsRow = $(`tr.order-details-row[data-order-id="${orderId}"]`);
+                    }
+
+                    // 确保详情行显示
+                    detailsRow.show();
+
+                    //  显示模态框
+                    $('#editOrderModal').modal('show');
+
+                } else {
+                    alert("获取订单信息失败：" + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("获取订单信息失败！", error);
+                alert("服务器连接失败！");
+            }
+        });
+    });
+
+
+    /**
+     * 保存修改
+>>>>>>> Stashed changes
      */
     $("#save-edit").click(function () {
         const orderId = $("#edit-order-id").val();
@@ -244,30 +348,24 @@ $(document).ready(function () {
         // 采集明细
         const lineItems = [];
         $("#edit-line-items tbody tr").each(function () {
-            const tds = $(this).find("td");
 
-            // 防止“暂无商品信息”的空行
-            if (tds.length < 3) {
-                return true; // 等于 continue
-            }
-
-            const itemId = tds.eq(0).text().trim();
-            const quantity = parseInt(tds.eq(1).text().trim(), 10);
-            const unitPrice = parseFloat(tds.eq(2).text().replace("￥", "").trim());
+            const itemid = $(this).find("td:nth-child(1)").text();  //  小写
+            const quantity = $(this).find(".line-item-quantity").val();
+            const unitprice = $(this).find(".line-item-unitprice").val();
 
             lineItems.push({
-                itemId: itemId,
-                quantity: quantity,
-                unitPrice: unitPrice
+                itemid: itemid,                           //  必须小写
+                quantity: parseInt(quantity, 10),        //  数值
+                unitprice: parseFloat(unitprice)         //  单价
+
             });
         });
-
         const orderData = {
             orderId: orderId,
             userId: userId,
             totalPrice: totalPrice,
             status: status,
-            lineItems: lineItems
+            lineItems: lineItems,
         };
 
         console.log("提交修改订单数据：", orderData);

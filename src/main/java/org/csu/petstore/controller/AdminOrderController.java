@@ -174,18 +174,25 @@ public class AdminOrderController {
             String status = request.getStatus();
             List<LineItem> lineItems = request.getLineItems();
 
+            System.out.println("接收到的 orderId = " + orderId);
+            System.out.println("接收到的 userId = " + userId);
+            System.out.println("接收到的 totalPrice = " + totalPrice);
+            System.out.println("接收到的 status = " + status);
+            System.out.println("接收到的 lineItems = " + lineItems);
+
             Integer orderIntId = Integer.valueOf(orderId);
 
-            boolean success = orderService.updateOrder(String.valueOf(orderIntId), userId, totalPrice, status, lineItems);
+            boolean success = orderService.updateOrder(orderId, userId, totalPrice, status, lineItems);
 
             if (success) {
                 response.put("status", "success");
                 response.put("message", "订单更新成功");
             } else {
-                response.put("status", "error");
+                response.put("status", "error"); // ✅ 改了！
                 response.put("message", "订单更新失败");
             }
         } catch (Exception e) {
+            e.printStackTrace(); // ✅ 打印异常信息
             response.put("status", "error");
             response.put("message", "服务器异常：" + e.getMessage());
         }
@@ -244,29 +251,40 @@ public class AdminOrderController {
 
     @GetMapping("/getOrderById")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getOrderById(@RequestParam String orderId) {
+    public Map<String, Object> getOrderById(@RequestParam String orderId) {
         Map<String, Object> response = new HashMap<>();
 
         try {
+            // 1. 获取订单主信息
             Order order = orderService.getOrderById(orderId);
 
             if (order != null) {
-                // 查询订单明细
-                List<LineItem> lineItems = orderService.getLineItemsByOrderId(Integer.parseInt(orderId));
+                // 2. 获取订单明细（子项）
+                List<LineItem> lineItems = orderService.getLineItemsByOrderId(orderId);
 
+                // 3. 构建返回数据
+                Map<String, Object> orderData = new HashMap<>();
+                orderData.put("orderId", order.getOrderId());
+                orderData.put("userId", order.getUserId());
+                orderData.put("totalPrice", order.getTotalPrice());
+//                orderData.put("status", order.getStatus());
+                orderData.put("lineItems", lineItems);  // 加入子订单明细
+
+                // 4. 封装统一响应结构
                 response.put("status", "success");
-                response.put("order", order);
-                response.put("lineItems", lineItems);  // <<< 加了这个
+                response.put("order", orderData);
+
             } else {
                 response.put("status", "not_found");
                 response.put("message", "订单未找到");
             }
+
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", "服务器异常：" + e.getMessage());
         }
 
-        return ResponseEntity.ok(response);
+        return response;
     }
 
 }

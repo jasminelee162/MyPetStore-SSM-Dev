@@ -283,37 +283,81 @@ public class OrderServiceImpl implements OrderService {
         return orderVOList;
     }
 
+    @Override
     public boolean updateOrder(String orderId, String userId, String totalPrice, String status, List<LineItem> lineItems) {
         try {
-            // 校验 orderId 是否为空
             if (orderId == null || orderId.trim().isEmpty()) {
                 throw new RuntimeException("订单编号不能为空！");
             }
 
-            // 将 orderId 转换为 Integer 类型
             Integer orderIntId = Integer.valueOf(orderId);
 
-            // 更新订单基本信息
             Order order = orderMapper.selectById(orderIntId);
             if (order == null) {
                 throw new RuntimeException("订单不存在！");
             }
 
             order.setUserId(userId);
+
+            // ✅ 转 BigDecimal，防止类型不一致
             order.setTotalPrice(totalPrice);
             orderMapper.updateById(order);
 
-            // 更新订单状态
-            orderStatusMapper.updateStatus(orderId, status);
+            int updateStatus = orderStatusMapper.updateStatus(orderId, status);
+            if (updateStatus == 0) {
+                throw new RuntimeException("订单状态更新失败，可能 order_id 不存在！");
+            }
 
-            // 更新订单明细数量
+            // linenum 从 1 开始递增
+            int lineNum = 1;
+
             for (LineItem lineItem : lineItems) {
-                int updateCount = lineItemMapper.updateQuantity(orderIntId, lineItem.getItemid(), lineItem.getQuantity());
-                if (updateCount == 0) {
-                    // 如果更新失败，可能是该订单明细不存在，可以选择插入新的订单明细
-                    lineItem.setOrderid(orderIntId);
-                    lineItemMapper.insert(lineItem);
+
+                // ✅ 判空
+                if (lineItem.getItemid() == null || lineItem.getItemid().trim().isEmpty()) {
+                    throw new RuntimeException("行项目的 itemid 不能为空！");
                 }
+
+                // ✅ 输出调试信息
+                System.out.println("正在处理行项目：orderId=" + orderIntId
+                        + ", lineNum=" + lineNum
+                        + ", itemId=" + lineItem.getItemid()
+                        + ", quantity=" + lineItem.getQuantity());
+
+                // 更新数量
+                int updateCount = lineItemMapper.updateQuantity(orderIntId, lineItem.getItemid(), lineItem.getQuantity());
+
+                if (updateCount == 0) {
+                    // 新增 lineItem
+
+                    BigDecimal unitPrice = lineItem.getUnitprice();
+                    if (unitPrice == null) {
+                        Item item = itemMapper.selectById(lineItem.getItemid());
+                        if (item != null) {
+                            unitPrice = item.getUnitCost();
+                        } else {
+                            unitPrice = BigDecimal.ZERO; // 没查到，兜底
+                        }
+                    }
+
+                    // ✅ 输出插入日志
+                    System.out.println("插入新行项目：orderId=" + orderIntId
+                            + ", lineNum=" + lineNum
+                            + ", itemId=" + lineItem.getItemid()
+                            + ", quantity=" + lineItem.getQuantity()
+                            + ", unitPrice=" + unitPrice);
+
+                    // 插入 lineItem
+                    lineItemMapper.insertLineItem(
+                            orderIntId,                       // orderid
+                            lineNum,                          // linenum
+                            lineItem.getItemid(),             // itemid
+                            lineItem.getQuantity(),           // quantity
+                            unitPrice                         // unitprice
+                    );
+                }
+
+                lineNum++;
             }
 
             return true;
@@ -322,6 +366,7 @@ public class OrderServiceImpl implements OrderService {
             return false;
         }
     }
+
     @Override
     public Order getOrderById(String orderId) {
         try {
@@ -565,9 +610,10 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    @Override
-    public List<LineItem> getLineItemsByOrderId(int orderId) {
-        return lineItemMapper.selectListByOrderId(orderId);
+
+    public List<LineItem> getLineItemsByOrderId(String orderId) {
+        return lineItemMapper.selectListByOrderId(Integer.valueOf(orderId)); // 你自己的mapper或DAO方法
     }
 
 }
+
