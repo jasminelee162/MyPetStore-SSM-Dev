@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户信息总览</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>用户信息总览</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Email</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 使用Thymeleaf遍历用户列表 -->
+    <tr th:each="account : ${accountList}">
+        <td th:text="${account.username}"></td>
+        <td th:text="${account.password}"></td>
+        <td th:text="${account.email}"></td>
+        <td><button th:data-username="${account.username}" th:data-password="${account.password}" th:onclick="'viewAccountDetails(this)'" >修改信息</button></td>
+        <td><button th:data-username="${account.username}" th:data-password="${account.password}" th:onclick="'showDetails(this)'" >查看完整信息</button></td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
+<footer th:replace="common/bottom"></footer>
+</body>
+</html>
+
+<script>
+    function viewAccountDetails(button) {
+        // 使用 Ajax 将用户的 username 发送给后端
+        var username = button.getAttribute("data-username")
+        var password = button.getAttribute("data-password")
+
+        $.ajax({
+            url: '/adminAccount/editAccountFrom', // 后端编辑页面的请求
+            type: 'GET',
+            data: { username: username, password:password}, // 将用户的 username 作为查询参数发送
+            success: function(response) {
+                // 或者直接跳转到编辑页面
+                window.location.href = '/adminAccount/editAccountFrom?username=' + username + '&password=' + password;
+            },
+            error: function(error) {
+                console.log("获取账户信息失败", error);
+            }
+        });
+    }
+
+    function showDetails(button) {
+        // 检查是否已有详情表单，若有则删除
+        var username = button.getAttribute("data-username")
+        var password = button.getAttribute("data-password")
+
+        let existingDetailRow = $("#detail-row-" + username); // 使用 username 作为 ID，确保唯一性
+        if (existingDetailRow.length) {
+            existingDetailRow.remove();
+            return; // 直接返回，表示收起详情
+        }
+
+
+        // 发送 AJAX 请求获取用户详情
+        $.ajax({
+            url: "/adminAccount/details",
+            type: "GET",
+            data: { username: username, password: password },
+            dataType: "json",
+            success: function (data) {
+                // 生成表格行
+                let newRow = `
+                <tr id="detail-row-${username}">
+                    <td colspan="3">
+                        <table class="details-table">
+                            <tr><td><strong>姓:</strong></td><td>${data.firstname}</td> <td><strong>名:</strong></td><td>${data.lastname}</td></tr>
+                            <tr><td><strong>状态:</strong></td><td>${data.status}</td> <td><strong>地址1:</strong></td><td>${data.addr1}</td></tr>
+                            <tr><td><strong>地址2:</strong></td><td>${data.addr2}</td> <td><strong>城市:</strong></td><td>${data.city}</td></tr>
+                            <tr><td><strong>州/省:</strong></td><td>${data.state}</td> <td><strong>邮编:</strong></td><td>${data.zip}</td></tr>
+                            <tr><td><strong>国家:</strong></td><td>${data.country}</td> <td><strong>电话:</strong></td><td>${data.phone}</td></tr>
+                            <tr><td><strong>语言偏好:</strong></td><td>${data.langpref}</td> <td><strong>喜欢的类别:</strong></td><td>${data.favcategory}</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            `;
+
+                // 在当前点击的行后面插入详情行
+                $(button).closest("tr").after(newRow);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+
+
+</script>
+
