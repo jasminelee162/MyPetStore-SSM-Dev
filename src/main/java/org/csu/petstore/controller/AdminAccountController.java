@@ -6,13 +6,16 @@ import org.csu.petstore.vo.AccountVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/adminAccount")
-@SessionAttributes("loginAccount")
+@SessionAttributes("checkAccount")
 public class AdminAccountController {
 
     @Autowired
@@ -22,16 +25,19 @@ public class AdminAccountController {
 
 
     @GetMapping("/editAccountFrom")
-    public String editAccountForm(@SessionAttribute("loginAccount") AccountVO accountVO, Model model) {
-        model.addAttribute("loginAccount", accountVO); // 确保添加到模型中
+    public String editAccountForm(@RequestParam String username,
+                                  @RequestParam String password,
+                                  Model model) {
+        AccountVO accountVO= accountService.getAccount(username, password);
+        model.addAttribute("checkAccount", accountVO); // 确保添加到模型中
         return "adminAccount/adminEdit";
     }
 
     @PostMapping("/editAccount")
-    public String editAccount(@ModelAttribute("loginAccount") AccountVO account,
+    public String editAccount(@ModelAttribute("account") AccountVO account,
                               @RequestParam(value = "password", required = false) String password,
                               @RequestParam("confirmPassword") String confirmPassword,
-                              @SessionAttribute("loginAccount") AccountVO loginAccount,
+                              @SessionAttribute("checkAccount") AccountVO loginAccount,
                               Model model) {
 
         if (!password.equals(confirmPassword)) {
@@ -64,12 +70,35 @@ public class AdminAccountController {
             return "adminAccount/adminEdit";
 
         } catch (Exception e) {
-            System.out.println("6666");
             logger.error("更新账户信息失败", e);
             model.addAttribute("error", "更新账户信息失败：" + e.getMessage());
             return "adminAccount/adminEdit";
         }
 
     }
+
+    // 新增的方法，用于返回所有用户
+    @GetMapping("/allAccounts")
+    public String getAllAccounts(Model model) {
+        try {
+            List<AccountVO> accountList = accountService.getAllAccounts();
+            model.addAttribute("accountList", accountList);  // 将所有用户的列表添加到模型中
+            return "adminAccount/adminShowAccount";  // 这是显示用户列表的页面
+        } catch (Exception e) {
+            logger.error("获取所有用户信息失败", e);
+            model.addAttribute("error", "获取所有用户信息失败：" + e.getMessage());
+            return "adminAccount/adminShowAccount";
+        }
+    }
+
+    @GetMapping(value = "/details", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<AccountVO> getUserDetails(@RequestParam String username,
+                                                    @RequestParam String password,
+                                                    Model model) {
+        AccountVO user = accountService.getAccount(username, password);
+        return ResponseEntity.ok(user);
+    }
+
+
 
 }

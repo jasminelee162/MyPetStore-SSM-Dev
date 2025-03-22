@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service("accountService")
 public class AccountServiceImpl implements AccountService {
 
@@ -104,6 +106,7 @@ public class AccountServiceImpl implements AccountService {
         profile.setLangpref(accountVO.getLangpref());
 
         // 调用Mapper进行更新操作
+        System.out.println(account);
         accountMapper.updateAccount(account);
         accountMapper.updatePassword(account.getUsername(), account.getPassword());
         accountMapper.updateProfile(profile);
@@ -113,5 +116,8 @@ public class AccountServiceImpl implements AccountService {
         return false;
     }
 
-
+    @Override
+    public List<AccountVO> getAllAccounts() {
+        return accountMapper.getAllAccounts();
+    }
 }

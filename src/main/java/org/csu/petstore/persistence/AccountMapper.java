@@ -11,6 +11,8 @@ import org.csu.petstore.entity.SignOn;
 import org.csu.petstore.vo.AccountVO;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AccountMapper extends BaseMapper<Account> {
 
@@ -72,6 +74,21 @@ public interface AccountMapper extends BaseMapper<Account> {
             "LANGPREF = #{langpref}" +
             "WHERE USERID = #{userid}")
     void updateProfile(Profile profile);
+
+    @Select("SELECT " +
+            "SIGNON.USERNAME, " +
+            "ACCOUNT.EMAIL, ACCOUNT.FIRSTNAME, ACCOUNT.LASTNAME, ACCOUNT.STATUS, " +
+            "ACCOUNT.ADDR1 AS addr1, ACCOUNT.ADDR2 AS addr2, " +
+            "ACCOUNT.CITY, ACCOUNT.STATE, ACCOUNT.ZIP, ACCOUNT.COUNTRY, ACCOUNT.PHONE, " +
+            "SIGNON.PASSWORD AS PASSWORD, " +
+            "PROFILE.LANGPREF AS langpref, PROFILE.FAVCATEGORY AS favcategory, " +
+            "PROFILE.MYLISTOPT AS mylistopt, PROFILE.BANNEROPT AS banneropt, " +
+            "BANNERDATA.BANNERNAME AS bannerName " +
+            "FROM ACCOUNT " +
+            "JOIN SIGNON ON SIGNON.USERNAME = ACCOUNT.USERID " +
+            "JOIN PROFILE ON PROFILE.USERID = ACCOUNT.USERID " +
+            "JOIN BANNERDATA ON PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY")
+    List<AccountVO> getAllAccounts();  // 获取所有用户信息
 
 
 }

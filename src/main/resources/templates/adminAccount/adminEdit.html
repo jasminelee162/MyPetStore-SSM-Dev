@@ -14,6 +14,10 @@
 <div class="registration-form" id="registration-form">
   <form th:action="@{/adminAccount/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
 
+    <input type="hidden" th:field="*{checkAccount.username}"/>
+    <input type="hidden" th:field="*{checkAccount.firstname}"/>
+    <input type="hidden" th:field="*{checkAccount.lastname}"/>
+
 
     <fieldset>
       <legend>账户信息</legend>
@@ -28,35 +32,35 @@
         </tr>
         <tr>
           <td><label for="email">邮箱:</label></td>
-          <td><input type="email" id="email" th:field="*{loginAccount.email}" required placeholder="请输入邮箱"  /></td>
+          <td><input type="email" id="email" th:field="*{checkAccount.email}" required placeholder="请输入邮箱"  /></td>
         </tr>
         <tr>
           <td><label for="phone">电话:</label></td>
-          <td><input type="tel" id="phone" th:field="*{loginAccount.phone}" required placeholder="请输入电话" /></td>
+          <td><input type="tel" id="phone" th:field="*{checkAccount.phone}" required placeholder="请输入电话" /></td>
         </tr>
         <tr>
           <td><label for="address1">商家地址 1:</label></td>
-          <td><input type="text" id="address1" th:field="*{loginAccount.addr1}" placeholder="请输入地址 1" /></td>
+          <td><input type="text" id="address1" th:field="*{checkAccount.addr1}" placeholder="请输入地址 1" /></td>
         </tr>
         <tr>
           <td><label for="address2">备用地址 2:</label></td>
-          <td><input type="text" id="address2" th:field="*{loginAccount.addr2}" placeholder="请输入地址 2" /></td>
+          <td><input type="text" id="address2" th:field="*{checkAccount.addr2}" placeholder="请输入地址 2" /></td>
         </tr>
         <tr>
           <td><label for="city">城市:</label></td>
-          <td><input type="text" id="city" th:field="*{loginAccount.city}" placeholder="请输入城市" /></td>
+          <td><input type="text" id="city" th:field="*{checkAccount.city}" placeholder="请输入城市" /></td>
         </tr>
         <tr>
           <td><label for="state">州/省:</label></td>
-          <td><input type="text" id="state" th:field="*{loginAccount.state}" placeholder="请输入州/省" /></td>
+          <td><input type="text" id="state" th:field="*{checkAccount.state}" placeholder="请输入州/省" /></td>
         </tr>
         <tr>
           <td><label for="zip">邮编:</label></td>
-          <td><input type="text" id="zip" th:field="*{loginAccount.zip}" placeholder="请输入邮编" /></td>
+          <td><input type="text" id="zip" th:field="*{checkAccount.zip}" placeholder="请输入邮编" /></td>
         </tr>
         <tr>
           <td><label for="country">国家:</label></td>
-          <td><input type="text" id="country" th:field="*{loginAccount.country}" required placeholder="请输入国家" /></td>
+          <td><input type="text" id="country" th:field="*{checkAccount.country}" required placeholder="请输入国家" /></td>
         </tr>
       </table>
     </fieldset>
@@ -67,9 +71,9 @@
         <tr>
           <td><label for="languagePreference">语言偏好:</label></td>
           <td>
-            <select id="languagePreference" th:field="*{loginAccount.langpref}">
-              <option value="english" th:selected="${loginAccount.langpref == 'english'}">English</option>
-              <option value="japanese" th:selected="${loginAccount.langpref == 'japanese'}">Japanese</option>
+            <select id="languagePreference" th:field="*{checkAccount.langpref}">
+              <option value="english" th:selected="${checkAccount.langpref == 'english'}">English</option>
+              <option value="japanese" th:selected="${checkAccount.langpref == 'japanese'}">Japanese</option>
             </select>
           </td>
         </tr>
