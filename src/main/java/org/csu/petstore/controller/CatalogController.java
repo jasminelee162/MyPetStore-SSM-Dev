@@ -4,8 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.csu.petstore.entity.Account;
 import org.csu.petstore.entity.Item;
 import org.csu.petstore.entity.Product;
+import org.csu.petstore.service.AccountService;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.LogService;
 import org.csu.petstore.vo.CategoryVO;
@@ -36,6 +38,9 @@ public class CatalogController {
     @Autowired
     private LogService logService;
 
+    @Autowired
+    private AccountService accountService;
+
     private static final Logger logger = LogManager.getLogger(CatalogController.class);
 
 
@@ -47,7 +52,12 @@ public class CatalogController {
     }
 
     @GetMapping("adminIndex")
-    public String adminIndex() {
+    public String adminIndex(HttpSession session) {
+        Account account = (Account) session.getAttribute("loginAccount");
+        if (account == null){
+            return "account/signOnForm";
+        }
+
         return "admin/main";
     }
 
