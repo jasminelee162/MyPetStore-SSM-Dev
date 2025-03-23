@@ -17,11 +17,11 @@
 
     <!-- 购物车、登录等 -->
 <!--    <a href="/cart/viewCart"><img src="/static/images/cart.gif"/> Cart</a>-->
-    <a href="/cart/viewCart">Cart</a>
+<!--    <a href="/cart/viewCart">Cart</a>-->
 
     <a th:if="${session.loginAccount} == null" href="/account/signOnForm">Sign In</a>
     <a th:if="(${session.loginAccount} != null) and ((${session.authenticated} == null) ? 0 : true)" href="/account/signOut">Sign Out</a>
-    <a th:if="(${session.loginAccount} != null) and ((${session.authenticated} == null) ? 0 : true)" href="/account/editAccount">My Account</a>
+    <a th:if="(${session.loginAccount} != null) and ((${session.authenticated} == null) ? 0 : true)" href="/account/editMerchantAccount">My Account</a>
 
     <div class="separator"></div>
 
