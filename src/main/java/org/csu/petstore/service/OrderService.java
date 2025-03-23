@@ -38,6 +38,9 @@
         boolean updateOrder(String orderId, String userId, String totalPrice, String status, List<LineItem> lineItems);
     
         Order getOrderById(String orderId);
+
+        //库存不足，回滚
+        boolean updateStatusToPending(String orderId);
     
         //非数据库方法定义
     

@@ -15,6 +15,10 @@ public interface OrderStatusMapper extends BaseMapper<OrderStatus> {
     @Update("UPDATE orderstatus SET status = 'S' WHERE orderid = #{orderId}")
     int updateStatusToShipped(@Param("orderId") String orderId);
 
+    // 更新订单状态为 'P'
+    @Update("UPDATE orderstatus SET status = 'P' WHERE orderid = #{orderId}")
+    int updateStatusToPending(@Param("orderId") String orderId);
+
     // 删除订单状态记录
     @Delete("DELETE FROM orderstatus WHERE orderid = #{orderId}")
     int deleteByOrderId(@Param("orderId") String orderId);

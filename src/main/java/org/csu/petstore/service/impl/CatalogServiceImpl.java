@@ -139,4 +139,22 @@ public class CatalogServiceImpl implements CatalogService {
         return productList;
     }
 
+    /**
+     * 减少库存
+     * @param itemId 商品ID
+     * @param quantity 减少的数量
+     * @return 是否成功
+     */
+    public boolean decreaseInventory(String itemId, int quantity) {
+        ItemQuantity itemQuantity = itemQuantityMapper.selectById(itemId);
+        if (itemQuantity == null || itemQuantity.getQuantity() < quantity) {
+            // 库存不足
+            return false;
+        }
+
+        // 更新库存数量
+        itemQuantity.setQuantity(itemQuantity.getQuantity() - quantity);
+        return itemQuantityMapper.updateById(itemQuantity) > 0;
+    }
+
 }

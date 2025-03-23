@@ -377,6 +377,24 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * 更新订单状态为待发货
+     * @param orderId 订单编号
+     * @return 是否成功
+     */
+    public boolean updateStatusToPending(String orderId) {
+        Order order = orderMapper.selectById(orderId);
+        orderStatusMapper.updateStatusToPending(orderId);
+
+        if (order == null) {
+            return false;
+        }
+
+
+
+        return orderMapper.updateById(order) > 0;
+    }
+
     //非数据库方法实现
 
     //Order初始化

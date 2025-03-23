@@ -3,6 +3,7 @@ package org.csu.petstore.controller;
 import org.csu.petstore.entity.LineItem;
 import org.csu.petstore.entity.Order;
 import org.csu.petstore.entity.OrderStatus;
+import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.OrderService;
 import org.csu.petstore.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class AdminOrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CatalogService catalogService;
 
     @GetMapping("/order")
     public String viewOrderList(Model model) {
@@ -82,18 +86,40 @@ public class AdminOrderController {
     }
 
     @PostMapping("/ship")
-    @ResponseBody
     public ResponseEntity<Map<String, String>> shipOrder(@RequestBody ShipOrderRequest request) {
         String orderId = request.getOrderId();
         boolean success = orderService.updateStatusToShipped(orderId);
+        List<LineItem> lineItems = orderService.getLineItemsByOrderId(orderId);
 
         Map<String, String> response = new HashMap<>();
         if (success) {
-            response.put("status", "success");
-            response.put("message", "发货成功");
+            try {
+                for (LineItem item : lineItems) {
+                    String itemId = item.getItemid();
+                    int quantity = item.getQuantity();
+
+                    // 调用 CatalogService 减少库存
+                    boolean inventoryUpdated = catalogService.decreaseInventory(itemId, quantity);
+                    if (!inventoryUpdated) {
+                        // 如果库存更新失败，回滚订单状态并返回错误信息
+                        orderService.updateStatusToPending(orderId);
+                        response.put("status", "error");
+                        response.put("message", "发货失败：库存不足或库存更新失败");
+                        return ResponseEntity.ok(response);
+                    }
+                }
+
+                response.put("status", "success");
+                response.put("message", "发货成功，库存已更新");
+            } catch (Exception e) {
+                // 如果发生异常，回滚订单状态并返回错误信息
+                orderService.updateStatusToPending(orderId);
+                response.put("status", "error");
+                response.put("message", "发货失败：" + e.getMessage());
+            }
         } else {
             response.put("status", "error");
-            response.put("message", "发货失败");
+            response.put("message", "发货失败：订单状态更新失败");
         }
 
         return ResponseEntity.ok(response);

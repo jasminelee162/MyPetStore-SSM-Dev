@@ -26,4 +26,7 @@ public interface CatalogService {
 
     //自动补全
     List<Product> searchProductList(String keyword);
+
+    //减少库存
+    boolean decreaseInventory(String itemId, int quantity);
 }
