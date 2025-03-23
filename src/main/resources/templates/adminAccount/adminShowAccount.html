@@ -26,7 +26,7 @@
         <td th:text="${account.password}"></td>
         <td th:text="${account.email}"></td>
         <td><button th:data-username="${account.username}" th:data-password="${account.password}" th:onclick="'viewAccountDetails(this)'" >修改信息</button></td>
-        <td><button th:data-username="${account.username}" th:data-password="${account.password}" th:onclick="'showDetails(this)'" >查看完整信息</button></td>
+        <td><button th:data-username="${account.username}" th:data-password="${account.password}" th:onclick="'showDetails(this)'" >查看信息</button></td>
     </tr>
     </tbody>
 </table>
@@ -40,6 +40,7 @@
         // 使用 Ajax 将用户的 username 发送给后端
         var username = button.getAttribute("data-username")
         var password = button.getAttribute("data-password")
+        console.log("8888")
 
         $.ajax({
             url: '/adminAccount/editAccountFrom', // 后端编辑页面的请求
@@ -102,8 +103,7 @@
                                                    const cursor = document.querySelector('.cursor');
                                                   const mouseX = e.clientX;
                                                     const mouseY = e.clientY;
-                                                    cursor.style.left = `${mouseX}px`;
-                                                   cursor.style.top = `${mouseY}px`;
+
                                           });
 
 

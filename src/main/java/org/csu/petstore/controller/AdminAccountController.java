@@ -24,7 +24,7 @@ public class AdminAccountController {
     private static final Logger logger = LoggerFactory.getLogger(EditAccountController.class);
 
 
-    @PostMapping("/editAccountFrom")
+    @GetMapping("/editAccountFrom")
     public String editAccountForm(@RequestParam String username,
                                   @RequestParam String password,
                                   Model model) {
