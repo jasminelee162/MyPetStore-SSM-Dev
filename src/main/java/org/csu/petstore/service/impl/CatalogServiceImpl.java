@@ -106,9 +106,11 @@ public class CatalogServiceImpl implements CatalogService {
         itemVO.setAttribute1(item.getAttribute1());
         itemVO.setProductId(product.getProductId());
         itemVO.setProductName(product.getName());
-        String[] temp = product.getDescription().split("_");
-        itemVO.setDescriptionImage(temp[0]);
-        itemVO.setDescriptionText(temp[1].substring(1));
+        itemVO.setDescriptionImage(product.getDescription());
+
+//        String[] temp = product.getDescription().split("_");
+//        itemVO.setDescriptionImage(temp[0]);
+//        itemVO.setDescriptionText(temp[1].substring(1));
 
         itemVO.setQuantity(itemQuantity.getQuantity());
 

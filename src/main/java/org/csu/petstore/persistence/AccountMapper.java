@@ -17,7 +17,7 @@ import java.util.List;
 public interface AccountMapper extends BaseMapper<Account> {
 
     @Select("SELECT " +
-            "SIGNON.USERNAME, " +
+            "SIGNON.USERNAME, SIGNON.ADMIN, " +
             "ACCOUNT.EMAIL, ACCOUNT.FIRSTNAME, ACCOUNT.LASTNAME, ACCOUNT.STATUS, " +
             "ACCOUNT.ADDR1 AS addr1, ACCOUNT.ADDR2 AS addr2, " +
             "ACCOUNT.CITY, ACCOUNT.STATE, ACCOUNT.ZIP, ACCOUNT.COUNTRY, ACCOUNT.PHONE, " +
@@ -52,8 +52,8 @@ public interface AccountMapper extends BaseMapper<Account> {
     boolean isUsernameExists(String username);
 
     // Update password in the SIGNON table
-    @Update("UPDATE SIGNON SET PASSWORD = #{password} WHERE USERNAME = #{username}")
-    void updatePassword(@Param("username") String username, @Param("password") String password);
+    @Update("UPDATE SIGNON SET PASSWORD = #{password}, ADMIN = #{admin} WHERE USERNAME = #{username}")
+    void updatePassword(@Param("username") String username, @Param("password") String password, @Param("admin") boolean admin);
 
     // Update account information in the ACCOUNT table
     @Update("UPDATE ACCOUNT SET " +

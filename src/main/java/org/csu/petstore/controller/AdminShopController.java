@@ -13,13 +13,11 @@ import org.csu.petstore.vo.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -87,14 +85,34 @@ public class AdminShopController {
     }
 
     @PostMapping("/addCategory")
-    public String addCategory(@RequestParam String categoryId,
-                              @RequestParam String categoryName,
-                              @RequestParam("description") MultipartFile file) throws IOException {
-        String imageUrl = file.isEmpty() ? null : fileStorageService.saveFile(file, categoryId);
-        System.out.println("imageUrl" + imageUrl);
-        adminShopService.addCategory(categoryId, categoryName, imageUrl);
-        return "redirect:/adminShop/catalog";
+    @ResponseBody
+    public Map<String, Object> addCategory(@RequestParam String categoryId,
+                                           @RequestParam String categoryName,
+                                           @RequestParam("description") MultipartFile file) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String imageUrl = file.isEmpty() ? null : fileStorageService.saveFile(file, categoryId);
+            adminShopService.addCategory(categoryId, categoryName, imageUrl);
+
+            response.put("success", true);
+            response.put("message", "分类添加成功！");
+
+            // 返回单个分类
+            Map<String, Object> category = new HashMap<>();
+            category.put("categoryId", categoryId);
+            category.put("categoryName", categoryName);
+            category.put("description", imageUrl); // 你前端叫 description，这里也保持一致
+
+            response.put("category", category);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+            response.put("message", "添加分类失败：" + e.getMessage());
+        }
+        return response;
     }
+
+
 
     @PostMapping("/addProduct")
     public String addProduct(@RequestParam String categoryId,

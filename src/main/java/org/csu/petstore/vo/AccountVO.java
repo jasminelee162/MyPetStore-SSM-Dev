@@ -32,6 +32,7 @@ public class AccountVO {
     // SignOn 类中的字段
     private String signOnUsername;
     private String signOnPassword;
+    private boolean admin;
 
     private String bannerName;
 

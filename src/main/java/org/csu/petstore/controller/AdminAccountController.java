@@ -29,6 +29,7 @@ public class AdminAccountController {
                                   @RequestParam String password,
                                   Model model) {
         AccountVO accountVO= accountService.getAccount(username, password);
+        System.out.println(accountVO);
         model.addAttribute("checkAccount", accountVO); // 确保添加到模型中
         return "adminAccount/adminEdit";
     }
@@ -63,6 +64,7 @@ public class AdminAccountController {
             loginAccount.setZip(account.getZip());
             loginAccount.setLangpref(account.getLangpref());
             loginAccount.setCountry(account.getCountry());
+            loginAccount.setAdmin(account.isAdmin());
             // 更新数据库
             accountService.updateAccount(account);
 

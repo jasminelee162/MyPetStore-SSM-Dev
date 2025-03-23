@@ -76,7 +76,7 @@ public class AccountController {
                 }*/
                 String message = "User " + username + " login success!";
                 logService.setLog(message);
-                if(admin) return "admin/main";
+                if(admin && loginAccount.isAdmin()) return "admin/main";
 
 
                 List<CategoryVO> categories = catalogService.getAllCategories();

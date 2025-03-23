@@ -108,7 +108,7 @@ public class AccountServiceImpl implements AccountService {
         // 调用Mapper进行更新操作
         System.out.println(account);
         accountMapper.updateAccount(account);
-        accountMapper.updatePassword(account.getUsername(), account.getPassword());
+        accountMapper.updatePassword(account.getUsername(), account.getPassword(), accountVO.isAdmin());
         accountMapper.updateProfile(profile);
     }
     @Override
