@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.csu.petstore.entity.Item;
 import org.csu.petstore.entity.Product;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.LogService;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -70,6 +73,19 @@ public class CatalogController {
         ProductVO productVO = catalogService.getProduct(productId);
         session.setAttribute("product", productVO);
         model.addAttribute("product", productVO);
+
+
+        // 获取商品的所有项
+        List<Item> itemList = productVO.getItemList();
+
+        // 获取所有项的ID
+        List<String> itemIds = itemList.stream()
+                .map(Item::getItemId)
+                .collect(Collectors.toList());
+
+        // 获取每个商品的库存数量
+        Map<String, Integer> itemQuantities = catalogService.getItemQuantities(itemIds);
+        model.addAttribute("itemQuantities", itemQuantities); // 传递库存数据
 
         //记录日志
         catalogService.setLog("product", session, productId);
