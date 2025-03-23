@@ -3,41 +3,33 @@ body {
     background-size: 400% 400%;
     animation: gradientFlow 12s ease infinite;
     min-height: 100vh;
-
     position: relative;
     color: #fff;
 }
+
 h1 {
-    /* 文字渐变 */
     background: linear-gradient(45deg, #00E5FF, #00C853);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
-    /* 呼吸光效 */
     animation: glowingText 2s infinite alternate;
-
-    /* 玻璃拟态风格 */
     background-color: rgba(255, 255, 255, 0.1);
     padding: 10px 20px;
     border-radius: 10px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-
-    /* 其他基本样式 */
     text-align: center;
     margin-bottom: 20px;
-    /* margin-left:100px; */
     font-size: 2.5rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
-    /* display: inline-block; */
     display: flex;
     justify-content: center;
     align-items: center;
     width: 97%;
 }
-/* 背景动态渐变效果 */
+
+/* Gradient Animation */
 @keyframes gradientFlow {
     0% { background-position: 0% 50%; }
     25% { background-position: 100% 50%; }
@@ -46,7 +38,7 @@ h1 {
     100% { background-position: 0% 50%; }
 }
 
-/* 添加光影层 */
+/* Adding Light Effects */
 body::after {
     content: '';
     position: absolute;
@@ -57,29 +49,22 @@ body::after {
     z-index: -1;
 }
 
-
-/* 顶部标题 */
+/* Header Style */
 header {
-
     padding: 20px;
     text-align: center;
     font-size: 28px;
     font-weight: bold;
     letter-spacing: 2px;
     text-transform: uppercase;
-
     border-bottom: 2px solid #00aaff;
     background: linear-gradient(to right, #1E4D6D 10%, #000000 50%, #000000 60%, #1E4D6D 100%);
     color: white;
-
-
-
-
-    border-bottom: 3px solid #0E6655;
+    border-bottom: 3px solid #36f6cc;
     box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.3);
 }
 
-/* 主体布局 */
+/* Main Layout */
 main {
     width: 80%;
     margin: 30px auto;
@@ -88,13 +73,15 @@ main {
     border-radius: 15px;
     box-shadow: 0px 8px 16px rgba(0, 170, 255, 0.3);
     backdrop-filter: blur(10px);
+    color: white;
 }
 
-/* 订单查询 */
+/* Order Search */
 .order-search {
     padding: 20px;
     background: rgba(50, 50, 50, 0.7);
     border-radius: 10px;
+    color: white;
     box-shadow: inset 0px 0px 12px rgba(0, 170, 255, 0.3);
     margin-bottom: 20px;
 }
@@ -131,7 +118,7 @@ main {
     box-shadow: 0px 0px 10px #00aaff;
 }
 
-/* 订单列表 */
+/* Order List */
 .order-list h2 {
     color: #00aaff;
     text-align: center;
@@ -155,6 +142,7 @@ thead {
 th, td {
     padding: 12px;
     text-align: center;
+    color: white;
 }
 
 tbody tr {
@@ -166,7 +154,7 @@ tbody tr:hover {
     background: rgba(0, 170, 255, 0.2);
 }
 
-/* 按钮组 */
+/* Buttons */
 .order-detail-btn,
 .order-edit-btn,
 .order-delete-btn,
@@ -215,86 +203,103 @@ tbody tr:hover {
     box-shadow: 0px 0px 10px #4689ff;
 }
 
-/* 页脚 */
+/* Footer */
 footer {
     text-align: center;
-    padding: 15px;
-    background: rgba(20, 20, 20, 0.8);
     font-size: 14px;
-    color: #aaaaaa;
+    color: white;
+    margin-top: 40px;
+    padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.7);
     border-top: 2px solid #00aaff;
 }
-
-
-#edit-line-items input[type="number"] {
-    -moz-appearance: textfield;
-    -webkit-appearance: none;
-    appearance: none;
-
-    display: inline-block;
-    vertical-align: middle;  /* 垂直对齐文字 */
-
-    width: 60px;             /* 可以调宽 */
-    height: 30px;            /* 重点！调高度 */
-
-    padding: 2px 8px;        /* 适配行高 */
-    margin: 0;               /* 去掉默认 margin */
-
-    font-size: 14px;
-    line-height: 1.5;        /* 让字体更居中 */
-
-    border: 1px solid #ccc;
-    border-radius: 6px;      /* 圆角更柔和 */
-    background-color: #fff;
-
-    text-align: center;
-    outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
+/* 整个模态框背景 */
+.modal-content {
+    background: rgba(0, 0, 0, 0.8); /* 透明黑色背景 */
+    border-radius: 15px; /* 圆角 */
+    border: 1px solid rgba(0, 255, 0, 0.5); /* 绿色边框 */
+    box-shadow: 0 4px 10px rgba(24, 164, 166, 0.49); /* 绿色阴影 */
+    backdrop-filter: blur(5px); /* 背景模糊 */
 }
 
-#edit-line-items input[type="number"]:focus {
-    border-color: #66afe9;
-    box-shadow: 0 0 6px rgba(102, 175, 233, 0.6);
-
+/* 标题 */
+.modal-header {
+    background-color: rgba(0, 0, 0, 0.6); /* 深色背景 */
+    color:#18A4A6; /* 绿色文字 */
+    font-weight: bold;
+    border-bottom: 2px solid rgba(0, 255, 0, 0.5); /* 绿色底边 */
 }
 
-#edit-line-items input[type="number"]::-webkit-inner-spin-button,
-#edit-line-items input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
+/* 关闭按钮 */
+.modal-header .close {
+    color: #18A4A6; /* 绿色 */
+    font-size: 1.5rem;
 }
 
-#edit-line-items td:nth-child(2) {
-    text-align: center; /* 水平居中 */
-    vertical-align: middle;
-    padding: 8px; /* 可微调 */
-= = = = = = = . line-item-quantity {
-    width: 60px; /* 输入框宽度 */
-    padding: 5px 10px; /* 内边距，增大点击区域 */
-    font-size: 14px; /* 字体大小统一 */
-    border: 1px solid #ccc; /* 边框柔和一点 */
-    border-radius: 6px; /* 圆角更现代 */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 内阴影 */
-    outline: none; /* 聚焦时不显示默认轮廓 */
-    transition: border-color 0.3s, box-shadow 0.3s; /* 动效 */
+/* 模态框内容 */
+.modal-body {
+    background: rgba(0, 0, 0, 0.7); /* 深色背景 */
+    color: white;
 }
 
-    /* 鼠标悬浮或点击时的效果 */
+/* 输入框 */
+.form-control {
+    background-color: rgba(255, 255, 255, 0.2); /* 半透明白色 */
+    color: white;
+    border: 1px solid #18A4A6; /* 绿色边框 */
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
 
-    .line-item-quantity:hover,
-    .line-item-quantity:focus {
-        border-color: #409eff; /* 蓝色边框 */
-        box-shadow: 0 0 5px rgba(64, 158, 255, 0.3); /* 浅蓝光晕 */
-    }
+.form-control:focus {
+    border-color: #18A4A6; /* 聚焦时绿色 */
+    box-shadow: 0 0 5px #18A4A6; /* 聚焦时绿色光环 */
+}
 
-    /* 去除 Chrome、Firefox 等浏览器自带的上下箭头 */
+/* 下拉框 */
+select.form-control {
+    background-color: rgba(255, 255, 255, 0.2); /* 半透明白色 */
+    color: white;
+    border: 1px solid rgba(0, 255, 0, 0.5); /* 绿色边框 */
+}
 
-    .line-item-quantity::-webkit-outer-spin-button,
-    .line-item-quantity::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+/* 保存按钮 */
+.btn-primary {
+    background-color: #00FF00; /* 绿色背景 */
+    border-color: #00FF00; /* 绿色边框 */
+    color: black; /* 黑色文字 */
+}
 
-    .line-item-quantity[type=number] {
-        -moz-appearance: textfield; /* Firefox */
-    }
+.btn-primary:hover {
+    background-color: #00CC00; /* 悬停时绿色变深 */
+    border-color: #00CC00; /* 边框变深 */
+}
+
+/* 取消按钮 */
+.btn-secondary {
+    background-color: rgba(255, 0, 0, 0.7); /* 红色背景 */
+    color: white;
+    border: 1px solid rgba(255, 0, 0, 0.8); /* 红色边框 */
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 0, 0, 0.8); /* 悬停时红色变深 */
+    border-color: rgba(255, 0, 0, 1); /* 边框变深 */
+}
+
+/* 表格 */
+.table {
+    background-color: rgba(0, 0, 0, 0.6); /* 深色背景 */
+    color: white;
+}
+
+
+
+.table th {
+    background-color: rgba(0, 255, 0, 0.1); /* 绿色头部 */
+}
+
+/* 动态生成的订单明细行 */
+.table tbody tr:hover {
+    background-color: rgba(24, 164, 166, 0.49); /* 悬停时绿色高亮 */
 }
