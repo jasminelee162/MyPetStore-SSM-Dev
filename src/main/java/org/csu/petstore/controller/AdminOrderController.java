@@ -88,6 +88,18 @@ public class AdminOrderController {
     @PostMapping("/ship")
     public ResponseEntity<Map<String, String>> shipOrder(@RequestBody ShipOrderRequest request) {
         String orderId = request.getOrderId();
+
+        // 获取订单信息
+        OrderVO orderVO = orderService.getOrder(Integer.parseInt(orderId));
+        if (orderVO == null || !"P".equals(orderVO.getStatus())) {
+            // 如果订单不存在或订单状态不是 "P"，直接返回错误信息
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "error");
+            response.put("message", "错误操作：订单不存在或订单状态不为待发货（P）");
+            return ResponseEntity.ok(response);
+        }
+
+        // 如果订单状态为 "P"，继续执行发货逻辑
         boolean success = orderService.updateStatusToShipped(orderId);
         List<LineItem> lineItems = orderService.getLineItemsByOrderId(orderId);
 
