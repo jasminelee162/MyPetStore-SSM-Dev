@@ -72,7 +72,8 @@
                 <th>Product ID</th>
                 <th>Description</th>
                 <th>List Price</th>
-                <th>&nbsp;</th>
+                <th>inventory</th>
+                <th> </th>
             </tr>
 
             <tr th:each="item:${product.itemList}">
@@ -83,6 +84,7 @@
                 </td>
                 <!--                    <td th:text="${item.listPrice}">Item List Price</td>-->
                 <td th:text="'$'+${#numbers.formatDecimal(item.listPrice,1,2)}">Item List Price</td>
+                <td th:text="${itemQuantities[item.itemId]}">Inventory</td>
                 <td><a th:href="'/cart/addItemToCart?workingItemId='+${item.itemId}">Add to Cart</a></td>
             </tr>
         </table>
