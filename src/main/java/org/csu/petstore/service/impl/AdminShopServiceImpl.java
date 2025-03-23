@@ -2,7 +2,7 @@ package org.csu.petstore.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
 import org.csu.petstore.entity.Category;
 import org.csu.petstore.entity.Item;
 import org.csu.petstore.entity.ItemQuantity;
@@ -16,6 +16,7 @@ import org.csu.petstore.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
