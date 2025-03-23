@@ -15,4 +15,7 @@ public class SignOn {
 
     @TableField("password")
     private String password;
+
+    @TableField("admin")
+    private boolean admin;
 }
