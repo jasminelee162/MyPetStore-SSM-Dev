@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>分类详情</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="StyleSheet" href="/css/admincatalog.css" type="text/css" media="screen"/>
     <style>
 
-        table{
-            margin-left:222px;
-            width:70%;
-            margin-top:50px;
+        table {
+            margin-left: 222px;
+            width: 70%;
+            margin-top: 50px;
         }
-        h1,h2{
-            margin-left:200px;
-            width:70%;
+
+        h1, h2 {
+            margin-left: 200px;
+            width: 70%;
         }
+
         .add-category-container {
             margin-top: 50px;
             margin-left: 65px;
@@ -29,7 +31,10 @@
         .add-category-container::before {
             content: "";
             position: absolute;
-            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
             background: linear-gradient(45deg, #38ef7d, #18A4A6, #1E4D6D, #38ef7d);
             background-size: 300% 300%;
             border-radius: 20px;
@@ -39,131 +44,101 @@
         }
 
         @keyframes gradient-border {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
-        .add-category-container h2{
-            margin-left:30px;
+        .add-category-container h2 {
+            margin-left: 30px;
         }
-        #add{
-            margin-right:30px;
+
+        .add {
+            margin-right: 30px;
         }
 
 
     </style>
-    <script>
-        function showEditForm(categoryId,productId, productName, productDescription) {
-            let existingRow = document.getElementById('editRow');
-            if (existingRow) {
-                existingRow.remove();
-            }
-
-            // 获取当前商品行
-            let currentRow = document.getElementById('productRow-' + productId);
-            if (!currentRow) return;
-
-            // 创建新的修改表单行
-            let newRow = document.createElement('tr');
-            newRow.id = 'editRow';
-            newRow.innerHTML = `
-            <td colspan="4">
-            <form action="/adminShop/updateProduct" method="post" enctype="multipart/form-data">
-               <input type="hidden" name="categoryId" value="${categoryId}">
-                <input type="hidden" name="productId" value="${productId}">
-                <input type="hidden" name="originalDescription" value="${productDescription}">
-
-                <label>产品名称：</label>
-                <input type="text" name="productName" value="${productName}" required>
-
-                <!-- 上传新图片（如果不上传，则保持原图片路径） -->
-                <label>上传新产品图片（可选）：</label>
-                <input type="file" name="description" accept="image/*">
-
-                <button type="submit">保存</button>
-                <button type="button" onclick="document.getElementById('editRow').remove()">取消</button>
-            </form>
-        </td>
-        `;
-
-            // 插入修改表单行到当前商品行的下方
-            currentRow.parentNode.insertBefore(newRow, currentRow.nextSibling);
-        }
-    </script>
 
 </head>
 <body>
 <!--<header th:replace="common/top"></header>-->
 <div th:replace="~{common/admintop}"></div>
 <div id="mainContent">
-<h1 th:text="'分类：' + ${category.categoryName}">分类名称</h1>
+    <h1 th:text="'分类：' + ${category.categoryName}">分类名称</h1>
 
-<!-- 商品列表 -->
-<table border="1" th:if="${category.productList != null and category.productList.size() > 0}">
-    <tr>
-        <th>产品编号</th>
-        <th>产品名称</th>
-        <th>产品图片</th>
-        <th>操作</th>
-    </tr>
-    <tr th:each="product : ${category.productList}" th:id="'productRow-'+${product.productId}">
-        <td th:text="${product.productId}">产品ID</td>
-        <td th:text="${product.name}">产品名称</td>
-        <td>
-            <img th:src="${product.description}" alt="产品图片" width="100" height="100">
-        </td>
-        <td>
-            <div class="action-container">
+    <!-- 商品列表 -->
+    <table th:id="productTable" border="1" th:if="${category.productList != null and category.productList.size() > 0}">
+        <tr>
+            <th>产品编号</th>
+            <th>产品名称</th>
+            <th>产品图片</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="product : ${category.productList}" th:id="'productRow-'+${product.productId}">
+            <td th:text="${product.productId}">产品ID</td>
+            <td th:text="${product.name}">产品名称</td>
+            <td>
+                <img th:src="${product.description}" alt="产品图片" width="100" height="100">
+            </td>
+            <td>
+                <div class="action-container">
+                    <button class="btn-edit"
+                            th:data-category-id="${category.categoryId}"
+                            th:data-product-id="${product.productId}"
+                            th:data-product-name="${product.name}"
+                            th:data-product-description="${product.description}">
+                        修改
+                    </button>
+                    <a th:href="@{/adminShop/product(productId=${product.productId})}">查看详情</a>
 
-<!--            <a th:href="@{/adminShop/product(productId=${product.productId})}">查看详情</a>-->
+                    <!-- 删除按钮 -->
+                    <button class="btn-delete"
+                            th:data-category-id="${category.categoryId}"
+                            th:data-product-id="${product.productId}">
+                        删除
+                    </button>
+                </div>
+            </td>
+        </tr>
 
-            <!-- 修改商品 -->
-            <button type="button"
-                    th:attr="onclick=|showEditForm('${category.categoryId}','${product.productId}', '${product.name}', '${product.description}')|">
-                修改
-            </button>
-                <a th:href="@{/adminShop/product(productId=${product.productId})}">查看详情</a>
+    </table>
 
-            <!-- 删除商品 -->
-            <form action="/adminShop/deleteProduct" method="post" style="display:inline;">
-                <input type="hidden" name="categoryId" th:value="${category.categoryId}">
-                <input type="hidden" name="productId" th:value="${product.productId}">
-                <button type="submit" onclick="return confirm('确定删除该商品？')">删除</button>
-            </form>
-            </div>
-        </td>
-    </tr>
+    <!-- 如果没有商品，则显示空提示 -->
+    <p th:if="${category.productList == null or category.productList.size() == 0}">该类别下暂无产品。</p>
+    <div class="add-category-container">
 
-</table>
+        <!-- 添加商品表单 -->
+        <h2>添加新商品</h2>
+        <form id="addProductForm" class="add" action="/adminShop/addProduct" method="post"
+              enctype="multipart/form-data">
+            <input type="hidden" name="categoryId" th:value="${category.categoryId}"/>
 
-<!-- 如果没有商品，则显示空提示 -->
-<p th:if="${category.productList == null or category.productList.size() == 0}">该类别下暂无产品。</p>
-<div class="add-category-container">
+            <label for="productId">商品编号：</label>
+            <input type="text" id="productId" name="productId" required>
 
-<!-- 添加商品表单 -->
-<h2>添加新商品</h2>
-<form  id="add" action="/adminShop/addProduct" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="categoryId" th:value="${category.categoryId}"/>
+            <label for="productName">商品名称：</label>
+            <input type="text" id="productName" name="productName" required>
 
-    <label for="productId">商品编号：</label>
-    <input type="text" id="productId" name="productId" required>
+            <label for="description">商品图片：</label>
+            <input type="file" id="description" name="description" accept="image/*">
 
-    <label for="productName">商品名称：</label>
-    <input type="text" id="productName" name="productName" required>
-
-    <label for="description">商品图片：</label>
-    <input type="file" id="description" name="description" accept="image/*">
-
-    <button type="submit">添加商品</button>
-</form>
-</div>
+            <button type="submit">添加商品</button>
+        </form>
+    </div>
     <div class="back">
         <a th:href="@{/catalog/adminIndex}">返回后台管理首页</a>
         <a th:href="@{/adminShop/catalog}">返回商品管理</a>
     </div>
 
 </div>
+<script src="../js/adminShopProduct.js"></script>
 <!--<footer th:replace="common/bottom"></footer>-->
 </body>
 </html>

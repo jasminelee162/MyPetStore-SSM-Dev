@@ -125,7 +125,7 @@ public class CartController {
         session.setAttribute("cart", cart);
 
         // 封装 JSON 数据
-        ItemDTO responseDTO = new ItemDTO(cartItemVO != null ? cartItemVO.getTotalPrice() : BigDecimal.ZERO, subTotal);
+        ItemDTO responseDTO = new ItemDTO(cartItemVO != null ? cartItemVO.getTotalPrice() : BigDecimal.ZERO, subTotal, null, null, null, null, null);
         String jsonResult = JSON.toJSONString(responseDTO);
         System.out.println(jsonResult);
 

@@ -211,7 +211,7 @@ a:hover {
     justify-content: center; /* 居中排列（可根据需求调整） */
     gap: 20px; /* 让 h2 和 form 之间留点间距 */
 }
-#add {
+.add {
     background: rgba(255, 255, 255, 0.15); /* 轻微提升透明度，让其更显眼 */
     padding: 20px;
     border-radius: 12px;
@@ -225,13 +225,13 @@ a:hover {
 }
 
 /* 悬停时添加轻微放大和阴影增强 */
-#add:hover {
+.add:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* 输入框美化 */
-#add input {
+.add input {
     width: 90%;
     padding: 10px;
     margin: 8px 0;
@@ -244,12 +244,12 @@ a:hover {
     transition: background 0.3s ease-in-out;
 }
 
-#add input:focus {
+.add input:focus {
     background: rgba(255, 255, 255, 0.3);
 }
 
 /* 提交按钮美化 */
-#add button {
+.add button {
     background: linear-gradient(135deg, #18A4A6, #0F2F38);
     color: white;
     padding: 12px 20px;
@@ -262,11 +262,11 @@ a:hover {
     transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
 
-#add button:hover {
+.add button:hover {
     background: linear-gradient(135deg, #0F2F38, #18A4A6);
     transform: scale(1.05);
 }
-#add label {
+.add label {
     display: block; /* 让标签独占一行 */
     font-size: 16px;
     color: #E0F7FA;
