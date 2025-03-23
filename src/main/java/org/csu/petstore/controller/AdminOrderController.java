@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/adminOrder")
@@ -90,8 +91,9 @@ public class AdminOrderController {
         String orderId = request.getOrderId();
 
         // 获取订单信息
-        OrderVO orderVO = orderService.getOrder(Integer.parseInt(orderId));
-        if (orderVO == null || !"P".equals(orderVO.getStatus())) {
+        String orderStatus = orderService.getOrderStatus(orderId);
+
+        if (!Objects.equals(orderStatus, "P")) {
             // 如果订单不存在或订单状态不是 "P"，直接返回错误信息
             Map<String, String> response = new HashMap<>();
             response.put("status", "error");

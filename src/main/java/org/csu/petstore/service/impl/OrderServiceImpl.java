@@ -210,6 +210,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public String getOrderStatus(String orderId) {
+        try {
+            // 调用 Mapper 更新状态
+            OrderStatus orderStatus = orderStatusMapper.getLatestStatusByOrderId(orderId);
+            return orderStatus.getStatus();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "P";
+        }
+    }
+
+    @Override
     public List<Order> getAllOrders() {
         // 调用 Mapper 的 selectList 方法查询所有订单
         return orderMapper.selectList(null); // 不传入任何查询条件，表示查询所有数据

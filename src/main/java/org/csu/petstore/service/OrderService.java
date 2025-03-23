@@ -28,6 +28,8 @@
         boolean insertOrderStatus(OrderStatusVO orderStatus);
     
         boolean updateStatusToShipped(String orderId);
+
+        String getOrderStatus(String orderId);
     
         //获得所有订单
         List<Order> getAllOrders();
