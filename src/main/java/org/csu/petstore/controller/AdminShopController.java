@@ -1,8 +1,9 @@
 package org.csu.petstore.controller;
 
+import com.alibaba.fastjson.JSON;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.csu.petstore.entity.Item;
-import org.csu.petstore.entity.ItemQuantity;
+import org.csu.petstore.entity.*;
 import org.csu.petstore.service.AdminShopService;
 import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.FileStorageService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,54 +87,78 @@ public class AdminShopController {
     }
 
     @PostMapping("/addCategory")
-    @ResponseBody
-    public Map<String, Object> addCategory(@RequestParam String categoryId,
-                                           @RequestParam String categoryName,
-                                           @RequestParam("description") MultipartFile file) {
-        Map<String, Object> response = new HashMap<>();
+    public void addCategory(@RequestParam String categoryId,
+                            @RequestParam String categoryName,
+                            @RequestParam("description") MultipartFile file,
+                            HttpServletResponse response) throws IOException {
+        // 设置响应格式
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        PrintWriter out = response.getWriter();
+
         try {
+            // 处理文件上传
             String imageUrl = file.isEmpty() ? null : fileStorageService.saveFile(file, categoryId);
             adminShopService.addCategory(categoryId, categoryName, imageUrl);
 
-            response.put("success", true);
-            response.put("message", "分类添加成功！");
+            // 封装 JSON 数据
+            CategoryDTO responseDTO = new CategoryDTO("success", "分类添加成功", categoryId, categoryName, imageUrl);
+            String jsonResult = JSON.toJSONString(responseDTO);
 
-            // 返回单个分类
-            Map<String, Object> category = new HashMap<>();
-            category.put("categoryId", categoryId);
-            category.put("categoryName", categoryName);
-            category.put("description", imageUrl); // 你前端叫 description，这里也保持一致
+            // 输出 JSON 数据
+            out.println(jsonResult);
+        } catch (IOException e) {
+            // 发生异常时返回错误信息
+            CategoryDTO responseDTO = new CategoryDTO("error", "文件上传失败", null, null, null);
+            String jsonResult = JSON.toJSONString(responseDTO);
 
-            response.put("category", category);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.put("success", false);
-            response.put("message", "添加分类失败：" + e.getMessage());
+            out.println(jsonResult);
+        } finally {
+            out.flush();
+            out.close();
         }
-        return response;
     }
-
 
 
     @PostMapping("/addProduct")
-    public String addProduct(@RequestParam String categoryId,
-                             @RequestParam String productId,
-                             @RequestParam String productName,
-                             @RequestParam("description") MultipartFile file) throws IOException {
-        // 拼接 categoryId 和 productId 作为文件名
-        String fileId = categoryId + "-" + productId;
+    public void addProduct(@RequestParam String categoryId,
+                           @RequestParam String productId,
+                           @RequestParam String productName,
+                           @RequestParam("description") MultipartFile file,
+                           HttpServletResponse response) throws IOException {
+        // 设置响应格式
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        // 保存文件（不再传 type）
-        String imageUrl = file.isEmpty() ? null : fileStorageService.saveFile(file, fileId);
-        System.out.println("imageUrl: " + imageUrl);
+        PrintWriter out = response.getWriter();
 
-        // 调用服务保存产品信息
-        adminShopService.addProduct(categoryId, productId, productName, imageUrl);
+        try {
+            // 拼接 categoryId 和 productId 作为文件名
+            String fileId = categoryId + "-" + productId;
 
-        // 重定向回分类页面
-        return "redirect:/adminShop/category?categoryId=" + categoryId;
+            // 处理文件上传
+            String imageUrl = file.isEmpty() ? null : fileStorageService.saveFile(file, fileId);
+
+            // 调用服务保存商品信息
+            adminShopService.addProduct(categoryId, productId, productName, imageUrl);
+
+            // 封装 JSON 数据
+            ProductDTO responseDTO = new ProductDTO("success", "商品添加成功", categoryId, productId, productName, imageUrl);
+            String jsonResult = JSON.toJSONString(responseDTO);
+
+            // 输出 JSON 数据
+            out.println(jsonResult);
+        } catch (IOException e) {
+            // 发生异常时返回错误信息
+            ProductDTO responseDTO = new ProductDTO("error", "文件上传失败", null, null, null, null);
+            String jsonResult = JSON.toJSONString(responseDTO);
+            out.println(jsonResult);
+        } finally {
+            out.flush();
+            out.close();
+        }
     }
-
 
     @PostMapping("/addItem")
     public String addItem(@RequestParam String productId,
@@ -146,49 +172,83 @@ public class AdminShopController {
     }
 
     @PostMapping("/updateCategory")
-    public String updateCategory(@RequestParam String categoryId,
-                                 @RequestParam String categoryName,
-                                 @RequestParam("description") MultipartFile categoryImage,
-                                 @RequestParam("originalDescription") String originalDescription) {
-        String imagePath = originalDescription;  // 默认使用原图片路径
+    public void updateCategory(@RequestParam String categoryId,
+                               @RequestParam String categoryName,
+                               @RequestParam("description") MultipartFile categoryImage,
+                               @RequestParam("originalDescription") String originalDescription,
+                               HttpServletResponse response) throws IOException {
+        // 设置响应格式
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        // 处理分类图片更新
-        if (categoryImage != null && !categoryImage.isEmpty()) {
-            try {
+        PrintWriter out = response.getWriter();
+
+        try {
+            String imagePath = originalDescription;  // 默认使用原图片路径
+
+            // 处理分类图片更新
+            if (categoryImage != null && !categoryImage.isEmpty()) {
                 imagePath = fileStorageService.updateImage(categoryImage, categoryId);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
+            adminShopService.updateCategory(categoryId, categoryName, imagePath);
+
+            // 封装 JSON 数据
+            CategoryDTO responseDTO = new CategoryDTO("success", "分类更新成功", categoryId, categoryName, imagePath);
+            String jsonResult = JSON.toJSONString(responseDTO);
+
+            // 输出 JSON 数据
+            out.println(jsonResult);
+        } catch (IOException e) {
+            CategoryDTO responseDTO = new CategoryDTO("error", "文件上传失败", null, null, null);
+            String jsonResult = JSON.toJSONString(responseDTO);
+            out.println(jsonResult);
+        } finally {
+            out.flush();
+            out.close();
         }
-
-        adminShopService.updateCategory(categoryId, categoryName, imagePath);
-
-        return "redirect:/adminShop/catalog";  // 返回分类管理页面
     }
 
 
     @PostMapping("/updateProduct")
-    public String updateProduct(@RequestParam String categoryId,
-                                @RequestParam String productId,
-                                @RequestParam String productName,
-                                @RequestParam("description")MultipartFile productImage,
-                                @RequestParam("originalDescription") String originalDescription) {
-        String imagePath = originalDescription;  // 默认使用原图片路径
+    public void updateProduct(@RequestParam String categoryId,
+                              @RequestParam String productId,
+                              @RequestParam String productName,
+                              @RequestParam("description") MultipartFile productImage,
+                              @RequestParam("originalDescription") String originalDescription,
+                              HttpServletResponse response) throws IOException {
+        // 设置响应格式
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        // 处理商品图片更新
-        if (productImage != null && !productImage.isEmpty()) {
-            try {
+        PrintWriter out = response.getWriter();
+
+        try {
+            String imagePath = originalDescription;  // 默认使用原图片路径
+
+            // 处理商品图片更新
+            if (productImage != null && !productImage.isEmpty()) {
                 imagePath = fileStorageService.updateImage(productImage, productId);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
+            adminShopService.updateProduct(productId, productName, imagePath);
+
+            // 封装 JSON 数据
+            ProductDTO responseDTO = new ProductDTO("success", "商品更新成功",categoryId, productId, productName, imagePath);
+            String jsonResult = JSON.toJSONString(responseDTO);
+
+            // 输出 JSON 数据
+            out.println(jsonResult);
+        } catch (IOException e) {
+            // 发生异常时返回错误信息
+            ProductDTO responseDTO = new ProductDTO("error", "文件上传失败", null,null, null, null);
+            String jsonResult = JSON.toJSONString(responseDTO);
+            out.println(jsonResult);
+        } finally {
+            out.flush();
+            out.close();
         }
-
-        adminShopService.updateProduct(productId, productName, imagePath);
-
-        return "redirect:/adminShop/category?categoryId=" + categoryId;  // 返回该类别的商品页面
     }
-
 
     @PostMapping("/updateItem")
     public String updateItem(@RequestParam String productId,
@@ -201,28 +261,76 @@ public class AdminShopController {
         return "redirect:/adminShop/product?productId=" + productId;  // 返回商品详情页面
     }
 
+
     @PostMapping("/deleteCategory")
-    public String deleteCategory(@RequestParam String categoryId) throws IOException {
-        fileStorageService.deleteImage(categoryId);
-        adminShopService.deleteCategory(categoryId);
-        return "redirect:/adminShop/catalog";  // 返回商品分类管理页面
+    public void deleteCategory(@RequestParam String categoryId, HttpServletResponse response) throws IOException {
+        // 设置响应格式
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        PrintWriter out = response.getWriter();
+
+        try {
+            // 调用删除服务，删除分类和分类图片
+            fileStorageService.deleteImage(categoryId);  // 删除分类的图片
+            adminShopService.deleteCategory(categoryId);  // 删除分类
+
+            // 封装 JSON 数据
+            CategoryDTO responseDTO = new CategoryDTO("success", "分类删除成功", categoryId, null, null);
+            String jsonResult = JSON.toJSONString(responseDTO);
+
+            // 输出 JSON 数据
+            out.println(jsonResult);
+        } catch (Exception e) {
+            CategoryDTO responseDTO = new CategoryDTO("error", "删除失败: " + e.getMessage(), null, null, null);
+            String jsonResult = JSON.toJSONString(responseDTO);
+            out.println(jsonResult);
+        } finally {
+            out.flush();
+            out.close();
+        }
     }
 
     @PostMapping("/deleteProduct")
-    public String deleteProduct(@RequestParam String categoryId,
-                                @RequestParam String productId) throws IOException {
-        String id=categoryId+"-"+productId;
-        fileStorageService.deleteImage(id);
-        adminShopService.deleteProduct(productId);
-        return "redirect:/adminShop/category?categoryId=" + categoryId;  // 返回商品类别页面
+    public void deleteProduct(@RequestParam String categoryId,
+                              @RequestParam String productId,
+                              HttpServletResponse response) throws IOException {
+        // 设置响应格式
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        PrintWriter out = response.getWriter();
+
+        try {
+            String id = categoryId + "-" + productId;
+            fileStorageService.deleteImage(id);  // 删除商品图片
+            adminShopService.deleteProduct(productId);  // 删除商品
+
+            System.out.println("jjhjsshadshadasd");
+            // 封装 JSON 数据
+            ProductDTO responseDTO = new ProductDTO("success", "商品删除成功",categoryId, productId, null, null);
+            String jsonResult = JSON.toJSONString(responseDTO);
+
+            // 输出 JSON 数据
+            out.println(jsonResult);
+        } catch (Exception e) {
+            System.out.println("errrrrr");
+            // 发生异常时返回错误信息
+            ProductDTO responseDTO = new ProductDTO("error", "删除失败: " + e.getMessage(), null,null, null, null);
+            String jsonResult = JSON.toJSONString(responseDTO);
+            out.println(jsonResult);
+        } finally {
+            out.flush();
+            out.close();
+        }
     }
+
 
     @PostMapping("/deleteItem")
     public String deleteItem(@RequestParam String productId, @RequestParam String itemId) {
         adminShopService.deleteItem(itemId);
         return "redirect:/adminShop/product?productId=" + productId;  // 返回商品详情页面
     }
-
 
     //上下架
     @PostMapping("/updateItemStatus")
