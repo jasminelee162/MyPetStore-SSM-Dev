@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>编辑账户信息</title>
+  <link rel="StyleSheet" href="/css/edit.css" type="text/css" media="screen"/>
+  <style>
+    body {
+      /*background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);*/
+      /*overflow: auto;*/
+      /*margin: 0;*/
+      min-height: 100vh;
+    }
+    fieldset {
+      margin-left:30px;
+      width:790px;
+    }
+    .registration-form {
+      margin-left:300px;
+    }
+    form{
+      width:850px;
+      margin-left:80px;
+    }
+    .back {
+      margin-left:710px;
+    }
+    .back a {
+      width: 200px;
+    }
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle linear infinite;
+    }
+
+    @keyframes twinkle {
+      0% {
+        transform: translate(0, 0);
+        opacity: 0.6;
+      }
+      25% {
+        transform: translate(-5px, 5px);
+        opacity: 1;
+      }
+      50% {
+        transform: translate(5px, -5px);
+        opacity: 0.8;
+      }
+      75% {
+        transform: translate(-1px, -1px);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(0, 0);
+        opacity: 0.6;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!--<header th:replace="~{common/top}"></header>-->
+<h2>编辑账户信息</h2>
+<div class="registration-form" id="registration-form">
+
+  <form th:action="@{/account/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
+
+    <input type="hidden" th:field="*{account.username}" />
+
+
+    <fieldset>
+      <legend>账户信息</legend>
+      <table>
+
+        <tr>
+          <td><label for="password">新密码:</label></td>
+          <td><input type="password" id="password" name="password" required placeholder="请输入新密码" /></td>
+        </tr>
+        <tr>
+          <td><label for="confirmPassword">确认新密码:</label></td>
+          <td><input type="password" id="confirmPassword" name="confirmPassword" required placeholder="请确认新密码" /></td>
+        </tr>
+        <tr>
+          <td><label for="firstName">姓名:</label></td>
+          <td><input type="text" id="firstName" th:field="*{account.firstname}" required placeholder="请输入姓名" /></td>
+        </tr>
+        <tr>
+          <td><label for="lastName">姓氏:</label></td>
+          <td><input type="text" id="lastName" th:field="*{account.lastname}" required placeholder="请输入姓氏" /></td>
+        </tr>
+        <tr>
+          <td><label for="email">邮箱:</label></td>
+          <td><input type="email" id="email" th:field="*{account.email}" required placeholder="请输入邮箱"  /></td>
+        </tr>
+        <tr>
+          <td><label for="phone">电话:</label></td>
+          <td><input type="tel" id="phone" th:field="*{account.phone}" required placeholder="请输入电话" /></td>
+        </tr>
+        <tr>
+          <td><label for="address1">地址 1:</label></td>
+          <td><input type="text" id="address1" th:field="*{account.addr1}" placeholder="请输入地址 1" /></td>
+        </tr>
+        <tr>
+          <td><label for="address2">地址 2:</label></td>
+          <td><input type="text" id="address2" th:field="*{account.addr2}" placeholder="请输入地址 2" /></td>
+        </tr>
+        <tr>
+          <td><label for="city">城市:</label></td>
+          <td><input type="text" id="city" th:field="*{account.city}" placeholder="请输入城市" /></td>
+        </tr>
+        <tr>
+          <td><label for="state">州/省:</label></td>
+          <td><input type="text" id="state" th:field="*{account.state}" placeholder="请输入州/省" /></td>
+        </tr>
+        <tr>
+          <td><label for="zip">邮编:</label></td>
+          <td><input type="text" id="zip" th:field="*{account.zip}" placeholder="请输入邮编" /></td>
+        </tr>
+        <tr>
+          <td><label for="country">国家:</label></td>
+          <td><input type="text" id="country" th:field="*{account.country}" required placeholder="请输入国家" /></td>
+        </tr>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend>个人信息</legend>
+      <table>
+        <tr>
+          <td><label for="languagePreference">语言偏好:</label></td>
+          <td>
+            <select id="languagePreference" th:field="*{account.langpref}">
+              <option value="english" th:selected="${account.langpref == 'english'}">English</option>
+              <option value="japanese" th:selected="${account.langpref == 'japanese'}">Japanese</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="favouriteCategoryId">喜欢的类别:</label></td>
+          <td>
+            <select id="favouriteCategoryId" th:field="*{account.favcategory}">
+              <option value="FISH" th:selected="${account.favcategory == 'FISH'}">FISH</option>
+              <option value="DOGS" th:selected="${account.favcategory == 'DOGS'}">DOGS</option>
+              <option value="REPTILES" th:selected="${account.favcategory == 'REPTILES'}">REPTILES</option>
+              <option value="CATS" th:selected="${account.favcategory == 'CATS'}">CATS</option>
+              <option value="BIRDS" th:selected="${account.favcategory == 'BIRDS'}">BIRDS</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="listOption">启用我的列表:</label></td>
+          <td><input type="checkbox" id="listOption" th:field="*{account.mylistopt}" /></td>
+        </tr>
+        <tr>
+          <td><label for="bannerOption">启用我的横幅:</label></td>
+          <td><input type="checkbox" id="bannerOption" th:field="*{account.banneropt}" /></td>
+        </tr>
+      </table>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="submit">保存修改</button>
+    </div>
+  </form>
+
+  <!-- 错误信息显示 -->
+  <div class="error" th:text="${error}"></div>
+</div>
+<div class="back">
+  <a href="/catalog/adminIndex">返回后台管理首页</a>
+</div>
+</body>
+<!--<footer th:replace="~{common/bottom}"></footer>-->
+</html>
+<script>
+  // 使用JavaScript做前端验证
+  document.querySelector("form").onsubmit = function() {
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirmPassword").value;
+    if (password !== confirmPassword) {
+      alert("密码和确认密码不一致，请重新输入！");
+      return false;  // 阻止表单提交
+    }
+    return true;
+  };
+</script>

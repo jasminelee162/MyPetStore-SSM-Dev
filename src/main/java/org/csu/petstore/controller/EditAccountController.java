@@ -27,6 +27,13 @@ public class EditAccountController {
         return "account/editAccount";
     }
 
+    @GetMapping("/editMerchantAccount")
+    public String editMerchantAccountForm(@SessionAttribute("loginAccount") AccountVO loginAccount, Model model) {
+        // 填充表单数据
+        model.addAttribute("account", loginAccount);
+        return "account/editMerchantAccount";
+    }
+
     @PostMapping("/editAccount")
     public String submitAccountInfo(@Validated @ModelAttribute("account") AccountVO account,
                                     @RequestParam(value = "password", required = false) String password,
