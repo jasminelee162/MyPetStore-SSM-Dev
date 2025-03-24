@@ -49,6 +49,7 @@ public interface AccountMapper extends BaseMapper<Account> {
     @Select("SELECT * FROM account WHERE ACCOUNT.USERID = #{username}")
     AccountVO getAccountByUsername(@Param("username") String username);
 
+    @Select("SELECT COUNT(*) > 0 FROM SIGNON WHERE USERNAME = #{username}")
     boolean isUsernameExists(String username);
 
     // Update password in the SIGNON table
