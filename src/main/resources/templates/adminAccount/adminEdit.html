@@ -12,7 +12,7 @@
 <!--<header th:replace="~{common/top}"></header>-->
 <h2>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp编辑账户信息</h2>
 <div class="registration-form" id="registration-form">
-  <form th:action="@{/adminAccount/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
+  <form id="myForm" th:action="@{/adminAccount/editAccount}" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validatePassword()">
 
     <input type="hidden" th:field="*{checkAccount.username}"/>
     <input type="hidden" th:field="*{checkAccount.firstname}"/>
@@ -24,11 +24,11 @@
       <table>
         <tr>
           <td><label for="password">新密码:</label></td>
-          <td><input  id="password" name="password"  value="123" placeholder="请输入新密码" /></td>
+          <td><input  type="password" id="password" name="password"  placeholder="请输入新密码" /></td>
         </tr>
         <tr>
           <td><label for="confirmPassword">确认新密码:</label></td>
-          <td><input id="confirmPassword" name="confirmPassword" value="123" placeholder="请确认新密码" /></td>
+          <td><input type="password" id="confirmPassword" name="confirmPassword"  placeholder="请确认新密码" /></td>
         </tr>
         <tr>
           <td><label for="email">邮箱:</label></td>
@@ -106,13 +106,26 @@
 </html>
 <script>
   // 使用JavaScript做前端验证
-  document.querySelector("form").onsubmit = function() {
+  document.querySelector("form").onsubmit = function () {
     var password = document.getElementById("password").value;
     var confirmPassword = document.getElementById("confirmPassword").value;
+
     if (password !== confirmPassword) {
       alert("密码和确认密码不一致，请重新输入！");
       return false;  // 阻止表单提交
-    }
+    } 
     return true;
   };
+
+
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+    var passwordField = document.getElementById("password");
+      var confirmPassword = document.getElementById("confirmPassword");
+    if (passwordField.value.trim() === "") {
+    passwordField.value = "00"; // 设定默认值
+      confirmPassword.value = "00"
+
+  }
+  });
+
 </script>

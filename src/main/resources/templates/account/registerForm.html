@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <title>Registration</title>
     <link rel="StyleSheet" href="/css/account.css" type="text/css" media="screen"/>
-   <!-- <script src="/static/js/register.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="/js/register.js"></script>
 </head>
 <body>
 <!--<header th:replace="common/top"></header>-->
 
 <div class="registration-form" id="registration-form">
 
-    <form action="#" th:action="@{/account/register}" method="post" enctype="application/x-www-form-urlencoded">
+    <form id="registerForm" action="#" method="post" enctype="application/x-www-form-urlencoded">
 
         <p id="m">Init your account.</p>
 

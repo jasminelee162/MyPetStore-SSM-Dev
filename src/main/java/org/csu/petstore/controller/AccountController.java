@@ -93,7 +93,6 @@ public class AccountController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute AccountVO account, Model model) {
-
         // 调用服务层的注册方法
         accountService.registerAccount(account);
         return "catalog/main";
@@ -118,6 +117,17 @@ public class AccountController {
     public String registerForm(Model model) {
         return "account/registerForm";
     }
+
+    @GetMapping("/Check")
+    public String checkUsernameExists(@RequestParam("username") String username) {
+        // 检查用户名是否存在
+        if (accountService.checkAccount(username)) {
+            return "true";
+        } else {
+            return "false";
+        }
+    }
+
 
     @GetMapping("/captcha")
     @ResponseBody
