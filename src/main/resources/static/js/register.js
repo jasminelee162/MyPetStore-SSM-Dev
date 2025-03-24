@@ -25,17 +25,16 @@ function checkUsernameExists(username, input, submit, msg) {
     return new Promise(function (resolve, reject) {
         // 拼接查询字符串
         var queryString = 'username=' + encodeURIComponent(username);
-        makeRequest('GET', 'Check?' + queryString)  // 直接传递URL和参数
+
+        makeRequest('GET', 'Check?' + queryString)
             .then(function (data) {
                 var result = JSON.parse(data);
 
                 if (result.exists) {
-                    msg.html("Username already exists!");
-                    msg.css('color', "red");
+                    msg.html("Username already exists!").css('color', "red");
                     reject("Username already exists");
                 } else {
-                    msg.html("Username is available.");
-                    msg.css('color', '#333');
+                    msg.html("Username is available.").css('color', '#333');
                     resolve();  // 用户名通过，继续执行注册
                 }
             })
@@ -48,18 +47,15 @@ function checkUsernameExists(username, input, submit, msg) {
 
 // 提交注册表单
 function submitRegistration(username, password) {
-    // 拼接 formData 到 URL
+
     var form = document.getElementById('registerForm');
     var formData = new FormData(form);  // FormData 自动获取表单中的所有字段
 
-    // 通过 URLSearchParams 将 FormData 转换为查询字符串形式
     var queryString = new URLSearchParams(formData).toString();
 
-    // 只传递两个参数
     makeRequest('POST', 'register?' + queryString)
         .then(function (data) {
-            console.log(data)
-            window.location.href = data;  // 返回的 data 是跳转 URL
+            window.location.href = '/catalog/index';
         })
         .catch(function (error) {
             console.error("Error during registration: ", error);
