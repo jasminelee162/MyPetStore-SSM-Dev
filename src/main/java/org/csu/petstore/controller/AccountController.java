@@ -98,7 +98,7 @@ public class AccountController {
     public String register(@ModelAttribute AccountVO account, Model model) {
         // 调用服务层的注册方法
         accountService.registerAccount(account);
-        return "catalog/main";
+        return "redirect:/catalog/main";
     }
 
 

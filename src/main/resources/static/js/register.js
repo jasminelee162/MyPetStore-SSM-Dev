@@ -1,7 +1,6 @@
 $(document).ready(function () {
     let submit = $('#submit');
     let msg = $('#msg1');
-    console.log("8888")
 
     // 监听表单提交
     $('#registerForm').on('submit', function (e) {
@@ -16,7 +15,6 @@ $(document).ready(function () {
             submitRegistration(username, password);
         }).catch(function (error) {
             // 用户名验证失败
-            console("9999")
             console.error(error);
         });
     });
@@ -25,9 +23,13 @@ $(document).ready(function () {
 // 检查用户名是否已存在
 function checkUsernameExists(username, input, submit, msg) {
     return new Promise(function (resolve, reject) {
-        makeRequest('GET', 'Check', { username: username})
+        // 拼接查询字符串
+        var queryString = 'username=' + encodeURIComponent(username);
+        makeRequest('GET', 'Check?' + queryString)  // 直接传递URL和参数
             .then(function (data) {
-                if (data === "true") {
+                var result = JSON.parse(data);
+
+                if (result.exists) {
                     msg.html("Username already exists!");
                     msg.css('color', "red");
                     reject("Username already exists");
@@ -46,11 +48,18 @@ function checkUsernameExists(username, input, submit, msg) {
 
 // 提交注册表单
 function submitRegistration(username, password) {
-    var formData = 'username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password);
+    // 拼接 formData 到 URL
+    var form = document.getElementById('registerForm');
+    var formData = new FormData(form);  // FormData 自动获取表单中的所有字段
 
-    makeRequest('POST', 'register', formData)
+    // 通过 URLSearchParams 将 FormData 转换为查询字符串形式
+    var queryString = new URLSearchParams(formData).toString();
+
+    // 只传递两个参数
+    makeRequest('POST', 'register?' + queryString)
         .then(function (data) {
-            window.location.href = data;  // 跳转到注册成功的页面
+            console.log(data)
+            window.location.href = data;  // 返回的 data 是跳转 URL
         })
         .catch(function (error) {
             console.error("Error during registration: ", error);
@@ -58,13 +67,10 @@ function submitRegistration(username, password) {
 }
 
 // 创建XHR 请求
-function makeRequest(method, url, data) {
+function makeRequest(method, url) {
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
-
-        // 设置请求头
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
@@ -81,7 +87,7 @@ function makeRequest(method, url, data) {
         };
 
         // 发送请求
-        xhr.send(data);
+        xhr.send();
     });
 }
 
