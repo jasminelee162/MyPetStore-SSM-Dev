@@ -9,6 +9,7 @@ import org.csu.petstore.vo.AccountVO;
 import org.csu.petstore.vo.CategoryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +21,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Controller
@@ -119,13 +122,14 @@ public class AccountController {
     }
 
     @GetMapping("/Check")
-    public String checkUsernameExists(@RequestParam("username") String username) {
+    public ResponseEntity<Map<String, Boolean>> checkUsernameExists(@RequestParam(value = "username", required = false) String username) {
         // 检查用户名是否存在
-        if (accountService.checkAccount(username)) {
-            return "true";
-        } else {
-            return "false";
-        }
+
+        boolean exists = accountService.checkAccount(username);
+        System.out.println(exists);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
     }
 
 
