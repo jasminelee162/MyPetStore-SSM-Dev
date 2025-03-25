@@ -49,7 +49,7 @@ $(document).ready(function () {
             })
             .then(data => {
                 console.log("注册成功:", data);
-                window.location.href = data;
+                window.location.href = "/catalog/index";// 注册成功后跳转到 /catalog/index
             })
             .catch(error => {
                 console.error("Error during registration: ", error);
