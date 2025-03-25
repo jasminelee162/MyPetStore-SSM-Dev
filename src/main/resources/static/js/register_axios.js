@@ -49,7 +49,8 @@ function submitRegistration(username, password) {
     axios.post('register', formData)
         .then(response => {
             console.log(response.data);
-            window.location.href = response.data; // 假设返回的 data 是跳转 URL
+            // 注册成功后跳转到 /catalog/index
+            window.location.href = "/catalog/index";
         })
         .catch(error => {
             console.error("Error during registration: ", error);
