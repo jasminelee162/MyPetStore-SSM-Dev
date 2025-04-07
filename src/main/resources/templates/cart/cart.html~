@@ -147,7 +147,7 @@
                             </div>
                         </td>
                         <td th:id="|single-price-${cartItem.item.itemId}|">
-                            <span th:text=" ${#numbers.formatCurrency(cartItem.item.listPrice)}"></span>
+                            <span th:text="${#numbers.formatCurrency(cartItem.item.listPrice)}"></span>
                         </td>
                         <td>
                             <button type="button" class="quantity-decrease" th:data-item-id="${cartItem.item.itemId}">-</button>

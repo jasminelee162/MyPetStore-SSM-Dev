@@ -14,8 +14,7 @@ $(document).ready(function () {
             // 用户名验证通过，进行注册提交
             submitRegistration(username, password);
         }).catch(function (error) {
-            // 用户名验证失败
-            console.error(error);
+            console.error(error); // 用户名验证失败
         });
     });
 });
@@ -25,11 +24,9 @@ function checkUsernameExists(username, input, submit, msg) {
     return new Promise(function (resolve, reject) {
         // 拼接查询字符串
         var queryString = 'username=' + encodeURIComponent(username);
-
         makeRequest('GET', 'Check?' + queryString)
             .then(function (data) {
                 var result = JSON.parse(data);
-
                 if (result.exists) {
                     msg.html("Username already exists!").css('color', "red");
                     reject("Username already exists");
@@ -62,7 +59,7 @@ function submitRegistration(username, password) {
         });
 }
 
-// 创建XHR 请求
+    // 创建XHR 请求
 function makeRequest(method, url) {
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
@@ -78,12 +75,8 @@ function makeRequest(method, url) {
             }
         };
 
-        xhr.onerror = function () {
-            reject('error');
-        };
-
-        // 发送请求
-        xhr.send();
+        xhr.onerror = function () {reject('error');};
+        xhr.send();     // 发送请求
     });
 }
 
