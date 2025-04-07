@@ -173,7 +173,7 @@ public class AccountController {
             int index = random.nextInt(characters.length());
             randomString.append(characters.charAt(index));
         }
-zx
+
         return randomString.toString();
     }
 
@@ -188,7 +188,7 @@ zx
         }
     }
 
-    private boolean validate(String  username, String password, String gotCaptcha, String captcha) {
+    private boolean validate(String username, String password, String gotCaptcha, String captcha) {
 
         if(username == null || username.isEmpty()){
             this.msg = "用户名不能空";
