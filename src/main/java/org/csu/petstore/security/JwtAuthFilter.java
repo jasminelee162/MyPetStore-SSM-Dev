@@ -39,6 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     public boolean exclude(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         // 判断请求路径是否在排除列表中
-        return requestURI.equals("/accounts") || requestURI.equals("/tokens");
+        //return requestURI.equals("/accounts") || requestURI.equals("/tokens");
+        return true;
     }
 }
