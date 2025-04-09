@@ -98,7 +98,7 @@ public class CartController {
 
         ItemDTO responseDTO = new ItemDTO(
                 cartItemVO != null ? cartItemVO.getTotalPrice() : BigDecimal.ZERO,
-                subTotal, null, null, null, null, null);
+                subTotal);
 
         return CommonResponse.createForSuccess(responseDTO);
     }

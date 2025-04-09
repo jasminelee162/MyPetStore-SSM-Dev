@@ -74,13 +74,13 @@ public class CartServiceImpl implements CartService {
         List<CartItem> cartItems = cartItemMapper.getCartItemsByUsername(username);
 
         // 调用封装的方法，转换为 CartVO
-        return convertToCartVO(cartItems);
+        return convertToCartVO(cartItems,username);
     }
 
     /**
      * 将购物车数据转换为 CartVO
      */
-    private CartVO convertToCartVO(List<CartItem> cartItems) {
+    private CartVO convertToCartVO(List<CartItem> cartItems,String username) {
         CartVO cartVO = new CartVO();
         BigDecimal subTotal = BigDecimal.ZERO;
 
@@ -111,6 +111,7 @@ public class CartServiceImpl implements CartService {
         }
 
         // 设置购物车数据
+        cartVO.setUsername(username);
         cartVO.setItemMap(itemMap);
         cartVO.setItemList(itemList);
         cartVO.setSubTotal(subTotal);
