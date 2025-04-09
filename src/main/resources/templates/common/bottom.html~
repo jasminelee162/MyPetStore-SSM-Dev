@@ -28,8 +28,7 @@
 <footer th:fragment="footer">
     <div id="Footer">
         <div id="PoweredBy">
-            &nbsp<a href="https://www.csu.edu.cn" target="_blank">Central South University</a>
-
+            &nbsp<a href="www.csu.edu.cn">Central South University</a>
         </div>
 
         <div id="Banner">
