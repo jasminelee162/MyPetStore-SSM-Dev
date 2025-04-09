@@ -3,6 +3,7 @@ package org.csu.petstore.controller;
 import com.alibaba.fastjson.JSON;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.csu.petstore.common.CommonResponse;
 import org.csu.petstore.entity.Account;
 import org.csu.petstore.entity.CartItem;
 import org.csu.petstore.entity.Item;
@@ -23,147 +24,279 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 
-@Controller
+@RestController
 @RequestMapping("/cart")
 public class CartController {
 
     @Autowired
     private CartService cartService;
+
     @Autowired
     private CatalogService catalogService;
 
-    @GetMapping("viewCart")
-    public String viewCart(HttpSession session, Model model) {
-        // 检查 session 是否有账户信息
-        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-        String username = null;
-        if (account == null) {
-            model.addAttribute("msg", "请先登录后再使用购物车！");
-            return "/account/signOnForm";
-        } else {
-            username = account.getUsername();
+    @GetMapping
+    public CommonResponse<CartVO> getCart(@RequestParam("username") String username) {
+        if (username == null || username.isEmpty()) {
+            return CommonResponse.createForError("请先登录后再使用购物车！");
         }
 
-        // 获取购物车信息
         CartVO cart = cartService.getCartByUsername(username);
-        if (cart == null) {
-            cart = new CartVO(); // 创建一个新的购物车对象
-            session.setAttribute("cart", cart);
-        }
-
-        session.setAttribute("cart", cart);
-
-        return "cart/cart";
+        return CommonResponse.createForSuccess(cart);
     }
 
-    @GetMapping("/addItemToCart")
-    public String addItemToCart(@RequestParam("workingItemId") String itemId, HttpSession session, Model model) {
-        // 从 session 中获取登录用户的 username
-        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-        if (account == null) {
-            model.addAttribute("msg", "请先登录后再使用购物车！");
-            return "/account/signOnForm";
+    @PostMapping("/item/{itemId}")
+    public CommonResponse<String> addItemToCart(@PathVariable String itemId,
+                                                @RequestParam String username) {
+        if (username == null || username.isEmpty()) {
+            return CommonResponse.createForError("请先登录后再添加商品！");
         }
-        String username = account.getUsername();
 
-        // 调用 CartService 的方法将商品添加到购物车
+        try {
+            catalogService.getItem(itemId);
+        }catch (Exception e) {
+            return CommonResponse.createForError("不存在该商品！");
+        }
         cartService.addCartItem(username, itemId);
-
-        // 获取购物车
-        CartVO cart = cartService.getCartByUsername(username);
-        if (cart != null) {
-            session.setAttribute("cart", cart);  // 更新 session 中的购物车
-        }
-
-        // 跳转回购物车页面
-        return "redirect:/cart/viewCart";
+        return CommonResponse.createForSuccess("商品添加成功");
     }
 
-    @PostMapping("/updateCart")
-    @ResponseBody
-    public void updateCart(@RequestParam("itemId") String itemId,
-                           @RequestParam("quantity") int quantity,
-                           HttpSession session,
-                           HttpServletResponse response) throws IOException {
+    @PutMapping("/item/{itemId}")
+    public CommonResponse<ItemDTO> updateItemQuantity(@PathVariable String itemId,
+                                                      @RequestParam int quantity,
+                                                      @RequestParam String username) {
+        if (username == null || username.isEmpty()) {
+            return CommonResponse.createForError("请先登录！");
+        }
 
-        // 获取用户信息
-        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-        String username = (account != null) ? account.getUsername() : null;
+        try {
+            catalogService.getItem(itemId);
+        }catch (Exception e) {
+            return CommonResponse.createForError("不存在该商品！");
+        }
 
-        // 获取购物车信息（不重新查询）
-        CartVO cart = (CartVO) session.getAttribute("cart");
-
-        // 获取购物车中对应的 CartItemVO
+        CartVO cart = cartService.getCartByUsername(username);
         CartItemVO cartItemVO = cart.getItemMap().get(itemId);
+
 
         if (cartItemVO != null) {
             if (quantity < 1) {
-                // 如果数量小于 1，则从购物车中移除该商品
                 cartService.removeCartItem(username, itemId);
-
-                // 同步更新 itemMap 和 itemList
                 cart.getItemMap().remove(itemId);
                 cart.getItemList().removeIf(item -> item.getItem().getItemId().equals(itemId));
             } else {
-                // 更新商品数量
                 cartService.updateCartItem(username, itemId, quantity);
-
-                // 同步更新 cartItemVO 的数量和总价
                 cartItemVO.setQuantity(quantity);
-                BigDecimal newTotalPrice = cartItemVO.getItem().getListPrice().multiply(BigDecimal.valueOf(quantity));
-                cartItemVO.setTotalPrice(newTotalPrice);
+                cartItemVO.setTotalPrice(cartItemVO.getItem().getListPrice().multiply(BigDecimal.valueOf(quantity)));
             }
+        }else{
+            return CommonResponse.createForError("购物车中无该商品！");
         }
 
-        // 重新计算 subTotal
-        BigDecimal subTotal = BigDecimal.ZERO;
-        for (CartItemVO item : cart.getItemMap().values()) {
-            subTotal = subTotal.add(item.getTotalPrice());
-        }
+        BigDecimal subTotal = cart.getItemMap().values().stream()
+                .map(CartItemVO::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // 更新 session 中的购物车数据
-        session.setAttribute("cart", cart);
+        ItemDTO responseDTO = new ItemDTO(
+                cartItemVO != null ? cartItemVO.getTotalPrice() : BigDecimal.ZERO,
+                subTotal, null, null, null, null, null);
 
-        // 封装 JSON 数据
-        ItemDTO responseDTO = new ItemDTO(cartItemVO != null ? cartItemVO.getTotalPrice() : BigDecimal.ZERO, subTotal, null, null, null, null, null);
-        String jsonResult = JSON.toJSONString(responseDTO);
-        System.out.println(jsonResult);
-
-        // 设定响应格式并返回 JSON 数据
-        response.setContentType("text/json");
-        PrintWriter out = response.getWriter();
-        out.println(jsonResult);
+        return CommonResponse.createForSuccess(responseDTO);
     }
 
-    @PostMapping("/removeCartItem")
-    public String removeCartItem(@RequestParam String itemId, HttpSession session) {
-        CartVO cart = (CartVO) session.getAttribute("cart");
-        if (cart != null) {
-            cartService.removeCartItem(cart.getUsername(), itemId);
-
-            // 同步更新 itemMap 和 itemList
-            cart.getItemMap().remove(itemId);
-            cart.getItemList().removeIf(item -> item.getItem().getItemId().equals(itemId));
-
-            // 更新 session 中的购物车
-            session.setAttribute("cart", cart);
+    @DeleteMapping("/item/{itemId}")
+    public CommonResponse<String> removeItem(@PathVariable String itemId,
+                                             @RequestParam String username) {
+        if (username == null || username.isEmpty()) {
+            return CommonResponse.createForError("请先登录！");
         }
-        return "redirect:/cart/viewCart";
+
+        try {
+            catalogService.getItem(itemId);
+        }catch (Exception e) {
+            return CommonResponse.createForError("不存在该商品！");
+        }
+
+        cartService.removeCartItem(username, itemId);
+        return CommonResponse.createForSuccess("商品已删除");
     }
 
-    @PostMapping("/clearCart")
-    public String clearCart(HttpSession session) {
-        CartVO cart = (CartVO) session.getAttribute("cart");
-        if (cart != null) {
-            cartService.clearCart(cart.getUsername());
-
-            // 清空 itemMap 和 itemList
-            cart.getItemMap().clear();
-            cart.getItemList().clear();
-
-            // 更新 session 中的购物车
-            session.setAttribute("cart", cart);
+    @DeleteMapping
+    public CommonResponse<String> clearCart(@RequestParam String username) {
+        if (username == null || username.isEmpty()) {
+            return CommonResponse.createForError("请先登录！");
         }
-        return "redirect:/cart/viewCart";
+
+        cartService.clearCart(username);
+        return CommonResponse.createForSuccess("清空购物车成功！");
     }
 }
+
+
+
+//import com.alibaba.fastjson.JSON;
+//import jakarta.servlet.http.HttpServletResponse;
+//import jakarta.servlet.http.HttpSession;
+//import org.csu.petstore.entity.Account;
+//import org.csu.petstore.entity.CartItem;
+//import org.csu.petstore.entity.Item;
+//import org.csu.petstore.entity.ItemDTO;
+//import org.csu.petstore.service.CartService;
+//import org.csu.petstore.service.CatalogService;
+//import org.csu.petstore.vo.AccountVO;
+//import org.csu.petstore.vo.CartItemVO;
+//import org.csu.petstore.vo.CartVO;
+//import org.csu.petstore.vo.ItemVO;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.Banner;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.ui.Model;
+//import org.springframework.web.bind.annotation.*;
+//
+//import java.io.IOException;
+//import java.io.PrintWriter;
+//import java.math.BigDecimal;
+//
+//@Controller
+//@RequestMapping("/cart")
+//public class CartController {
+//
+//    @Autowired
+//    private CartService cartService;
+//    @Autowired
+//    private CatalogService catalogService;
+//
+//    @GetMapping("viewCart")
+//    public String viewCart(HttpSession session, Model model) {
+//        // 检查 session 是否有账户信息
+//        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
+//        String username = null;
+//        if (account == null) {
+//            model.addAttribute("msg", "请先登录后再使用购物车！");
+//            return "/account/signOnForm";
+//        } else {
+//            username = account.getUsername();
+//        }
+//
+//        // 获取购物车信息
+//        CartVO cart = cartService.getCartByUsername(username);
+//        if (cart == null) {
+//            cart = new CartVO(); // 创建一个新的购物车对象
+//            session.setAttribute("cart", cart);
+//        }
+//
+//        session.setAttribute("cart", cart);
+//
+//        return "cart/cart";
+//    }
+//
+//    @GetMapping("/addItemToCart")
+//    public String addItemToCart(@RequestParam("workingItemId") String itemId, HttpSession session, Model model) {
+//        // 从 session 中获取登录用户的 username
+//        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
+//        if (account == null) {
+//            model.addAttribute("msg", "请先登录后再使用购物车！");
+//            return "/account/signOnForm";
+//        }
+//        String username = account.getUsername();
+//
+//        // 调用 CartService 的方法将商品添加到购物车
+//        cartService.addCartItem(username, itemId);
+//
+//        // 获取购物车
+//        CartVO cart = cartService.getCartByUsername(username);
+//        if (cart != null) {
+//            session.setAttribute("cart", cart);  // 更新 session 中的购物车
+//        }
+//
+//        // 跳转回购物车页面
+//        return "redirect:/cart/viewCart";
+//    }
+//
+//    @PostMapping("/updateCart")
+//    @ResponseBody
+//    public void updateCart(@RequestParam("itemId") String itemId,
+//                           @RequestParam("quantity") int quantity,
+//                           HttpSession session,
+//                           HttpServletResponse response) throws IOException {
+//
+//        // 获取用户信息
+//        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
+//        String username = (account != null) ? account.getUsername() : null;
+//
+//        // 获取购物车信息（不重新查询）
+//        CartVO cart = (CartVO) session.getAttribute("cart");
+//
+//        // 获取购物车中对应的 CartItemVO
+//        CartItemVO cartItemVO = cart.getItemMap().get(itemId);
+//
+//        if (cartItemVO != null) {
+//            if (quantity < 1) {
+//                // 如果数量小于 1，则从购物车中移除该商品
+//                cartService.removeCartItem(username, itemId);
+//
+//                // 同步更新 itemMap 和 itemList
+//                cart.getItemMap().remove(itemId);
+//                cart.getItemList().removeIf(item -> item.getItem().getItemId().equals(itemId));
+//            } else {
+//                // 更新商品数量
+//                cartService.updateCartItem(username, itemId, quantity);
+//
+//                // 同步更新 cartItemVO 的数量和总价
+//                cartItemVO.setQuantity(quantity);
+//                BigDecimal newTotalPrice = cartItemVO.getItem().getListPrice().multiply(BigDecimal.valueOf(quantity));
+//                cartItemVO.setTotalPrice(newTotalPrice);
+//            }
+//        }
+//
+//        // 重新计算 subTotal
+//        BigDecimal subTotal = BigDecimal.ZERO;
+//        for (CartItemVO item : cart.getItemMap().values()) {
+//            subTotal = subTotal.add(item.getTotalPrice());
+//        }
+//
+//        // 更新 session 中的购物车数据
+//        session.setAttribute("cart", cart);
+//
+//        // 封装 JSON 数据
+//        ItemDTO responseDTO = new ItemDTO(cartItemVO != null ? cartItemVO.getTotalPrice() : BigDecimal.ZERO, subTotal, null, null, null, null, null);
+//        String jsonResult = JSON.toJSONString(responseDTO);
+//        System.out.println(jsonResult);
+//
+//        // 设定响应格式并返回 JSON 数据
+//        response.setContentType("text/json");
+//        PrintWriter out = response.getWriter();
+//        out.println(jsonResult);
+//    }
+//
+//    @PostMapping("/removeCartItem")
+//    public String removeCartItem(@RequestParam String itemId, HttpSession session) {
+//        CartVO cart = (CartVO) session.getAttribute("cart");
+//        if (cart != null) {
+//            cartService.removeCartItem(cart.getUsername(), itemId);
+//
+//            // 同步更新 itemMap 和 itemList
+//            cart.getItemMap().remove(itemId);
+//            cart.getItemList().removeIf(item -> item.getItem().getItemId().equals(itemId));
+//
+//            // 更新 session 中的购物车
+//            session.setAttribute("cart", cart);
+//        }
+//        return "redirect:/cart/viewCart";
+//    }
+//
+//    @PostMapping("/clearCart")
+//    public String clearCart(HttpSession session) {
+//        CartVO cart = (CartVO) session.getAttribute("cart");
+//        if (cart != null) {
+//            cartService.clearCart(cart.getUsername());
+//
+//            // 清空 itemMap 和 itemList
+//            cart.getItemMap().clear();
+//            cart.getItemList().clear();
+//
+//            // 更新 session 中的购物车
+//            session.setAttribute("cart", cart);
+//        }
+//        return "redirect:/cart/viewCart";
+//    }
+//}

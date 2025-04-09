@@ -6,6 +6,7 @@ import org.csu.petstore.common.CommonResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,6 +31,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public CommonResponse<Object> handleConstraintViolationException(ConstraintViolationException e) {
+        logger.error(e.getMessage());
+        return CommonResponse.createForError(e.getMessage());
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
+    @ResponseBody
+    public CommonResponse<Object> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         logger.error(e.getMessage());
         return CommonResponse.createForError(e.getMessage());
     }
