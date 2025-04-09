@@ -1,0 +1,434 @@
+@property --k {
+    syntax: '<number>';
+    initial-value: -1;
+    inherits: true
+}
+
+@property --ang {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false
+}
+
+* { margin: 0 }
+
+html {
+    scrollbar-width: none;
+    height: calc(var(--n)*100%)
+}
+
+body, header, main, section,
+article, figure { display: grid }
+
+body {
+    --dir: 0;
+    grid-template-rows: max-content 1fr max-content;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    color: #dedede;
+    font: clamp(.625em, 3vmin, 1.5em)/ 1.25 saira, sans-serif;
+    animation: k 1s linear;
+    animation-timeline: scroll();
+
+    &::before {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: #000;
+        filter: url(#grain);
+        content: ''
+    }
+
+    @media (max-aspect-ratio: 2/ 3) { --dir: 1 }
+}
+
+@keyframes k { to { --k: 1 } }
+
+svg[height='0'][aria-hidden='true'] { position: fixed }
+
+top {
+    max-width:2000px;
+    /* display: flex;  /* 使用 flexbox 使内容居中 */
+    align-items: center;  /* 纵向居中 */
+    justify-content: center;  /* 水平居中 */
+    padding: 0.5em;
+    text-align: center;
+    text-wrap: balance;
+
+    position: fixed;  /* 让 header 固定在页面顶部 */
+    top: 0;
+    left: 0;
+    width: 100%;  /* 让 header 充满横向空间 */
+    height:0px;  /* 设定 header 的固定高度 */
+    background-color: black;  /* 可选，增加背景色 */
+    z-index: 1000;  /* 让 header 处于最上层 */
+}
+
+h1{
+    font-size: 60px;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
+    0 0 16px rgba(255, 255, 255, 0.6); /* 发光效果 */
+}
+em { max-width: 32em }
+
+main {
+    overflow: hidden;
+    perspective: 50em
+}
+
+section, article { transform-style: preserve-3d }
+
+section {
+    --r: calc(2 + var(--dir))/ 3;
+    --w: clamp(4em, min(50vh, 25vw), 18em);
+    --z: calc(var(--f, 1.25)*-.5*var(--w)/tan(.5turn/var(--n)));
+    place-self: center;
+    translate: 0 0 var(--z);
+    rotate: var(--dir) calc(1 - var(--dir)) 0 calc((var(--k) + .5)*-1turn);
+}
+
+article, header, figure, img, figcaption { grid-area: 1/ 1 }
+
+article {
+    /* item progress value */
+    --j: var(--i)/var(--n);
+    /* linear difference between this item's progress value
+     * and progress value of highlighted item in front -
+     * it's a value in the [0, 1] interval */
+    --dif-lin: calc(var(--j) - mod(var(--k) + 1, 1));
+    /* absolute value of linear difference */
+    --abs-lin: abs(var(--dif-lin));
+    /* difference between middle & absolute linear difference */
+    --dif-mid: calc(.5 - var(--abs-lin));
+    --abs-mid: abs(var(--dif-mid));
+    /* relative distance to from this item
+     * to highlighted one in front */
+    --dif-arc: calc(2*(.5 - var(--abs-mid)));
+    /* relative distance limit */
+    --lim: .35;
+    --sel: max(0, calc((var(--lim) - var(--dif-arc))/var(--lim)));
+    --out: calc(1 - var(--sel));
+    --hov: 0;
+    width: var(--w);
+    aspect-ratio: var(--r);
+    transform:
+            rotate3d(var(--dir), calc(1 - var(--dir)), 0, calc(var(--j)*1turn))
+            translatez(var(--z))
+            rotate(calc(var(--dir)*.5turn));
+
+    header { rotate: y calc(var(--hov)*.5turn) }
+
+    &:hover, &:focus-within { --hov: round(var(--sel)) }
+
+    @supports not (scale: abs(-1)) {
+        --abs-lin: max(var(--dif-lin), -1*var(--dif-lin));
+        --abs-mid: max(var(--dif-mid), -1*var(--dif-mid))
+    }
+}
+
+article header, figure {
+    --ang: calc(-45deg + var(--hov)*180deg);
+    overflow: hidden;
+    position: relative;
+    border: solid 4px #0000;
+    border-radius: .5em;
+    backface-visibility: hidden;
+    box-shadow: 5px 5px 13px #000;
+    background:
+            var(--url) 50%/ cover padding-box,
+            linear-gradient(#333 0 0) padding-box,
+            repeating-conic-gradient(from var(--ang),
+            #0000 0% 15%,
+            color-mix(in srgb,
+                    #f48c06 calc(var(--sel)*100%), #333) 20% 30%,
+            #0000 35% 50%)
+            border-box #121212;
+    background-blend-mode: multiply, normal, normal;
+    isolation: isolate;
+    /* prevent edge glitching on article hover */
+    pointer-events: none;
+    transition: .35s ease-out;
+    transition-property: rotate, --ang;
+
+    &::after {
+        position: absolute;
+        inset: 0;
+        opacity: var(--out);
+        background: #03071e;
+        mix-blend-mode: color;
+        pointer-events: none;
+        content: ''
+    }
+}
+
+/* reverse from parent */
+h2, em, img, a { pointer-events: auto }
+
+h2, em { opacity: round(up, var(--sel)) }
+
+h2 { font-size: 1.125em }
+
+figure { rotate: y calc((1 + var(--hov))*.5turn) }
+
+img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: var(--r);
+    object-fit: cover;
+    object-position: var(--pos)
+}
+
+figcaption {
+    align-self: end;
+    padding: .5em;
+    background: #fff3;
+    color: #040404;
+    font: Max(.75rem, .75em) caveat, cursive;
+    text-align: right;
+    text-shadow: 1px 1px 1px #0006;
+    backdrop-filter: blur(5px) brightness(1.5);
+
+    a { color: #370617 }
+}
+
+/* just support info boxes if it lacks support */
+aside {
+    position: fixed;
+    bottom: 0;
+    padding: .5em;
+}
+
+.box-info-scrollani {
+    margin: .5em;
+    border-left: solid 5px #dc3055;
+    padding: .75em;
+    box-shadow: 2px 2px 5px hsla(0, 0%, 0%, .35);
+    background: #851d40;
+    color: #fff;
+    font: 1em/ 1.25 ubuntu, trebuchet ms, arial, sans-serif;
+
+    @supports (animation-timeline: scroll()) { display: none }
+}
+
+kbd {
+    padding: 2px;
+    background: hsla(0, 0%, 0%, .35);
+    font: 1.1em/ 1.2 ubuntu mono, consolas, monaco, monospace
+}
+/* 让整个布局使用 flex，使侧边栏和轮播图水平排列 */
+#Main {
+    display: flex;
+}
+
+/* 侧边栏样式 */
+#Sidebar {
+    width: 400px; /* 设置侧边栏宽度 */
+    background: radial-gradient(circle, #f48c06d6, #040404);
+    padding: 20px;
+    margin-right: 0px; /* 侧边栏与轮播图的间距 */
+    margin-left: 100px;
+    margin-top:50px;
+    height:600px;
+    box-shadow:
+            0 0 15px rgba(255, 255, 255, 0.8),
+            0 0 30px #f48c06,
+            0 0 50px #dc3055;
+
+}
+
+/* 侧边栏内的内容样式 */
+#SidebarContent {
+    text-align: center;
+    margin-top:70px;
+}
+
+/* 侧边栏中的文字（白色发光） */
+#SidebarContent span {
+    display: block;
+    color: white;
+    font-size: 16px;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
+    0 0 16px rgba(255, 255, 255, 0.6); /* 发光效果 */
+    margin-bottom: 10px;
+}
+
+/* 侧边栏中的图片 */
+#SidebarContent img {
+    width: 80px; /* 调整图标大小 */
+    height: auto;
+    margin: 10px 0;
+}
+.scene {
+    flex: 1; /* 让它自动填充剩余空间 */
+
+}
+
+#Logo {
+    width: 33%;
+    height: 9ex;
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 0ex 0ex 0ex 0ex;
+    border-width: 0ex 0ex .3ex 0px;
+    border-style: solid;
+    border-color: #ccc;
+    float: left;
+    background-color: #000;
+    color: #fff;
+    line-height: 9ex;
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    height: 9ex;
+}
+
+body>#Logo {
+    height: 9ex;
+}
+
+
+#Menu {
+    display: flex;  /* 让子元素（图片和链接）横向排列 */
+    justify-content: center;  /* 水平居中 */
+    align-items: center;  /* 垂直居中 */
+    margin: 0 auto;  /* 居中对齐 */
+    marin-top:30px;
+    height: 50px;  /* 调整高度，使其更小 */
+    background-color: #000;  /* 黑色背景 */
+    border-bottom: 3px solid #ccc;  /* 底部边框 */
+    padding: 5px 0;  /* 上下留白 */
+}
+
+#MenuContent {
+    display: flex;  /* 让所有子元素横向排列 */
+    align-items: center;
+    gap: 10px; /* 设置图片和文字之间的间距 */
+    margin-top:60px;
+    margin-right:600px;
+    z-index: 999;
+}
+
+#Menu img {
+    height: 50px;  /* 控制图片大小 */
+    width: auto;  /* 按比例缩放 */
+}
+
+#Menu a {
+    color: #fff;  /* 白色字体 */
+    text-decoration: none;  /* 去掉下划线 */
+    font-family: Helvetica, Tahoma, Arial, Verdana, sans-serif;
+    font-size: 20px;  /* 调整字体大小 */
+}
+
+#Menu a:hover {
+    color: #eaac00;  /* 鼠标悬停时变成金黄色 */
+}
+
+/* 让分隔符更小 */
+#Menu img[src*="separator.gif"] {
+    height: 15px;
+    width: auto;
+}
+
+{
+}
+
+#Search {
+    width: 67%;
+    height: 21ex;
+    /* margin: 0ex 0ex 0ex 0ex; */
+    margin-top:-62.7px;
+    padding: 0ex 0ex 0ex 0ex;
+    border-width: 0ex 0ex .3ex 0px;
+    border-style: solid;
+    border-color: #ccc;
+    float: left;
+    text-align: center;
+    background-color: #000;
+    color: #eaac00;
+    line-height: 9ex;
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    height: 9ex;
+}
+
+body>#Search {
+    height: 9ex;
+}
+
+#Search input {
+    border-width: .1ex .1ex .1ex .1ex;
+    border-style: solid;
+    border-color: #aaa;
+    background-color: #666;
+    color: #eaac00;
+}
+
+/*#QuickLinks {*/
+/*    text-align: center;*/
+/*    background-color: #FFF;*/
+/*    width: 99%;*/
+/*}*/
+
+#QuickLinks {
+    display: flex;  /* 让子元素（图片）横向排列 */
+    justify-content: center;  /* 水平居中 */
+    align-items: center;  /* 垂直居中 */
+    background: radial-gradient(circle, #f48c06d6, #040404);
+    width: 30%;  /* 让其宽度占页面三分之一 */
+    /*margin: 0 auto;  !* 水平居中 *!*/
+    padding: 0 0;  /* 上下留白，避免太挤 */
+    height: 50px;  /* 调整高度 */
+    border-radius:100px;
+}
+
+/* 设置图片大小，确保整体不占太多空间 */
+#QuickLinks img {
+    height: 20px;  /* 控制图片高度 */
+    width: auto;  /* 让宽度按比例缩放 */
+}
+
+/* 设置分隔符的大小 */
+#QuickLinks img[src*="separator.gif"] {
+    height: 30px; /* 让分隔符比图标更小 */
+    width: auto;
+}
+
+input[type="text"] {
+    margin-left:800px;
+}
+
+#productAutoComplete {
+    position:absolute;
+    width: 0px;
+    z-index: 9999;
+}
+
+#productAutoList {
+    list-style:none;
+    height: 20px;
+    line-height:20px;
+    font-size:15px;
+    text-align:left;
+    padding-left:160px;
+    margin-top:3px;
+    width:195px;
+    color:#FFFFFF;
+    margin-left:-683px;
+
+}
+
+#productAutoList li {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #444; /* 分割线更细腻 */
+    background-color: #3a3a3a;
+    color: #f0f0f0;
+    font-size: 14px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#productAutoList li:hover {
+    background-color: #ffcc66; /* 高亮颜色 */
+    color: #2d2d2d; /* 文字颜色对比 */
+}

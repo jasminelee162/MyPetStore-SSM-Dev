@@ -286,35 +286,6 @@ body>#Logo {
     height: 9ex;
 }
 
-/*#Menu {*/
-/*    width: 33%;*/
-/*    height: 9ex;*/
-/*    margin: 0ex 0ex 0ex 0ex;*/
-/*    padding: 0ex 0ex 0ex 0ex;*/
-/*    border-width: 0ex 0ex .3ex 0px;*/
-/*    border-style: solid;*/
-/*    border-color: #ccc;*/
-/*    float: left;*/
-/*    background-color: #000;*/
-/*    color: #eaac00;*/
-/*    text-decoration: none;*/
-/*    font-family: helvetica, tahoma, arial, verdana, sans-serif;*/
-/*    text-align: center;*/
-/*    line-height: 9ex;*/
-/*    voice-family: "\"}\"";*/
-/*    voice-family: inherit;*/
-/*    height: 9ex;*/
-/*}*/
-
-/*#Menu, #Menu a, #Menu a:link, #Menu a:visited, #Menu a:hover {*/
-/*    color: #eaac00;*/
-/*    text-decoration: none;*/
-/*    font-family: helvetica, tahoma, arial, verdana, sans-serif;*/
-/*}*/
-
-/*body>#Menu {*/
-/*    height: 9ex;*/
-/*}*/
 #Menu {
     display: flex;  /* 让子元素（图片和链接）横向排列 */
     justify-content: center;  /* 水平居中 */
@@ -459,4 +430,437 @@ input[type="text"] {
 #productAutoList li:hover {
     background-color: #ffcc66; /* 高亮颜色 */
     color: #2d2d2d; /* 文字颜色对比 */
+}
+
+@property --k {
+    syntax: '<number>';
+    initial-value: -1;
+    inherits: true
+}
+
+@property --ang {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false
+}
+
+:root {
+    --bg-color: #000;
+    --text-color: #dedede;
+    --accent-color: #f48c06;
+    --highlight-color: #dc3055;
+    --shadow-color: rgba(255, 255, 255, 0.8);
+    --panel-bg: #121212;
+}
+
+.light-theme {
+    --bg-color: #ffffff;         /* 背景纯白 */
+    --text-color: #111111;       /* 深灰接近黑色，提升对比度 */
+    --accent-color: #4a90e2;     /* 明亮的蓝色，清爽现代感 */
+    --highlight-color: #0066cc;  /* 深一点的蓝，用于高亮/按钮边框 */
+    --shadow-color: rgba(0, 0, 0, 0.15);  /* 柔和阴影 */
+    --panel-bg: #f9f9f9;         /* 面板淡灰白，区分背景 */
+}
+
+* { margin: 0 }
+
+html {
+    scrollbar-width: none;
+    height: calc(var(--n)*100%)
+}
+
+body, header, main, section,
+article, figure { display: grid }
+
+body {
+    --dir: 0;
+    grid-template-rows: max-content 1fr max-content;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    color: var(--text-color);
+    font: clamp(.625em, 3vmin, 1.5em)/ 1.25 saira, sans-serif;
+    background-color: var(--bg-color);
+    animation: k 1s linear;
+    animation-timeline: scroll();
+    transition: background-color 0.4s ease, color 0.4s ease;
+
+    &::before {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--bg-color);
+        filter: url(#grain);
+        content: ''
+    }
+
+    @media (max-aspect-ratio: 2/ 3) { --dir: 1 }
+}
+
+@keyframes k { to { --k: 1 } }
+
+svg[height='0'][aria-hidden='true'] { position: fixed }
+
+top {
+    max-width:2000px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em;
+    text-align: center;
+    text-wrap: balance;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height:0px;
+    background-color: var(--bg-color);
+    z-index: 1000;
+}
+
+h1{
+    font-size: 60px;
+    text-shadow: 0 0 8px var(--shadow-color),
+    0 0 16px rgba(255, 255, 255, 0.6);
+}
+
+em { max-width: 32em }
+
+main {
+    overflow: hidden;
+    perspective: 50em
+}
+
+section, article { transform-style: preserve-3d }
+
+section {
+    --r: calc(2 + var(--dir))/ 3;
+    --w: clamp(4em, min(50vh, 25vw), 18em);
+    --z: calc(var(--f, 1.25)*-.5*var(--w)/tan(.5turn/var(--n)));
+    place-self: center;
+    translate: 0 0 var(--z);
+    rotate: var(--dir) calc(1 - var(--dir)) 0 calc((var(--k) + .5)*-1turn);
+}
+
+article, header, figure, img, figcaption { grid-area: 1/ 1 }
+
+article {
+    --j: var(--i)/var(--n);
+    --dif-lin: calc(var(--j) - mod(var(--k) + 1, 1));
+    --abs-lin: abs(var(--dif-lin));
+    --dif-mid: calc(.5 - var(--abs-lin));
+    --abs-mid: abs(var(--dif-mid));
+    --dif-arc: calc(2*(.5 - var(--abs-mid)));
+    --lim: .35;
+    --sel: max(0, calc((var(--lim) - var(--dif-arc))/var(--lim)));
+    --out: calc(1 - var(--sel));
+    --hov: 0;
+    width: var(--w);
+    aspect-ratio: var(--r);
+    transform:
+            rotate3d(var(--dir), calc(1 - var(--dir)), 0, calc(var(--j)*1turn))
+            translatez(var(--z))
+            rotate(calc(var(--dir)*.5turn));
+
+    header { rotate: y calc(var(--hov)*.5turn) }
+
+    &:hover, &:focus-within { --hov: round(var(--sel)) }
+
+    @supports not (scale: abs(-1)) {
+        --abs-lin: max(var(--dif-lin), -1*var(--dif-lin));
+        --abs-mid: max(var(--dif-mid), -1*var(--dif-mid))
+    }
+}
+
+article header, figure {
+    --ang: calc(-45deg + var(--hov)*180deg);
+    overflow: hidden;
+    position: relative;
+    border: solid 4px #0000;
+    border-radius: .5em;
+    backface-visibility: hidden;
+    box-shadow: 5px 5px 13px var(--bg-color);
+    background:
+            var(--url) 50%/ cover padding-box,
+            linear-gradient(#333 0 0) padding-box,
+            repeating-conic-gradient(from var(--ang),
+            #0000 0% 15%,
+            color-mix(in srgb,
+                    var(--accent-color) calc(var(--sel)*100%), #333) 20% 30%,
+            #0000 35% 50%)
+            border-box var(--panel-bg);
+    background-blend-mode: multiply, normal, normal;
+    isolation: isolate;
+    pointer-events: none;
+    transition: .35s ease-out;
+    transition-property: rotate, --ang;
+
+    &::after {
+        position: absolute;
+        inset: 0;
+        opacity: var(--out);
+        background: #03071e;
+        mix-blend-mode: color;
+        pointer-events: none;
+        content: ''
+    }
+}
+
+h2, em, img, a { pointer-events: auto }
+
+h2, em { opacity: round(up, var(--sel)) }
+
+h2 { font-size: 1.125em }
+
+figure { rotate: y calc((1 + var(--hov))*.5turn) }
+
+img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: var(--r);
+    object-fit: cover;
+    object-position: var(--pos)
+}
+
+figcaption {
+    align-self: end;
+    padding: .5em;
+    background: #fff3;
+    color: #040404;
+    font: Max(.75rem, .75em) caveat, cursive;
+    text-align: right;
+    text-shadow: 1px 1px 1px #0006;
+    backdrop-filter: blur(5px) brightness(1.5);
+
+    a { color: #370617 }
+}
+
+aside {
+    position: fixed;
+    bottom: 0;
+    padding: .5em;
+}
+
+.box-info-scrollani {
+    margin: .5em;
+    border-left: solid 5px var(--highlight-color);
+    padding: .75em;
+    box-shadow: 2px 2px 5px hsla(0, 0%, 0%, .35);
+    background: var(--highlight-color);
+    color: #fff;
+    font: 1em/ 1.25 ubuntu, trebuchet ms, arial, sans-serif;
+
+    @supports (animation-timeline: scroll()) { display: none }
+}
+
+kbd {
+    padding: 2px;
+    background: hsla(0, 0%, 0%, .35);
+    font: 1.1em/ 1.2 ubuntu mono, consolas, monaco, monospace
+}
+
+
+#SidebarContent a {
+    color: #f4c542;
+    text-decoration: none;
+}
+
+#SidebarContent a:hover {
+    color: #ffdd75;
+}
+
+/* 亮色主题 */
+body.light-mode #Sidebar {
+    background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+    color: #333;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode #SidebarContent a {
+    color: #0077cc;
+}
+
+body.light-mode #SidebarContent a:hover {
+    color: #005fa3;
+}
+/* 亮色模式覆盖样式，仅在 html 有 .light-theme 类时生效 */
+html.light-theme body {
+    color: #1a1a1a;
+    background-color: #fdfdfd;
+
+}
+
+html.light-theme body::before {
+    background: #fff;
+    filter: none;
+}
+
+html.light-theme #Sidebar {
+    background: radial-gradient(circle, #e7ce67, #ffffff);
+    box-shadow:
+            0 0 10px rgba(0, 0, 0, 0.2),
+            0 0 20px #eeef7c,
+            0 0 30px #ebd198;
+}
+
+html.light-theme #SidebarContent span {
+    color: #222;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+html.light-theme #SidebarContent img {
+    filter: brightness(0.9);
+}
+
+html.light-theme #Menu {
+    background-color: #fdfdfd;
+    border-bottom: 3px solid #aaa;
+}
+
+html.light-theme #Menu a {
+    color: #000;
+}
+
+html.light-theme #Menu a:hover {
+    color: #d97706;
+}
+
+html.light-theme #Search {
+    background-color: #f5f5f5;
+    color: #222;
+    border-color: #aaa;
+}
+
+html.light-theme #Search input {
+    background-color: #fff;
+    color: #000;
+    border-color: #aaa;
+}
+
+html.light-theme #QuickLinks {
+    background: radial-gradient(circle, #fef8df, #fff);
+}
+
+html.light-theme #QuickLinks img {
+    filter: brightness(0.8);
+}
+
+html.light-theme figcaption {
+    background: #eee;
+    color: #222;
+    text-shadow: none;
+    backdrop-filter: blur(3px) brightness(1);
+}
+
+html.light-theme #productAutoList {
+    background-color: #f8f8f8;
+    color: #222;
+}
+
+html.light-theme #productAutoList li {
+    background-color: #eee;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+}
+
+html.light-theme #productAutoList li:hover {
+    background-color: #7caaef;
+    color: #000;
+}
+
+/* 发光字体变暗一点 */
+html.light-theme h1,
+html.light-theme #SidebarContent span {
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+
+
+}
+html.light-theme article:hover,
+html.light-theme article:focus-within {
+    --hov: round(var(--sel));
+    box-shadow: 0 0 16px rgba(244, 200, 0, 0.4); /* 金色柔光 */
+    border: 2px solid #f4c430; /* 浅金边框 */
+}
+
+/* header / figure 背景适配亮色 */
+html.light-theme article header,
+html.light-theme article figure {
+    background:
+            var(--url) 50% / cover padding-box,
+            linear-gradient(#f5f5f5 0 0) padding-box,
+            repeating-conic-gradient(
+                    from var(--ang),
+                    #0000 0% 15%,
+                    color-mix(in srgb, #fef8df calc(var(--sel)*100%), #eee) 20% 30%,
+                    #0000 35% 50%
+            ) border-box #fdfdfd;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 遮罩变亮一些，仍保留淡入淡出效果 */
+html.light-theme article header::after,
+html.light-theme article figure::after {
+    background: #fff8dc82; /* 柔和米色 */
+    mix-blend-mode: lighten;
+    opacity: var(--out);
+}
+html.light-theme #Logo {
+    background-color: #f5f5f5;  /* 纯白背景 */
+    color: #333333;  /* 深灰色文字 */
+    border-color: #aaaaaa;  /* 浅灰色边框 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);  /* 轻微阴影，增强层次感 */
+    line-height: 9ex;  /* 保持行高 */
+
+}
+
+html.light-theme body>#Logo {
+    height: 9ex;
+    background-color: #f5f5f5;  /* 背景白色 */
+    color: #333333;  /* 深灰色文字 */
+    border-color: #ddd;  /* 浅灰色边框 */
+}
+
+html.light-theme #Logo:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);  /* 悬浮时增强阴影 */
+
+}
+
+#themeToggle {
+    position: fixed;  /* 固定定位 */
+    top: 150px;  /* 距离顶部20px */
+    left: 20px;  /* 距离右边20px */
+    padding: 10px 15px;
+    background-color: #333;  /* 默认背景色（暗色模式） */
+    color: #fff;  /* 默认文字颜色（白色） */
+    border: none;
+    border-radius: 5px;  /* 圆角 */
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;  /* 平滑过渡效果 */
+    z-index: 1000;  /* 确保按钮位于页面最上层 */
+}
+
+/* 暗色模式下的按钮样式 */
+html:not(.light-theme) #themeToggle {
+    background-color: #333;  /* 背景色：深灰色 */
+    color: #fff;  /* 文字颜色：白色 */
+}
+
+/* 亮色模式下的按钮样式 */
+html.light-theme #themeToggle {
+    background-color: #ffffff;  /* 背景色：白色 */
+    color: #333;  /* 文字颜色：深灰色 */
+    border: 1px solid #ddd;  /* 亮色模式下的边框 */
+}
+
+/* 悬浮时的效果 */
+#themeToggle:hover {
+    background-color: #444;  /* 暗色模式时：深灰色背景 */
+    color: #fff;  /* 白色文字 */
+}
+
+/* 亮色模式下悬浮时 */
+html.light-theme #themeToggle:hover {
+    background-color: #f0f0f0;  /* 亮色模式下：浅灰色背景 */
+    color: #333;  /* 文字颜色：深灰色 */
 }
