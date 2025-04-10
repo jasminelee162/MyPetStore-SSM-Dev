@@ -6,6 +6,7 @@ import org.csu.petstore.common.CommonResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
     public CommonResponse<Object> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         logger.error(e.getMessage());
         return CommonResponse.createForError(e.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public CommonResponse<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        logger.error("请求体缺失或格式错误: {}", e.getMessage());
+        return CommonResponse.createForError("请求体缺失或格式错误，spring无法成功映射。检查前端传参");
     }
 
     //都没匹配上就到这
