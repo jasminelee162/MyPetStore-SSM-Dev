@@ -3,6 +3,7 @@ package org.csu.petstore.controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.csu.petstore.common.CommonResponse;
 import org.csu.petstore.security.JwtUtil;
 import org.csu.petstore.service.AccountService;
 import org.csu.petstore.service.CatalogService;
@@ -16,11 +17,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
-import java.util.Date;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 @RestController
 public class RestAccountController {
@@ -42,18 +45,15 @@ public class RestAccountController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/accounts")
-    public ResponseEntity<?> register(@RequestBody AccountVO accountVO) {
-
-        try{
-        accountService.registerAccount(accountVO);
-        msg = "Account registered successfully, send to sign on";
-        }
-        catch (Exception e) {
+    public CommonResponse<String> register(@RequestBody AccountVO accountVO) {
+        try {
+            accountService.registerAccount(accountVO);
+            msg = "Account registered successfully, send to sign on";
+            return CommonResponse.createForSuccess(msg);
+        } catch (Exception e) {
             msg = "Account registration failed, parameter form is invalid";
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", msg));
+            return CommonResponse.createForError(msg);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", msg));
-
     }
 
     @PostMapping("/tokens")
@@ -61,35 +61,98 @@ public class RestAccountController {
                                    @RequestParam String password,
                                    @RequestParam("captcha") String gotCaptcha, // 接收前端验证码
                                    @RequestParam(value = "admin", required = false) boolean admin) {
-        System.out.println(username);
 
-        if(!validate(username, password, gotCaptcha, captcha)){
+        if (!validate(username, password, gotCaptcha, captcha)) {
             msg = "Invalid username or password, reload sign on form and try again";
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", msg));
-        }else {
+            CommonResponse<String> response = CommonResponse.createForError(msg);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
             AccountVO loginAccount = accountService.getAccount(username, password);
-
             if (loginAccount == null) {
-                this.msg = "incorrect username or password, reload sign on form and try again";
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", msg));
+                msg = "incorrect username or password, reload sign on form and try again";
+                CommonResponse<String> response = CommonResponse.createForError(msg);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
-
                 String jwtToken = jwtUtil.generateToken(username);
-                this.msg = successString + "main form and put loginAccount in session";
+                msg = successString + "main form and put loginAccount in session";
 
-                String message = "User " + username + " login success!";
-                logService.setLog(message);
-                if(admin && loginAccount.isAdmin()){this.msg = successString + "admin form and put loginAccount in session";}
+                // 记录登录日志
+                String logMessage = "User " + username + " login success!";
+                logService.setLog(logMessage);
+
+                // 如果是管理员并且用户具有管理员权限则返回不同消息
+                if (admin && loginAccount.isAdmin()) {
+                    msg = successString + "admin form and put loginAccount in session";
+                }
 
                 List<CategoryVO> categories = catalogService.getAllCategories();
-                return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
-                        .body(Map.of("message", msg, "loginAccount", loginAccount, "categories", categories));
-            }
+                // 构造数据返回，可扩展其他必要数据
+                Map<String, Object> data = new HashMap<>();
+                data.put("loginAccount", loginAccount);
+                data.put("categories", categories);
 
+                CommonResponse<Map<String, Object>> response = CommonResponse.createForSuccess(msg, data);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                        .body(response);
+            }
+        }
+    }
+
+    /**
+     * 获取验证码接口：返回验证码字节流，同时使用统一的响应对象包装验证码数据。
+     */
+    @GetMapping("/captcha")
+    public CommonResponse<Map<String, byte[]>> getCaptcha() throws IOException {
+        int originalWidth = 200;
+        int originalHeight = 50;
+        double scale = 0.75;
+        int width = (int) (originalWidth * scale);
+        int height = (int) (originalHeight * scale);
+
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = bufferedImage.createGraphics();
+
+        g2d.setColor(Color.white);
+        g2d.fillRect(0, 0, width, height);
+
+        captcha = generateRandomString(5);
+
+        g2d.setFont(new Font("SansSerif", Font.BOLD, (int) (24 * scale)));
+        g2d.setColor(Color.black);
+        g2d.drawString(captcha, (int) (50 * scale), (int) (30 * scale));
+
+        addNoise(g2d, width, height);
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", os);
+
+        Map<String, byte[]> data = new HashMap<>();
+        data.put("captcha", os.toByteArray());
+
+        return CommonResponse.createForSuccess(data);
+    }
+
+
+    @PutMapping("/accounts/{id}")
+    public CommonResponse<String> updateAccount(@PathVariable("id") String username,
+                                                @RequestParam("confirmPassword") String confirmPassword,
+                                                @RequestBody AccountVO account) {
+
+        if (!account.getPassword().equals(confirmPassword)) {
+            return CommonResponse.createForError("Password confirmation does not match.");
         }
 
-
+        try {
+            accountService.updateAccount(account);
+            // 返回成功，但不需要返回具体内容
+            return CommonResponse.createForSuccess("Account updated successfully.");
+        } catch (Exception e) {
+            logService.setLog("更新账户信息失败: " + e.getMessage());
+            return CommonResponse.createForError("Failed to update account information.");
+        }
     }
+
 
     private String generateRandomString(int length) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
