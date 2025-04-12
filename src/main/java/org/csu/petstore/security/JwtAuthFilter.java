@@ -27,9 +27,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if(authHeader == null){
-            if(!exclude(request)){
+            if(!exclude(request)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
                 return;
+            }
+            else {
+                filterChain.doFilter(request, response);
             }
         }
         else if(authHeader.startsWith("Bearer ")) {
@@ -52,7 +55,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     public boolean exclude(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         // 判断请求路径是否在排除列表中
-        //return requestURI.equals("/accounts") || requestURI.equals("/tokens");
-        return true;
+        return requestURI.equals("/accounts") || requestURI.equals("/tokens");
+        //return true;
     }
 }
