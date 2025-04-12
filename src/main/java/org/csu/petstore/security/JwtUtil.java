@@ -4,12 +4,14 @@ import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtil {
 
     private String key = "MENHERABESTKEY";
     private long expirationTime = 1000 * 60 * 60 * 24;
+    private List<String> blacklistedTokens;
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -54,5 +56,13 @@ public class JwtUtil {
         }
 
         return true;  // 如果通过验证，返回 true
+    }
+
+    public void deleteToken(String token) {
+        blacklistedTokens.add(token);
+    }
+
+    public boolean isTokenDeleted(String token) {
+        return blacklistedTokens.contains(token);
     }
 }

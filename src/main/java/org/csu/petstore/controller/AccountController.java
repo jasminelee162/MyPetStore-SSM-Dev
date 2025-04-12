@@ -133,7 +133,7 @@ public class AccountController {
     }
 
 
-    @GetMapping("/captcha")
+   /* @GetMapping("/captcha")
     @ResponseBody
     public byte[] getCaptcha(Model model) throws IOException {
         int originalWidth = 200;
@@ -161,7 +161,7 @@ public class AccountController {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "png", os);
         return os.toByteArray();
-    }
+    }*/
 
 
     private String generateRandomString(int length) {

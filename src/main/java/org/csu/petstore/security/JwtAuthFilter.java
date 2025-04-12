@@ -28,7 +28,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         else if(authHeader.startsWith("Bearer ")) {
             authHeader = authHeader.substring(7);
-            if(!jwtUtil.validateToken(authHeader)) {
+            if(!jwtUtil.validateToken(authHeader) || jwtUtil.isTokenDeleted(authHeader)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
                 return;
             }

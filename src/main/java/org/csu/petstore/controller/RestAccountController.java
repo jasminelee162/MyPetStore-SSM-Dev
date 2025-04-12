@@ -99,6 +99,15 @@ public class RestAccountController {
         }
     }
 
+    @DeleteMapping("/tokens")
+    public CommonResponse<String> signOut(@RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        jwtUtil.deleteToken(token);
+        msg = "delete token successfully";
+        return CommonResponse.createForSuccess(msg);
+    }
+
     /**
      * 获取验证码接口：返回验证码字节流，同时使用统一的响应对象包装验证码数据。
      */
