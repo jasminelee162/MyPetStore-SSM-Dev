@@ -3,6 +3,7 @@ package org.csu.petstore.security;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class JwtUtil {
 
     private String key = "MENHERABESTKEY";
     private long expirationTime = 1000 * 60 * 60 * 24;
-    private List<String> blacklistedTokens;
+    private List<String> blacklistedTokens = new ArrayList<>();
 
     public String generateToken(String username) {
         return Jwts.builder()
