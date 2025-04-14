@@ -90,6 +90,7 @@ public class RestAccountController {
                 Map<String, Object> data = new HashMap<>();
                 data.put("loginAccount", loginAccount);
                 data.put("categories", categories);
+                data.put("admin", admin);
 
                 CommonResponse<Map<String, Object>> response = CommonResponse.createForSuccess(msg, data);
                 return ResponseEntity.status(HttpStatus.OK)
@@ -144,7 +145,7 @@ public class RestAccountController {
 
 
     @PutMapping("/accounts/{id}")
-    public CommonResponse<String> updateAccount(@PathVariable("id") String username,
+    public CommonResponse<Map<String, Object>> updateAccount(@PathVariable("id") String username,
                                                 @RequestParam("confirmPassword") String confirmPassword,
                                                 @RequestBody AccountVO account) {
 
@@ -155,7 +156,9 @@ public class RestAccountController {
         try {
             accountService.updateAccount(account);
             // 返回成功，但不需要返回具体内容
-            return CommonResponse.createForSuccess("Account updated successfully.");
+            Map<String, Object> data = new HashMap<>();
+            data.put("loginAccount", account);
+            return CommonResponse.createForSuccess("Account updated successfully.", data);
         } catch (Exception e) {
             logService.setLog("更新账户信息失败: " + e.getMessage());
             return CommonResponse.createForError("Failed to update account information.");

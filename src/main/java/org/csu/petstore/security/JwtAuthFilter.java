@@ -28,7 +28,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if(authHeader == null){
             if(!exclude(request)){
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"status\": 1, \"message\": \"Empty token\"}");
                 return;
             }
             /*else{
@@ -38,7 +40,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         else if(authHeader.startsWith("Bearer ")) {
             authHeader = authHeader.substring(7);
             if(!jwtUtil.validateToken(authHeader) || jwtUtil.isTokenDeleted(authHeader)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"status\": 1, \"message\": \"Invalid token\"}");
                 return;
             }
 
