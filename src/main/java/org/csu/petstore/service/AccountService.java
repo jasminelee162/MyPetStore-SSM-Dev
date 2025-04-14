@@ -1,5 +1,6 @@
 package org.csu.petstore.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.ibatis.annotations.Update;
 import org.csu.petstore.persistence.AccountMapper;
 import org.csu.petstore.vo.AccountVO;
@@ -18,6 +19,7 @@ public interface AccountService {
     boolean validatePassword(String username, String password);
     AccountVO getAccountByUsername(String username);
     void updateAccount(AccountVO account);
+
 
     List<AccountVO> getAllAccounts();
 

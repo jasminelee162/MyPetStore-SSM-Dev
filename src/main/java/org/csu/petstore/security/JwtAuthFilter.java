@@ -33,9 +33,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 response.getWriter().write("{\"status\": 1, \"message\": \"Empty token\"}");
                 return;
             }
-            /*else{
-                filterChain.doFilter(request, response);
-            }*/
         }
         else if(authHeader.startsWith("Bearer ")) {
             authHeader = authHeader.substring(7);
@@ -50,9 +47,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<GrantedAuthority>());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // 设置到 SecurityContext
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
@@ -61,7 +55,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     public boolean exclude(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         // 判断请求路径是否在排除列表中
-        return true;
-        //return requestURI.equals("/accounts") || requestURI.equals("/tokens") || requestURI.equals("/") || requestURI.equals("/catalog/index") || requestURI.equals("/captcha");
+        return requestURI.equals("/accounts") || requestURI.equals("/tokens") || requestURI.equals("/") || requestURI.equals("/catalog/index") || requestURI.equals("/captcha") || requestURI.equals("/callback");
     }
 }

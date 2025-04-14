@@ -28,7 +28,7 @@ public class SecurityConfig {
                 // 配置 URL 权限
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/captcha", "/tokens", "/", "/catalog/index").permitAll()  // 公开访问
+                                .requestMatchers("/captcha", "/tokens", "/", "/catalog/index", "/callback", "/auth/github", "/auth/login").permitAll()  // 公开访问
                                 .anyRequest().authenticated()  // 其他请求需要认证
                 )
                 // 添加自定义过滤器
