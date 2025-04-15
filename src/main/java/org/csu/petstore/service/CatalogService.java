@@ -22,7 +22,7 @@ public interface CatalogService {
 
     public ItemVO getItem(String itemId);
 
-    public void setLog(String type, HttpSession session, String typeId);
+    void setLog(String type, String typeId, String username);
 
     //自动补全
     List<Product> searchProductList(String keyword);

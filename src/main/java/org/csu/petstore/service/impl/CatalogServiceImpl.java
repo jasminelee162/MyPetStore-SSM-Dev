@@ -117,10 +117,16 @@ public class CatalogServiceImpl implements CatalogService {
         return itemVO;
     }
 
+//    @Override
+//    public void setLog(String type, HttpSession session, String typeId) {
+//        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
+//        String username = account.getUsername();
+//        String message = "User " + username + " viewed " + type + ": " + typeId;
+//        logService.setLog(message);
+//    }
+
     @Override
-    public void setLog(String type, HttpSession session, String typeId) {
-        AccountVO account = (AccountVO) session.getAttribute("loginAccount");
-        String username = account.getUsername();
+    public void setLog(String type, String typeId, String username) {
         String message = "User " + username + " viewed " + type + ": " + typeId;
         logService.setLog(message);
     }
