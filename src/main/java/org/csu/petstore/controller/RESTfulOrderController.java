@@ -1,5 +1,7 @@
 package org.csu.petstore.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.csu.petstore.entity.Account;
 import org.csu.petstore.entity.LineItem;
 import org.csu.petstore.entity.Order;
@@ -33,9 +35,6 @@ public class RESTfulOrderController {
     @PostMapping("/newOrder")
     public CommonResponse<OrderVO> newOrder(@RequestParam String username,
                                             @RequestParam(required = false) String selectedItemsParam) {
-
-        System.out.println(">>> newOrder 被调用了 username=" + username);
-
         try {
             // 获取购物车
             CartVO cartVO = cartService.getCartByUsername(username);

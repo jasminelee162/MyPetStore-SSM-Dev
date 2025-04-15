@@ -4,6 +4,7 @@ import org.csu.petstore.security.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,9 +29,13 @@ public class SecurityConfig {
                 // 配置 URL 权限
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/captcha", "/tokens", "/", "/catalog/index", "/callback", "/auth/github", "/auth/login").permitAll()  // 公开访问
+                                // 放行 OPTIONS 请求，不需要身份认证
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers("/captcha", "/tokens", "/", "/catalog/index", "/callback", "/auth/github", "/auth/login",
+                                        "/catalog/categories").permitAll()  // 公开访问
                                 .anyRequest().authenticated()  // 其他请求需要认证
                 )
+
                 // 添加自定义过滤器
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // JWT 认证过滤器
 

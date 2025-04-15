@@ -25,6 +25,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
+        // 判断是否是OPTIONS请求，跳过认证
+        if (request.getMethod().equals("OPTIONS")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if(authHeader == null){
             if(!exclude(request)){
@@ -55,6 +60,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     public boolean exclude(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         // 判断请求路径是否在排除列表中
-        return requestURI.equals("/accounts") || requestURI.equals("/tokens") || requestURI.equals("/") || requestURI.equals("/catalog/index") || requestURI.equals("/captcha") || requestURI.equals("/callback");
+        return requestURI.equals("/accounts") || requestURI.equals("/tokens") || requestURI.equals("/") || requestURI.equals("/catalog/index") || requestURI.equals("/captcha") || requestURI.equals("/callback")|| requestURI.equals("/catalog/categories");
     }
 }
