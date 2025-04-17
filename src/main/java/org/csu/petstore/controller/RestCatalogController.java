@@ -15,6 +15,7 @@ import org.csu.petstore.vo.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -99,14 +100,24 @@ public class RestCatalogController {
     }
 
     @GetMapping("/products/search")
-    public CommonResponse<ProductVO> searchProduct(@RequestParam String keyword, HttpServletRequest request) {
+    public CommonResponse<List<ProductVO>> searchProduct(@RequestParam String keyword, HttpServletRequest request) {
         logRequest(request, "User searched product: " + keyword);
+
         List<Product> productList = catalogService.searchProductList(keyword);
+
         if (!productList.isEmpty()) {
-            Product product = productList.get(0);
-            catalogService.setLog("product", product.getProductId(), getUsername(request));
-            ProductVO productVO = catalogService.getProduct(product.getProductId());
-            return CommonResponse.createForSuccess(productVO);
+            List<ProductVO> productVOList = new ArrayList<>();
+            String username = getUsername(request);
+
+            for (Product product : productList) {
+                // 记录日志
+                catalogService.setLog("product", product.getProductId(), username);
+                // 转换为 VO 对象
+                ProductVO productVO = catalogService.getProduct(product.getProductId());
+                productVOList.add(productVO);
+            }
+
+            return CommonResponse.createForSuccess(productVOList);
         } else {
             return CommonResponse.createForError("No product found with keyword: " + keyword);
         }
