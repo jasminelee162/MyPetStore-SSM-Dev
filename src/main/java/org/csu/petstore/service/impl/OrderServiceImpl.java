@@ -132,7 +132,36 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean insertOrder(OrderVO orderVO) {
+    public boolean insertOrder(OrderVO orderVO,int orderId) {
+        try {
+            // 获取订单 ID
+            orderVO.setOrderId(String.valueOf(orderId));
+
+            // 转换 OrderVO 到 Order 实体
+            Order order = convertOrderVOToOrder(orderVO);
+
+            System.out.println(orderVO.getLineItems());
+
+
+            // 插入订单
+            orderMapper.updateById(order);
+
+
+            // 插入订单明细
+            for (LineItemVO lineItemVO : orderVO.getLineItems()) {
+                LineItem lineItem = convertLineItemVOToLineItem(lineItemVO, orderId);
+                lineItemMapper.updateById(lineItem);
+            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateOrder(OrderVO orderVO) {
         try {
             // 获取订单 ID
             int orderId = getNextId("ordernum");
