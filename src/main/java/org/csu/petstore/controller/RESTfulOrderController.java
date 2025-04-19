@@ -83,7 +83,7 @@ public class RESTfulOrderController {
     // 确认订单
     @PostMapping("/confirmOrder")
     public CommonResponse<OrderVO> confirmOrder(@RequestBody OrderVO orderVO,
-                                                @RequestParam String username,int orderId) {
+                                                @RequestParam String username) {
         try {
             orderVO.setUserId(username);
             orderVO.setOrderDate(new java.sql.Date(System.currentTimeMillis()).toString());
@@ -94,7 +94,7 @@ public class RESTfulOrderController {
             orderVO.setStatus("P");
 
             // 保存订单到数据库
-            orderService.insertOrder(orderVO,orderId);
+            orderService.insertOrder(orderVO);
 
             return CommonResponse.createForSuccess(orderVO);
         } catch (Exception e) {

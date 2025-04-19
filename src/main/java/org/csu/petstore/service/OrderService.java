@@ -23,7 +23,7 @@
     
         OrderVO getOrder(int orderId);
     
-        boolean insertOrder(OrderVO orderVO,int orderId);
+        boolean insertOrder(OrderVO orderVO);
 
         boolean updateOrder(OrderVO order);
     

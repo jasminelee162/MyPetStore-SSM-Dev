@@ -132,9 +132,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean insertOrder(OrderVO orderVO,int orderId) {
+    public boolean insertOrder(OrderVO orderVO) {
         try {
             // 获取订单 ID
+            int orderId = getNextId("ordernum");
             orderVO.setOrderId(String.valueOf(orderId));
 
             // 转换 OrderVO 到 Order 实体
@@ -142,15 +143,35 @@ public class OrderServiceImpl implements OrderService {
 
             System.out.println(orderVO.getLineItems());
 
+            // 更新库存数量
+            for (LineItemVO lineItemVO : orderVO.getLineItems()) {
+                String itemId = lineItemVO.getItemId();
+                Integer increment = lineItemVO.getQuantity();
+
+                // 更新库存数量
+                QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("itemid", itemId);
+                Item item = itemMapper.selectOne(queryWrapper);
+                if (item != null) {
+                    itemMapper.updateById(item);
+                }
+            }
 
             // 插入订单
-            orderMapper.updateById(order);
+            orderMapper.insert(order);
 
+            // 插入订单状态
+            OrderStatus orderStatus = new OrderStatus();
+            orderStatus.setOrderId(orderId);
+            orderStatus.setLinenum(orderId);
+            orderStatus.setStatus("P");
+            orderStatus.setTimestamp(new Date());
+            orderStatusMapper.insert(orderStatus);
 
             // 插入订单明细
             for (LineItemVO lineItemVO : orderVO.getLineItems()) {
                 LineItem lineItem = convertLineItemVOToLineItem(lineItemVO, orderId);
-                lineItemMapper.updateById(lineItem);
+                lineItemMapper.insert(lineItem);
             }
 
             return true;
