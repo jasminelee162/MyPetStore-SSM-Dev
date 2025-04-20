@@ -3,6 +3,7 @@ package org.csu.petstore.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.csu.petstore.entity.Account;
+import org.csu.petstore.entity.ConfirmOrderRequest;
 import org.csu.petstore.entity.LineItem;
 import org.csu.petstore.entity.Order;
 import org.csu.petstore.service.AccountService;
@@ -82,26 +83,24 @@ public class RESTfulOrderController {
 
     // 确认订单
     @PostMapping("/confirmOrder")
-    public CommonResponse<OrderVO> confirmOrder(@RequestBody OrderVO orderVO,
-                                                @RequestParam String username) {
+    public CommonResponse<OrderVO> confirmOrder(@RequestBody ConfirmOrderRequest request) {
         try {
-            orderVO.setUserId(username);
+            OrderVO orderVO = request.getOrderVO();
+            orderVO.setUserId(request.getUsername());
             orderVO.setOrderDate(new java.sql.Date(System.currentTimeMillis()).toString());
             orderVO.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
-
             orderVO.setCourier("UPS");
             orderVO.setLocale("CA");
             orderVO.setStatus("P");
 
-            // 保存订单到数据库
             orderService.insertOrder(orderVO);
-
             return CommonResponse.createForSuccess(orderVO);
         } catch (Exception e) {
             e.printStackTrace();
             return CommonResponse.createForError("确认订单失败！");
         }
     }
+
 
     // 查看订单
     @GetMapping("/viewOrder/{orderId}")
