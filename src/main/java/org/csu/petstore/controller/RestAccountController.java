@@ -113,7 +113,7 @@ public class RestAccountController {
      * 获取验证码接口：返回验证码字节流，同时使用统一的响应对象包装验证码数据。
      */
     @GetMapping("/captcha")
-    public CommonResponse<Map<String, byte[]>> getCaptcha() throws IOException {
+    public CommonResponse<Map<String, String>> getCaptcha() throws IOException {
         int originalWidth = 200;
         int originalHeight = 50;
         double scale = 0.75;
@@ -126,7 +126,7 @@ public class RestAccountController {
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, width, height);
 
-        captcha = generateRandomString(5);
+        String captcha = generateRandomString(5);
 
         g2d.setFont(new Font("SansSerif", Font.BOLD, (int) (24 * scale)));
         g2d.setColor(Color.black);
@@ -137,11 +137,17 @@ public class RestAccountController {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "png", os);
 
-        Map<String, byte[]> data = new HashMap<>();
-        data.put("captcha", os.toByteArray());
+        byte[] imageBytes = os.toByteArray();
+
+        // 将字节数组编码为Base64字符串
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("captcha", base64Image);
 
         return CommonResponse.createForSuccess(data);
     }
+
 
 
     @PutMapping("/accounts/{id}")
