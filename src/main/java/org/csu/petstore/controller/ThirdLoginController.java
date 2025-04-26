@@ -9,8 +9,10 @@ import org.csu.petstore.entity.Profile;
 import org.csu.petstore.entity.SignOn;
 import org.csu.petstore.security.JwtUtil;
 import org.csu.petstore.service.AccountService;
+import org.csu.petstore.service.CatalogService;
 import org.csu.petstore.service.ThirdLoginService;
 import org.csu.petstore.vo.AccountVO;
+import org.csu.petstore.vo.CategoryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -36,12 +39,17 @@ public class ThirdLoginController {
     @Autowired
     private ThirdLoginService thirdLoginService;
 
+    @Autowired
+    private CatalogService catalogService;
+
     @GetMapping("/callback")
     public ResponseEntity<?> getCode(String code) throws JsonProcessingException {
         AccountVO loginAccount = thirdLoginService.getUserInfoFromGitHub(code);
 
         Map<String, Object> data = new HashMap<>();
         data.put("loginAccount", loginAccount);
+        List<CategoryVO> categories = catalogService.getAllCategories();
+        data.put("categories", categories);
 
         String jwtToken = jwtUtil.generateToken(loginAccount.getUsername());
 
