@@ -1,8 +1,10 @@
 package org.csu.petstore.security;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +12,8 @@ import java.util.List;
 @Component
 public class JwtUtil {
 
-    private String key = "MENHERABESTKEY";
+    // 使用安全方法生成 256 位的密钥
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private long expirationTime = 1000 * 60 * 60 * 24;
     private List<String> blacklistedTokens = new ArrayList<>();
 
@@ -19,7 +22,7 @@ public class JwtUtil {
                 .setSubject(username)  // 设置用户名为 token 的主体
                 .setIssuedAt(new Date())  // 设置签发时间
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))  // 设置过期时间
-                .signWith(SignatureAlgorithm.HS256, key)  // 使用 HS256 算法签名，`yourSecretKey` 是密钥
+                .signWith(key, SignatureAlgorithm.HS256)  // 使用 HS256 算法签名
                 .compact();
     }
 
@@ -35,8 +38,9 @@ public class JwtUtil {
     // 解析 token 并验证签名
     private Claims parseClaims(String token) {
         try {
-            return Jwts.parser()
+            return Jwts.parserBuilder()
                     .setSigningKey(key)  // 设置用于签名验证的密钥
+                    .build()
                     .parseClaimsJws(token)  // 解析 token
                     .getBody();
         } catch (JwtException e) {
