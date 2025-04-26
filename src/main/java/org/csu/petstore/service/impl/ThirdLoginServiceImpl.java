@@ -32,7 +32,7 @@ public class ThirdLoginServiceImpl implements ThirdLoginService {
     public String fetchAccessToken(String code) {
         MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
         paramMap.add("client_id", "Ov23liaqK4Ooy6PMiWWX");
-        paramMap.add("client_secret", "aaa02740aa3db1a27fec8e2870937702106cc053");
+        paramMap.add("client_secret", "e8ee8aec2a365b503fb6d017afa3a471bc473dae");
         paramMap.add("code", code);
         paramMap.add("accept", "json");
 
@@ -80,6 +80,7 @@ public class ThirdLoginServiceImpl implements ThirdLoginService {
     public AccountVO mapGitHubDataToAccount(String userInfo) throws JsonProcessingException {
         // Example parsing process
         JsonNode userNode = new ObjectMapper().readTree(userInfo);
+        System.out.println(userInfo);
         AccountVO account = new AccountVO();
 
         // Check and create or fetch account
@@ -104,7 +105,7 @@ public class ThirdLoginServiceImpl implements ThirdLoginService {
             account.setBanneropt(false);
             accountService.registerAccount(account);
         } else {
-            account = accountService.getAccountByUsername(username);
+            account = accountService.getAccountVO(username);
         }
 
         return account;

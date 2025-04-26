@@ -23,6 +23,9 @@ public interface AccountService {
 
     List<AccountVO> getAllAccounts();
 
+    public AccountVO getAccountVO(String username);
+
+
 
 
 }

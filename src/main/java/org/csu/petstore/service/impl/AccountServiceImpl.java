@@ -82,7 +82,10 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.getAccountByUsername(username);
     }
 
-
+    @Override
+    public AccountVO getAccountVO(String username) {
+        return accountMapper.getAccountVOByUsername(username);
+    }
 
     @Override
     public void updateAccount(AccountVO accountVO) {

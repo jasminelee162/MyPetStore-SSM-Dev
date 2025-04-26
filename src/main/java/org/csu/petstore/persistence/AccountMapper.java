@@ -43,6 +43,21 @@ public interface AccountMapper extends BaseMapper<Account> {
     @Insert("INSERT INTO SIGNON (USERNAME, PASSWORD) VALUES (#{username}, #{password})")
     void insertSignon(SignOn signon);
 
+    @Select("SELECT " +
+            "SIGNON.USERNAME, SIGNON.ADMIN, " +
+            "ACCOUNT.EMAIL, ACCOUNT.FIRSTNAME, ACCOUNT.LASTNAME, ACCOUNT.STATUS, " +
+            "ACCOUNT.ADDR1 AS addr1, ACCOUNT.ADDR2 AS addr2, " +
+            "ACCOUNT.CITY, ACCOUNT.STATE, ACCOUNT.ZIP, ACCOUNT.COUNTRY, ACCOUNT.PHONE, " +
+            "PROFILE.LANGPREF AS langpref, PROFILE.FAVCATEGORY AS favcategory, " +
+            "PROFILE.MYLISTOPT AS mylistopt, PROFILE.BANNEROPT AS banneropt, " +
+            "BANNERDATA.BANNERNAME AS bannerName " +
+            "FROM ACCOUNT " +
+            "JOIN SIGNON ON SIGNON.USERNAME = ACCOUNT.USERID " +
+            "JOIN PROFILE ON PROFILE.USERID = ACCOUNT.USERID " +
+            "JOIN BANNERDATA ON PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY " +
+            "WHERE ACCOUNT.USERID = #{username}")
+    AccountVO getAccountVOByUsername(String username);
+
 
 
     // 获取账户信息
