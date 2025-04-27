@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -43,8 +44,10 @@ public class ThirdLoginController {
     private CatalogService catalogService;
 
     @GetMapping("/callback")
-    public ResponseEntity<?> getCode(String code) throws JsonProcessingException {
+    public ResponseEntity<?> getCode(@RequestParam String code) throws JsonProcessingException {
+        System.out.println(code);
         AccountVO loginAccount = thirdLoginService.getUserInfoFromGitHub(code);
+        System.out.println("ces");
 
         Map<String, Object> data = new HashMap<>();
         data.put("loginAccount", loginAccount);
@@ -54,10 +57,13 @@ public class ThirdLoginController {
         String jwtToken = jwtUtil.generateToken(loginAccount.getUsername());
 
         CommonResponse<Map<String, Object>> res = CommonResponse.createForSuccess("success", data);
+        System.out.println(loginAccount);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .body(res);
+
+        //return ResponseEntity.status(HttpStatus.OK).body(CommonResponse.createForSuccess("56"));
     }
 
 

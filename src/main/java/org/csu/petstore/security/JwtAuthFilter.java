@@ -25,11 +25,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
+        System.out.println("999");
         // 判断是否是OPTIONS请求，跳过认证
         if (request.getMethod().equals("OPTIONS")) {
             filterChain.doFilter(request, response);
             return;
         }
+
 
         if(authHeader == null){
             if(!exclude(request)){
@@ -54,6 +56,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
+        System.out.println("456");
         filterChain.doFilter(request, response);
     }
 

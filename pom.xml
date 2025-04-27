@@ -61,9 +61,22 @@
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version> <!-- 用最新的版本替换 -->
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
         </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if you prefer -->
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
 
 
         <dependency>
@@ -141,6 +154,7 @@
 <!--        </dependency>-->
 
     </dependencies>
+
 
     <repositories>
         <repository>
